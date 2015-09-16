@@ -10,7 +10,98 @@ from urllib.parse import urlparse, parse_qs
 
 import time
 
-class CageMatch:
+
+class Scrapper:
+    scrape_delay = 1
+
+    _requests = requests.session()
+    _last_scrape = 0
+
+    def __init__(self):
+        try:
+            from cachecontrol import CacheControl
+            from cachecontrol.caches import FileCache
+            import tempfile
+            self._requests = CacheControl(self._requests, cache=FileCache(tempfile.gettempdir()+'/cagematch-cache', forever=True))
+        except:
+            logging.warning('CacheControl not available')
+
+        self._requests.headers.update({'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'})
+
+    def get(self, url, **kwargs):
+        if self._last_scrape:
+            sleeptime = max(0, self.scrape_delay - (time.time() - self._last_scrape))
+            time.sleep(sleeptime)
+
+        self._last_scrape = time.time()
+        return self._requests.get(url, **kwargs)
+
+class WikiData(Scrapper):
+
+    API_URL = 'https://www.wikidata.org/w/api.php'
+    COMMONS_URL = 'https://commons.wikimedia.org/wiki/File:'
+
+    WRESTLER_ID = 13474373
+
+    CLAIM_IMAGE = 'P18'
+    CLAIM_OCCUPATION = 'P106'
+    
+    def search(self, search, **kwargs):
+        kwargs.setdefault('language', 'en')
+        kwargs.setdefault('action', 'wbsearchentities')
+        kwargs.setdefault('search', search)
+        r = self.get(self.API_URL, params=kwargs)
+        return r.json()
+
+    def search_wrestler(self, search):
+        r = self.search(search)
+        ids = []
+        for e in r['search']:
+            ids.append(e['id'])
+        entities = self.entities(ids)
+
+        wrestlers = {}
+
+        for id in entities['entities']:
+            entity = entities['entities'][id]
+
+            if entity.get('type') != 'item':
+                continue
+
+            jobs = self.get_claim_values(entity, self.CLAIM_OCCUPATION)
+            if self.WRESTLER_ID in jobs:
+                wrestlers[id] = entity
+            elif 'wrestler' in entity['descriptions']['en']['value']:
+                wrestlers[id] = entity
+
+        if len(wrestlers) == 1:
+            return list(wrestlers.items())[0][1]
+
+    def get_claim_values(self, entity, claim):
+        r = []
+
+        for item in entity['claims'].get(claim, []):
+            if item['mainsnak']['datavalue']['type'] == 'wikibase-entityid':
+                r.append(item['mainsnak']['datavalue']['value']['numeric-id'])
+            else:
+                r.append(item['mainsnak']['datavalue']['value'])
+
+        return r
+
+    def entities(self, ids, **kwargs):
+        kwargs.setdefault('action', 'wbgetentities')
+        kwargs.setdefault('ids', '|'.join(ids))
+        r = self.get(self.API_URL, params=kwargs)
+        return r.json()
+
+    def get(self, url, **kwargs):
+        params = kwargs.get('params', {})
+        params['format'] = 'json'
+        kwargs['params'] = params
+        return super().get(url, **kwargs)
+
+
+class CageMatch(Scrapper):
 	URLS = {
 		'SEARCH': 'http://www.cagematch.net/?id=666',
 		'PROMOTION': 'http://www.cagematch.net/?id=8',
@@ -20,23 +111,10 @@ class CageMatch:
 		'TITLE': 'http://www.cagematch.net/?id=5'
 	}
 
-	_requests = requests.session()
 
-	_last_scrape = 0
+	scrape_delay = 5
 
 	_title_cache = None
-
-	def __init__(self):
-		try:
-			from cachecontrol import CacheControl
-			from cachecontrol.caches import FileCache
-			import tempfile
-			self._requests = CacheControl(self._requests, cache=FileCache(tempfile.gettempdir()+'/cagematch-cache', forever=True))
-		except:
-			logging.warning('CacheControl not available')
-
-		self._requests.headers.update({'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'})
-
 
 	def search(self, name):
 		'''
@@ -163,10 +241,3 @@ class CageMatch:
 		nr = href['nr'][0]
 		return int(nr)
 
-	def get(self, url, **kwargs):
-		if self._last_scrape:
-			sleeptime = max(0, 5 - (time.time() - self._last_scrape))
-			time.sleep(sleeptime)
-
-		self._last_scrape = time.time()
-		return self._requests.get(url, **kwargs)
