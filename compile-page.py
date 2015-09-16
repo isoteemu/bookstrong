@@ -32,8 +32,17 @@ def get_face(wrestler):
     if not path.isfile(f):
         try:
             if not path.isfile(w):
-                r = Bing().imageSearch(u'%s wrestler' % wrestler.name, ImageFilters="'Face:Face'")
-                urlretrieve(r[0]['Thumbnail']['MediaUrl'], w)
+                try: 
+                    data = wd.search_wrestler(wrestler.name)
+                    pic = wd.get_claim_values(data, wd.CLAIM_IMAGE)[0]
+                    src = wd.get_image_url(pic)
+                    if not src:
+                        raise RuntimeError('No picture found')
+                    urlretrieve(src, w)
+                except:
+                    r = Bing().imageSearch(u'%s wrestler' % wrestler.name, ImageFilters="'Face:Face'")
+                    urlretrieve(r[0]['Thumbnail']['MediaUrl'], w)
+
             im = Image.open(w)
             im = square_image(im, (80,80))
             im = im.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
@@ -51,7 +60,7 @@ def get_wrestlers():
     a = session.query(Score).order_by(desc(func.max(Score.score))).\
         join(Match).filter(Match.date >= since).\
         join(Wrestler).\
-        group_by(Score.wrestler_nr).slice(0,27).all()
+        group_by(Score.wrestler_nr).slice(0,100).all()
 
     r = []
 
@@ -64,6 +73,8 @@ def get_wrestlers():
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
+    wd = WikiData()
+    
     promotions = session.query(Promotion).join(Wrestler).filter(Wrestler.nr != None).all()
     wrestlers = get_wrestlers()
 
