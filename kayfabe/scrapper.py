@@ -71,7 +71,7 @@ class WikiData(Scrapper):
             jobs = self.get_claim_values(entity, self.CLAIM_OCCUPATION)
             if self.WRESTLER_ID in jobs:
                 wrestlers[id] = entity
-            elif 'wrestler' in entity['descriptions']['en']['value']:
+            elif 'en' in entity['descriptions'] and 'wrestler' in entity['descriptions']['en']['value']:
                 wrestlers[id] = entity
 
         if len(wrestlers) == 1:
@@ -88,6 +88,15 @@ class WikiData(Scrapper):
 
         return r
 
+    def get_image_url(self, title, **kwargs):
+        kwargs.setdefault('action', 'query')
+        kwargs.setdefault('titles', 'File:%s' % title)
+        kwargs.setdefault('prop', 'imageinfo')
+        kwargs.setdefault('iiprop', 'url')
+        
+        r = self.get(self.API_URL, params=kwargs).json()
+        return r['query']['pages']['-1']['imageinfo'][0]['url']
+        
     def entities(self, ids, **kwargs):
         kwargs.setdefault('action', 'wbgetentities')
         kwargs.setdefault('ids', '|'.join(ids))
