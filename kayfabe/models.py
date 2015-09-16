@@ -49,7 +49,7 @@ class Gimmick(Base):
 	alias_of = Column(Integer, ForeignKey('gimmicks.id'))
 
 	def __repr__(self):
-		return "<Gimmick(gimmick='{gimmick}', id={id}, wrestler_nr={cm})>".format(gimmick=self.gimmick, id=self.id, cm=self.wrestler_cm)
+		return "<Gimmick(gimmick='{gimmick}', id={id}, wrestler_nr={nr})>".format(gimmick=self.gimmick, id=self.id, nr=self.wrestler_nr)
 
 class Match(Base):
 	__tablename__ = 'matches'
