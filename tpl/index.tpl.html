@@ -68,7 +68,7 @@
 					<div class="panel-body">
                         <nav class="list-group rank">
                             {% for wrestler in wrestlers %}
-                                <a href="#" class="list-group-item wrestler-rank-item {% if loop.index > 25 %}limit-filter-hide{%endif%}" data-promotion="{{ wrestler.promotion.cm_id }}" data-nr="{{ wrestler.nr }}" data-gimmicks="{% for gimmick in wrestler.gimmicks %}{{gimmick.gimmick|escape}}, {% endfor %}">
+                                <a href="#" class="list-group-item wrestler-rank-item {% if loop.index > config['items_per_page'] %}limit-filter-hide{%endif%}" data-promotion="{{ wrestler.promotion.cm_id }}" data-nr="{{ wrestler.nr }}" data-gimmicks="{% for gimmick in wrestler.gimmicks %}{{gimmick.gimmick|escape}}, {% endfor %}">
                                     <div class="bg" style="background-image:url({{wrestler.face}});"></div>
                                     <h4 class="list-group-item-heading"><span class="label label-info rank-nr">{{ wrestler.rank }}</span> {{ wrestler.name|escape }}</h4>
                                     <p class="list-group-item-text">
@@ -81,17 +81,17 @@
                     <div class="panel-footer">
 
 <nav>
-  <ul class="pagination">
+  <ul class="pagination" id="rank-pagination">
     <li>
       <a href="#" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
-    <li id="rank-page-1"><a href="#">1</a></li>
-    <li id="rank-page-2"><a href="#">2</a></li>
-    <li id="rank-page-3"><a href="#">3</a></li>
-    <li id="rank-page-4"><a href="#">4</a></li>
-    <li id="rank-page-5"><a href="#">5</a></li>
+    <li id="rank-page-1"><a href="#" onclick="restack(1); return false;" data-page="1">1</a></li>
+    <li id="rank-page-2"><a href="#" onclick="restack(2); return false;" data-page="2">2</a></li>
+    <li id="rank-page-3"><a href="#" onclick="restack(3); return false;" data-page="3">3</a></li>
+    <li id="rank-page-4"><a href="#" onclick="restack(4); return false;" data-page="4">4</a></li>
+    <li id="rank-page-5"><a href="#" onclick="restack(5); return false;" data-page="5">5</a></li>
     <li>
       <a href="#" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
@@ -118,7 +118,8 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
-    
+
+var items_per_page = {{config['items_per_page']}};
 var gimmick_search_scheduler;
 
 function gimmick_search(gimmick) {
@@ -133,11 +134,11 @@ function gimmick_search(gimmick) {
     restack();
 }
 
-function restack() {
+function restack(page=1) {
     i = ii = 0
     $('a.wrestler-rank-item').each(function() {
 
-        if(i >= 25) {
+        if(i >= items_per_page ) {
             $(this).addClass('limit-filter-hide');
         } else {
             $(this).removeClass('limit-filter-hide');
@@ -145,7 +146,15 @@ function restack() {
                 i = i + 1
             }
         }
-        
+    });
+
+    $('#rank-pagination a').each(function() {
+        li = $(this).parent();
+        if($(this).data('page') == page) {
+            li.addClass('active');
+        } else {
+            li.removeClass('active');
+        }
     });
 }
 
