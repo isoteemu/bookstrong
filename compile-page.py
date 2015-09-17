@@ -15,6 +15,8 @@ from os import path
 from urllib.request import urlretrieve
 from PIL import Image
 
+from subprocess import call, check_output
+
 tpl = Environment(loader=FileSystemLoader('tpl'))
 
 from teemu.Bing import Bing
@@ -28,7 +30,7 @@ def get_face(wrestler):
         http://www.cagematch.net/site/main/img/portrait/00000293.jpg
     '''
     w = 'ass/w/{:0>8}.jpg'.format(wrestler.nr)
-    f = 'ass/f/{:0>8}.png'.format(wrestler.nr)
+    f = 'ass/f/{:0>8}.jpg'.format(wrestler.nr)
     if not path.isfile(f):
         try:
             if not path.isfile(w):
@@ -44,23 +46,22 @@ def get_face(wrestler):
                     urlretrieve(r[0]['Thumbnail']['MediaUrl'], w)
 
             im = Image.open(w)
-            im = square_image(im, (80,80))
-            im = im.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
-            im.save(f, 'PNG', colors=255)
+            im = square_image(im, (64,64))
+            #im = im.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
+            im.save(f, 'JPEG')
         except:
             f = None
 
     return f
 
-def get_wrestlers():
+def get_wrestlers(from_date=date.today()):
 
-    today = date.today()
-    since = date(today.year, today.month-1, 1)
+    since = date(from_date.year, from_date.month-1, 1)
 
     a = session.query(Score).order_by(desc(func.max(Score.score))).\
         join(Match).filter(Match.date >= since).\
         join(Wrestler).\
-        group_by(Score.wrestler_nr).slice(0,100).all()
+        group_by(Score.wrestler_nr).slice(0,26).all()
 
     r = []
 
@@ -83,6 +84,7 @@ if __name__ == '__main__':
 
     #print(wrestlers[0].rank)
 
+    call(['lessc', '-rp=ass/', '-ru', 'style.less', 'style.css']) and exit()
 
     print(tpl.get_template('index.tpl.html').render(
         promotions=promotions,
