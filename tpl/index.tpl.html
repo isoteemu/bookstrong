@@ -1,0 +1,30 @@
+{% extends "layout.tpl.html" %}
+{% block content %}
+
+<div id="top-riser" class="well">
+    <div class="bg"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-5">
+
+<div class="item">
+  <img src="ass/w/{{ '%08d'|format(top_riser.nr) }}.jpg" class="img-responsive" />
+  <div class="carousel-caption">
+    <h3><span lang="en">{{top_riser.name|escape}}</span></h3>
+    <ul>
+        {% for gimmick in top_riser.gimmicks %}<li><span lang="en">{{gimmick.gimmick|escape}}</span></li>{% endfor %}
+    </ul>
+  </div>
+</div>
+
+                
+            </div>
+            <div class="col-sm-7">
+                DATAA
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

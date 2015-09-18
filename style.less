@@ -205,6 +205,11 @@ a.wrestler-rank-item:hover .bg:after {
     opacity:0;
 }
 
+header.header {
+    &:extend(.clearfix all);
+    margin-bottom:5em;
+}
+
 #lang-select {
     float:right;
 }
@@ -214,10 +219,11 @@ a.wrestler-rank-item:hover .bg:after {
     margin-right: @grid-gutter-width / 2;
 }
 
-#logo-btn img {
+#logo-img {
     background-color:@brand-primary;
     height:(@line-height-base * 1em);
     margin-right: @padding-large-horizontal;
+    padding:1px;
 }
     
 .main {
@@ -239,6 +245,29 @@ a.wrestler-rank-item:hover .bg:after {
     
     margin-top: @panel-body-padding;
     margin-bottom: @panel-body-padding;
+    position:relative;
+    //z-index:1;
+
+    overflow: hidden;
+}
+
+#top-riser .bg {
+    //z-index:2;
+    position:absolute;
+    
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    
+    width:100%;
+    height:100%;
+    
+    background: transparent url(i/sprkl.png) no-repeat center center / cover;
+
+    filter:blur(1px);
+    -webkit-filter: blur(1px);
+
 }
 
 header .btn-group {
@@ -246,6 +275,7 @@ header .btn-group {
 }
 
 footer {
+    margin-top:1em;
     background-color:#000;
 }
     
