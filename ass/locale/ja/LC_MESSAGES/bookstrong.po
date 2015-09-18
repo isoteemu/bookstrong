@@ -1,0 +1,117 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: bookstrong\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Teemu Autto <teemu [at] rautakuu [dot] org>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"Language: ja\n"
+
+msgid "Book Strong"
+msgstr "強力なブック"
+
+msgid "Promotion"
+msgstr "プロモーション"
+
+msgid "World Wrestling Entertainment"
+msgstr ""
+
+msgid "New Japan Pro Wrestling"
+msgstr "新日本プロレス株式会社"
+
+msgid "Ring of Honor"
+msgstr ""
+
+msgid "Independed"
+msgstr "独立の"
+
+msgid "Dragon Gate USA"
+msgstr "ドラゴン・ゲート・ユー・エス・エー"
+
+msgid "Total Nonstop Action Wrestling"
+msgstr ""
+
+msgid "Asistencia Asesoria y Administracion"
+msgstr "トリプレア"
+
+msgid "All Japan Pro Wrestling"
+msgstr "オールジャパン・プロレスリング"
+
+msgid "Dramatic Dream Team"
+msgstr "DDTプロレスリング"
+
+msgid "Pro Wrestling NOAH"
+msgstr "プロレスリングノア"
+
+msgid "Consejo Mundial De Lucha Libre"
+msgstr ""
+
+msgid "Dragon Gate"
+msgstr "ドラゴンゲート"
+
+msgid "Big Japan Pro-Wrestling"
+msgstr "大日本プロレス"
+
+msgid "Westside Xtreme Wrestling"
+msgstr "ウエストサイド・エクストリーム・レスリング"
+
+msgid "Global Force Wrestling"
+msgstr "グローバル・フォース・レスリング"
+
+msgid "WRESTLE-1"
+msgstr "レッスル・ワン"
+
+msgid "Pro Wrestling ZERO1"
+msgstr "ゼロワン"
+
+msgid "World Wrestling Council"
+msgstr "プロレス"
+
+msgid "Union Pro Wrestling"
+msgstr ""
+
+msgid "Toryumon Mexico"
+msgstr "闘龍門"
+
+msgid "666"
+msgstr ""
+
+msgid "House of Hardcore"
+msgstr ""
+
+msgid "Combat Zone Wrestling"
+msgstr "コンバット・ゾーン・レスリング"
+
+msgid "Michinoku Pro Wrestling"
+msgstr "みちのくプロレス"
+
+msgid "Lucha Underground"
+msgstr ""
+
+msgid "Ice Ribbon"
+msgstr "アイスリボン"
+
+msgid "Japanese Women Pro-Wrestling Project"
+msgstr "JWP女子プロレス"
+
+msgid "OSAKA Women's Pro-Wrestling"
+msgstr ""
+
+msgid "REINA"
+msgstr ""
+
+msgid "Sendai Girls' Pro Wrestling"
+msgstr "センダイガールズプロレスリング"
+
+msgid "Pro Wrestling WAVE"
+msgstr "プロレスリング"
+
+msgid "OZ Academy"
+msgstr "OZアカデミー"
+
+msgid "Stardom"
+msgstr "スターダム"

@@ -148,7 +148,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
-    translations = gettext.translation('bookstrong', localedir='ass/locale', languages=['jp'])
+    translations = gettext.translation('bookstrong', localedir='ass/locale', languages=['ja'])
     translations.install()
 
     tpl = Environment(loader=FileSystemLoader('tpl'), extensions=['jinja2.ext.i18n'])
