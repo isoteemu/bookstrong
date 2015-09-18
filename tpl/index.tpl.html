@@ -92,6 +92,7 @@
     <li id="rank-page-3"><a href="#" onclick="rank_page(3); return false;" data-page="3">3</a></li>
     <li id="rank-page-4"><a href="#" onclick="rank_page(4); return false;" data-page="4">4</a></li>
     <li id="rank-page-5"><a href="#" onclick="rank_page(5); return false;" data-page="5">5</a></li>
+    <li id="rank-page-6"><a href="#" onclick="rank_page(6); return false;" data-page="6">6</a></li>
     <li>
       <a href="#" onclick="rank_next_page(); return false;" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
@@ -161,6 +162,7 @@ function rank_page(page=1) {
         
         pager_nr = $(this).data('page')
         li.removeClass('active');
+        li.removeClass('disabled');
 
         if(pager_nr == page) {
             li.addClass('active');
