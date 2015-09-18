@@ -27,6 +27,7 @@ from copy import copy
 from teemu.Bing import Bing
 from teemu.Image import square_image
 
+
 def get_face(wrestler):
     '''
         Get wrestler face pic
@@ -34,7 +35,7 @@ def get_face(wrestler):
         
         http://www.cagematch.net/site/main/img/portrait/00000293.jpg
     '''
-    
+
     thumb_size = (80,80)
 
     w = 'ass/w/{:0>8}.jpg'.format(wrestler.nr)
@@ -42,17 +43,31 @@ def get_face(wrestler):
     if not path.isfile(f):
         try:
             if not path.isfile(w):
-                try: 
+                img_url = None
+                try:
                     data = wd.search_wrestler(wrestler.name)
                     pic = wd.get_claim_values(data, wd.CLAIM_IMAGE)[0]
                     src = wd.get_image_url(pic)
-                    if not src:
-                        raise RuntimeError('No picture found')
-                    urlretrieve(src, w)
-                except e:
-                    logging.warning('Did not find image from wikipedia: %s' % e)
-                    r = Bing().imageSearch(u'%s wrestler' % wrestler.name, ImageFilters="'Face:Face'")
-                    urlretrieve(r[0]['Thumbnail']['MediaUrl'], w)
+                    if src:
+                        img_url = src
+
+                except:
+                    logging.debug('Did not find image from wikipedia')
+                    pass
+
+                try:
+                    if not img_url:
+                        r = Bing().imageSearch(u'%s wrestler' % wrestler.name, ImageFilters="'Face:Face'")
+                        if len(r):
+                            img_url = r[0]['Thumbnail']['MediaUrl']
+                except:
+                    pass
+
+                if not img_url:
+                    img_url = 'http://www.cagematch.net/site/main/img/portrait/{:0>8}.jpg'.format(wrestler.nr)
+                    logging.warning('Fall back on stealing images: %s' % img_url)
+
+                urlretrieve(img_url, w)
 
             try:
                 im = crop_face(w, thumb_size)
@@ -62,14 +77,15 @@ def get_face(wrestler):
                 #im = im.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
 
             im.save(f, 'JPEG')
-        except:
+        except Exception as e:
+            logging.warning('Could not save image: %s' % e.msg)
             f = None
 
     return f
 
 
 def crop_face(picture, size=(64,64)):
-    x,y,w,h = find_face(picture)
+    x, y, w, h = find_face(picture)
 
     im = Image.open(picture)
 
@@ -109,7 +125,7 @@ def get_ranked_wrestlers(to_date=date.today(), from_date=None):
         join(Match).filter(Match.date >= from_date).\
         filter(Match.date <= to_date).\
         join(Wrestler).\
-        group_by(Score.wrestler_nr).slice(0,20).all()
+        group_by(Score.wrestler_nr).slice(0,200).all()
 
     r = []
 
@@ -140,7 +156,7 @@ def translate_html(page, translation):
     lang = translation.info()['language']
 
     soup = BeautifulSoup(page, 'lxml')
-    
+
     tags = soup.select('span[lang="en"]') + soup.select('title[lang="en"]')
 
     for span in tags:
@@ -164,7 +180,7 @@ def translate_html(page, translation):
 
 if __name__ == '__main__':
 
-    config={
+    config = {
         'items_per_page': 20
     }
 
@@ -209,5 +225,6 @@ if __name__ == '__main__':
         config=config
     )
 
+    exit()
     #print(output)
     print(translate_html(output, translations))
