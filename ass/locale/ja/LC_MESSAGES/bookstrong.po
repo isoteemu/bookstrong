@@ -1,3 +1,4 @@
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: bookstrong\n"
@@ -8,11 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
 "Language: ja\n"
+"X-Generator: Poedit 1.5.4\n"
 
 msgid "Book Strong"
 msgstr "強力なブック"
+
+msgid "Japan"
+msgstr "日本語"
 
 msgid "Promotion"
 msgstr "プロモーション"
@@ -115,3 +119,1734 @@ msgstr "OZアカデミー"
 
 msgid "Stardom"
 msgstr "スターダム"
+
+msgid "Seth Rollins"
+msgstr "タイラー・ブラック"
+
+msgid "John Cena"
+msgstr "ジョン・シーナ"
+
+msgid "A.J. Styles"
+msgstr "アレン・ジョーンズ"
+
+msgid "Roman Reigns"
+msgstr "ローマン・リーキー"
+
+msgid "Shinsuke Nakamura"
+msgstr "中邑真輔"
+
+msgid "Randy Orton"
+msgstr "ランディー・オートン"
+
+msgid "Jay Briscoe"
+msgstr ""
+
+msgid "Rusev"
+msgstr "ミロスラフ・バルニャシェフ"
+
+msgid "Alberto el Patrón"
+msgstr "アルベルト・ロドリゲス"
+
+msgid "Kevin Owens"
+msgstr "ケビン・スティーン"
+
+msgid "Hiroshi Tanahashi"
+msgstr "マスクド・デビロック"
+
+msgid "Dolph Ziggler"
+msgstr "ニック・ネメス"
+
+msgid "Dean Ambrose"
+msgstr "ジョン・モクスリー"
+
+msgid "Daniel Bryan"
+msgstr "ダニエル・ブライアン"
+
+msgid "Neville"
+msgstr "ベン・サッタレイ"
+
+msgid "Ricochet"
+msgstr "リコシェ"
+
+msgid "Jay Lethal"
+msgstr ""
+
+msgid "Lashley"
+msgstr ""
+
+msgid "Minoru Suzuki"
+msgstr "鈴木実"
+
+msgid "King Barrett"
+msgstr ""
+
+msgid "Bray Wyatt"
+msgstr "デューク・ロトンド"
+
+msgid "Bobby Roode"
+msgstr "ボビー・ルード"
+
+msgid "Sami Zayn"
+msgstr "エル・ジェネリコ"
+
+msgid "Luke Harper"
+msgstr "ブロディ・リー"
+
+msgid "Kurt Angle"
+msgstr "カート・アングル"
+
+msgid "El Mesias"
+msgstr ""
+
+msgid "Kazuchika Okada"
+msgstr "岡田かずちか"
+
+msgid "Finn Balor"
+msgstr "フォーガル・デヴィット"
+
+msgid "Ryback"
+msgstr "ライバック"
+
+msgid "Ethan Carter III"
+msgstr "デリック・ベイトマン"
+
+msgid "Go Shiozaki"
+msgstr "潮﨑豪"
+
+msgid "John Morrison, Johnny Mundo"
+msgstr "ジョン・モリソン"
+
+msgid "Darren Young"
+msgstr "ダレン・ヤング"
+
+msgid "KUSHIDA"
+msgstr ""
+
+msgid "Kyle O'Reilly"
+msgstr "カイル・オライリー"
+
+msgid "Big Show"
+msgstr "ポール・ワイト"
+
+msgid "Drew Galloway"
+msgstr ""
+
+msgid "Hideo Itami"
+msgstr "小林健太"
+
+msgid "Adam Cole"
+msgstr ""
+
+msgid "Kota Ibushi"
+msgstr "飯伏幸太"
+
+msgid "Cesaro"
+msgstr "アントニオ・セザーロ"
+
+msgid "Sheamus"
+msgstr "ステファン・ファレリー"
+
+msgid "Michael Elgin"
+msgstr "マイケル・エルガン"
+
+msgid "Big E"
+msgstr "エットレ・ユエン"
+
+msgid "Bobby Fish"
+msgstr "ボビー・フィッシュ"
+
+msgid "Samoa Joe"
+msgstr "サモア・ジョー"
+
+msgid "Jeff Hardy"
+msgstr "ジェフ・ハーディー"
+
+msgid "Naomichi Marufuji"
+msgstr "丸藤正道"
+
+msgid "Jimmy Uso"
+msgstr "ジョナサン・ファトゥ"
+
+msgid "Austin Aries"
+msgstr "オースチン・スター"
+
+msgid "Kane"
+msgstr "グレン・ジェイコブズ"
+
+msgid "Kofi Kingston"
+msgstr "コフィ・サーコーディエ・メンサー"
+
+msgid "Tyson Kidd"
+msgstr "TJウィルソン"
+
+msgid "Kenny Omega"
+msgstr "ケニー・オメガ"
+
+msgid "Davey Richards"
+msgstr "デイビー・リチャーズ"
+
+msgid "James Storm"
+msgstr ""
+
+msgid "Maximo"
+msgstr "マキシモ (プロレスラー)"
+
+msgid "ACH"
+msgstr ""
+
+msgid "BxB Hulk"
+msgstr "BBハルク"
+
+msgid "Miz"
+msgstr ""
+
+msgid "Tyler Breeze"
+msgstr "マイク・ダルトン"
+
+msgid "Roderick Strong"
+msgstr "ロドリック・ストロング"
+
+msgid "El Hijo del Fantasma"
+msgstr "イホ・デル・ファンタズマ"
+
+msgid "Christopher Daniels"
+msgstr "カレーマン"
+
+msgid "Stardust"
+msgstr "コーディ・ローズ"
+
+msgid "Matt Jackson"
+msgstr ""
+
+msgid "Nick Jackson"
+msgstr ""
+
+msgid "Hiroyoshi Tenzan"
+msgstr "山本広吉"
+
+msgid "Frankie Kazarian, Kazarian"
+msgstr ""
+
+msgid "Mark Briscoe"
+msgstr ""
+
+msgid "Nick Aldis"
+msgstr "ニコラス・アルディス"
+
+msgid "Jey Uso"
+msgstr "ジョシュア・ファトゥ"
+
+msgid "Doc Gallows"
+msgstr "ドリュー・ハンキンソン"
+
+msgid "Matt Hardy"
+msgstr "マット・ハーディ"
+
+msgid "Eddie Edwards"
+msgstr "エディ・エドワーズ"
+
+msgid "Hirooki Goto"
+msgstr "後藤洋央紀"
+
+msgid "Xavier Woods"
+msgstr "オースティン・ワトソン"
+
+msgid "Brian Cage"
+msgstr "クリス・ローガン"
+
+msgid "Karl Anderson"
+msgstr "カール・アンダーソン"
+
+msgid "Tetsuya Naito"
+msgstr ""
+
+msgid "Davey Boy Smith Jr."
+msgstr ""
+
+msgid "Michael Bennett"
+msgstr ""
+
+msgid "Rob Conway"
+msgstr "ロブ・コンウェイ"
+
+msgid "Chris Jericho"
+msgstr "スーパー・ライガー"
+
+msgid "Cedric Alexander"
+msgstr ""
+
+msgid "Baron Corbin"
+msgstr ""
+
+msgid "El Texano Jr."
+msgstr ""
+
+msgid "Akebono"
+msgstr "モンスター・ボノ"
+
+msgid "Goldust"
+msgstr "ヴァージル・ラネルズ3世"
+
+msgid "Bad Luck Fale"
+msgstr ""
+
+msgid "MVP"
+msgstr ""
+
+msgid "Lance Archer"
+msgstr ""
+
+msgid "Damien Sandow"
+msgstr "アーロン・スティーブンス"
+
+msgid "R-Truth"
+msgstr "Rトゥルース"
+
+msgid "Pentagon Jr."
+msgstr ""
+
+msgid "Matt Taven"
+msgstr "マット・ターバン"
+
+msgid "Low Ki"
+msgstr "Senshi"
+
+msgid "Satoshi Kojima"
+msgstr "愚零斗孤士"
+
+msgid "AR Fox"
+msgstr ""
+
+msgid "Sin Cara"
+msgstr ""
+
+msgid "Suwama"
+msgstr "諏訪間幸平"
+
+msgid "Ryusuke Taguchi"
+msgstr "田口隆祐"
+
+msgid "Rocky Romero"
+msgstr "ロッキー・ロメロ"
+
+msgid "Chris Hero"
+msgstr "クリス・ヒーロー"
+
+msgid "Trent Barreta"
+msgstr "トレント・バレッタ"
+
+msgid "Kenny King"
+msgstr ""
+
+msgid "Damian El Terrible"
+msgstr ""
+
+msgid "Joe Doering"
+msgstr "ジョー・ドーリング"
+
+msgid "Johnny Gargano"
+msgstr "ジョニー・ガルガノ"
+
+msgid "Tomohiro Ishii"
+msgstr "石井智宏"
+
+msgid "Erick Rowan"
+msgstr "ジョセフ・ルード"
+
+msgid "Abyss"
+msgstr "クリス・パークス"
+
+msgid "Rockstar Spud"
+msgstr ""
+
+msgid "Matt Sydal"
+msgstr ""
+
+msgid "Daisuke Sekimoto"
+msgstr "関本大介"
+
+msgid "Murphy"
+msgstr ""
+
+msgid "Angelico"
+msgstr ""
+
+msgid "Mr. Anderson"
+msgstr ""
+
+msgid "Rich Swann"
+msgstr "リッチ・スワン"
+
+msgid "Kalisto"
+msgstr "サムライ・デル・ソル"
+
+msgid "Blake"
+msgstr ""
+
+msgid "Rey Bucanero"
+msgstr "レイ・ブカネロ"
+
+msgid "Katsuyori Shibata"
+msgstr "魔界4号"
+
+msgid "Bram"
+msgstr ""
+
+msgid "Drago"
+msgstr ""
+
+msgid "PJ Black"
+msgstr ""
+
+msgid "Matt Cross"
+msgstr ""
+
+msgid "Togi Makabe"
+msgstr "真壁伸也"
+
+msgid "Bubba Ray Dudley"
+msgstr ""
+
+msgid "Mark Henry"
+msgstr "マーク・ヘンリー"
+
+msgid "Myzteziz"
+msgstr "シン・カラ"
+
+msgid "Drew Gulak"
+msgstr "ドリュー・グラック"
+
+msgid "Tommaso Ciampa"
+msgstr ""
+
+msgid "Gunner"
+msgstr "チャド・レイル"
+
+msgid "Chris Sabin"
+msgstr "クリス・セービン"
+
+msgid "Seiya Sanada"
+msgstr "真田聖也"
+
+msgid "Jack Swagger"
+msgstr "ジェイク・ヘイガー"
+
+msgid "Yuji Nagata"
+msgstr "ジャスティス永田"
+
+msgid "Luke Hawx"
+msgstr ""
+
+msgid "Jax Dane"
+msgstr ""
+
+msgid "Masato Yoshino"
+msgstr "YOSSINO"
+
+msgid "Curtis Axel"
+msgstr "ジョー・ヘニング"
+
+msgid "Alex Shelley"
+msgstr "アレックス・シェリー"
+
+msgid "Volador Jr."
+msgstr "ボラドール・ジュニア"
+
+msgid "Rhyno"
+msgstr ""
+
+msgid "Blue Demon Jr."
+msgstr ""
+
+msgid "TJ Perkins, TJP, Manik"
+msgstr ""
+
+msgid "Viktor"
+msgstr "エリック・トンプソン"
+
+msgid "Robbie E"
+msgstr ""
+
+msgid "Jun Akiyama"
+msgstr "秋山潤"
+
+msgid "Konnor"
+msgstr "コナー・オブライエン"
+
+msgid "Crazzy Steve"
+msgstr ""
+
+msgid "T-Hawk"
+msgstr ""
+
+msgid "Moose"
+msgstr ""
+
+msgid "El Sombra"
+msgstr ""
+
+msgid "Bo Dallas"
+msgstr "テイラー・ロタンダ"
+
+msgid "Colt Cabana"
+msgstr "スコット・コルトン"
+
+msgid "SUSHI"
+msgstr ""
+
+msgid "Angel de Oro"
+msgstr ""
+
+msgid "Diego"
+msgstr "エディ・コロン"
+
+msgid "Fernando"
+msgstr ""
+
+msgid "Fenix"
+msgstr ""
+
+msgid "Tommy End"
+msgstr ""
+
+msgid "Jessie Godderz"
+msgstr "ジェシー・ゴッダーズ"
+
+msgid "Zack Sabre Jr."
+msgstr ""
+
+msgid "Aero Star"
+msgstr "エアロスター"
+
+msgid "YAMATO"
+msgstr ""
+
+msgid "Adam Ryder"
+msgstr ""
+
+msgid "Mephisto"
+msgstr "メフィスト"
+
+msgid "Dr. Wagner Jr."
+msgstr ""
+
+msgid "Titus O'Neil"
+msgstr "タイタス・オニール"
+
+msgid "BJ Whitmer"
+msgstr ""
+
+msgid "Masada, MASADA"
+msgstr ""
+
+msgid "Rey Escorpion"
+msgstr ""
+
+msgid "Eric Young"
+msgstr ""
+
+msgid "Naruki Doi"
+msgstr "土井成樹"
+
+msgid "Big Ryck"
+msgstr ""
+
+msgid "Kotaro Suzuki"
+msgstr "鈴木鼓太郎"
+
+msgid "Mahabali Shera"
+msgstr ""
+
+msgid "Extreme Tiger, Tigre Uno"
+msgstr ""
+
+msgid "Hideki Suzuki"
+msgstr ""
+
+msgid "Jeff Jarrett"
+msgstr "ジェフ・ジャレット"
+
+msgid "Fandango"
+msgstr ""
+
+msgid "Shane Haste"
+msgstr "シェイン・ヘイスト"
+
+msgid "Mikey Nicholls"
+msgstr "マイキー・ニコルス"
+
+msgid "KAI"
+msgstr ""
+
+msgid "Adam Rose"
+msgstr ""
+
+msgid "Micah"
+msgstr ""
+
+msgid "Heath Slater"
+msgstr "ヒース・スレーター"
+
+msgid "Adam Page"
+msgstr ""
+
+msgid "DJ Z"
+msgstr ""
+
+msgid "Mojo Rawley"
+msgstr ""
+
+msgid "LA Par-K"
+msgstr ""
+
+msgid "Kento Miyahara"
+msgstr "宮原健斗"
+
+msgid "Kahagas"
+msgstr "カハガス"
+
+msgid "Eli Drake, Shaun Ricker"
+msgstr ""
+
+msgid "Apollo Crews"
+msgstr "ウーハー・ネイション"
+
+msgid "Ultimo Guerrero"
+msgstr ""
+
+msgid "Papadon"
+msgstr ""
+
+msgid "Tim Storm"
+msgstr ""
+
+msgid "HARASHIMA"
+msgstr "HERO!"
+
+msgid "Rey Horus"
+msgstr ""
+
+msgid "Raymond Rowe"
+msgstr ""
+
+msgid "Biff Busick"
+msgstr ""
+
+msgid "El Sensacional Carlitos"
+msgstr ""
+
+msgid "Colin Cassady"
+msgstr "コリン・キャサディ"
+
+msgid "Chris Melendez"
+msgstr ""
+
+msgid "Romantic Touch"
+msgstr ""
+
+msgid "Caprice Coleman"
+msgstr ""
+
+msgid "Bestia 666"
+msgstr ""
+
+msgid "Takashi Sugiura"
+msgstr "杉浦貴"
+
+msgid "Mistico"
+msgstr ""
+
+msgid "Mandrews"
+msgstr ""
+
+msgid "Tyrus"
+msgstr "ブローダス・クレイ"
+
+msgid "Silas Young"
+msgstr ""
+
+msgid "Donovan Dijak"
+msgstr ""
+
+msgid "Ricky Reyes"
+msgstr ""
+
+msgid "Masato Tanaka"
+msgstr "田中正人"
+
+msgid "Chicano"
+msgstr ""
+
+msgid "Will Ferrara"
+msgstr ""
+
+msgid "Ashley Remington, Dalton Castle"
+msgstr ""
+
+msgid "Chase Owens"
+msgstr "チェーズ・オーエンズ"
+
+msgid "Joey Ryan"
+msgstr ""
+
+msgid "Steve Anthony"
+msgstr ""
+
+msgid "Shuji Ishikawa"
+msgstr ""
+
+msgid "Enzo Amore"
+msgstr "エリック・アーント"
+
+msgid "Matt Riviera"
+msgstr ""
+
+msgid "Keiji Mutoh"
+msgstr "武藤敬司"
+
+msgid "Christopher Silvio/Chris Silvio"
+msgstr ""
+
+msgid "Jushin Thunder Liger"
+msgstr ""
+
+msgid "Jason Kincaid"
+msgstr ""
+
+msgid "Pepper Parks"
+msgstr ""
+
+msgid "Gedo"
+msgstr "高山圭司"
+
+msgid "Facade"
+msgstr ""
+
+msgid "Jesus De Leon, Mr. 450"
+msgstr ""
+
+msgid "Kohei Sato"
+msgstr "佐藤耕平"
+
+msgid "Ashley Sixx"
+msgstr ""
+
+msgid "CIMA"
+msgstr "大島伸彦"
+
+msgid "Tyson Dux"
+msgstr ""
+
+msgid "Jado, Captain NOAH"
+msgstr ""
+
+msgid "Hanson"
+msgstr ""
+
+msgid "Charlie Haas"
+msgstr "チャーリー・ハース"
+
+msgid "Hernandez"
+msgstr ""
+
+msgid "Matt Tremont"
+msgstr ""
+
+msgid "David Starr"
+msgstr ""
+
+msgid "Mighty Ursas"
+msgstr ""
+
+msgid "Samuel Shaw"
+msgstr ""
+
+msgid "The Brian Kendrick"
+msgstr ""
+
+msgid "Sherman Tank"
+msgstr ""
+
+msgid "Solomon Crowe"
+msgstr ""
+
+msgid "Stevie Richards"
+msgstr "マイケル・マナ"
+
+msgid "Kzy"
+msgstr "M.c.KZ."
+
+msgid "J. Diesel"
+msgstr ""
+
+msgid "Jay Bradley, Aiden O'Shea"
+msgstr ""
+
+msgid "Shingo Takagi"
+msgstr "鷹木信悟"
+
+msgid "Simon Gotch"
+msgstr "ライアン・ドラゴ"
+
+msgid "Scorpio Sky"
+msgstr ""
+
+msgid "Brian Myers"
+msgstr ""
+
+msgid "BLK Jeez"
+msgstr ""
+
+msgid "Tomoaki Honma"
+msgstr "本間朋晃"
+
+msgid "Aiden English"
+msgstr "エイデン・イングリッシュ"
+
+msgid "Colin Delaney"
+msgstr "コリン・デラニー"
+
+msgid "Bull Dempsey"
+msgstr "スミス・ジェームス"
+
+msgid "Akito"
+msgstr ""
+
+msgid "Anthony Nese"
+msgstr "アンソニー・ニース"
+
+msgid "Bob Evans"
+msgstr ""
+
+msgid "Akira Tozawa"
+msgstr "戸澤アキラ"
+
+msgid "Cody Deaner"
+msgstr "コーディ・ディーナー"
+
+msgid "Jeff Cobb"
+msgstr ""
+
+msgid "Ultimo Dragon"
+msgstr ""
+
+msgid "Gory"
+msgstr ""
+
+msgid "Isami Kodaka"
+msgstr "Isami"
+
+msgid "Chuck Taylor, Mr. Azerbaijan"
+msgstr ""
+
+msgid "Aeroboy"
+msgstr ""
+
+msgid "Ryan Taylor"
+msgstr ""
+
+msgid "Masakatsu Funaki"
+msgstr "船木誠勝"
+
+msgid "Jason Jordan"
+msgstr ""
+
+msgid "Arik Cannon"
+msgstr ""
+
+msgid "Kenou"
+msgstr "中栄大輔"
+
+msgid "DJ Hyde"
+msgstr "DJハイド"
+
+msgid "Negro Casas"
+msgstr "ネグロ・カサス"
+
+msgid "Darin Corbin"
+msgstr ""
+
+msgid "Player Dos, Stupefied"
+msgstr ""
+
+msgid "Danny Havoc"
+msgstr "ダニー・ハボック"
+
+msgid "Shocker"
+msgstr "ショッカー"
+
+msgid "Beautiful Beaa"
+msgstr ""
+
+msgid "Lucky 13"
+msgstr ""
+
+msgid "Yuko Miyamoto"
+msgstr ""
+
+msgid "Kaz Hayashi"
+msgstr "カズハヤシ"
+
+msgid "Shuji Kondo"
+msgstr "近藤修司"
+
+msgid "Roy Knight"
+msgstr ""
+
+msgid "Dylan Bostic"
+msgstr ""
+
+msgid "Yuji Okabayashi"
+msgstr ""
+
+msgid "B-Boy"
+msgstr "Bボーイ"
+
+msgid "Zak Knight"
+msgstr ""
+
+msgid "Argenis"
+msgstr "アルヘニス"
+
+msgid "Carlito"
+msgstr "カリート・カリビアン・クール"
+
+msgid "John Skyler"
+msgstr ""
+
+msgid "KUDO"
+msgstr "KUDO"
+
+msgid "Timothy Thatcher"
+msgstr ""
+
+msgid "Devon Moore"
+msgstr ""
+
+msgid "Corey Hollis"
+msgstr ""
+
+msgid "Tommy Dreamer"
+msgstr "トミー・ドリーマー"
+
+msgid "Ricky Mandel"
+msgstr ""
+
+msgid "Ethan Page"
+msgstr ""
+
+msgid "Dave Crist"
+msgstr ""
+
+msgid "Rhett Giddins"
+msgstr ""
+
+msgid "Asylum"
+msgstr ""
+
+msgid "Alex Colon"
+msgstr ""
+
+msgid "Taichi"
+msgstr ""
+
+msgid "Steve Boz"
+msgstr ""
+
+msgid "Jake Crist"
+msgstr ""
+
+msgid "Atlantis"
+msgstr ""
+
+msgid "Famous B"
+msgstr ""
+
+msgid "Sonjay Dutt"
+msgstr "サンジェイ・ダット"
+
+msgid "Toru Yano"
+msgstr "矢野通"
+
+msgid "Johnny Yuma"
+msgstr ""
+
+msgid "Chavo Guerrero"
+msgstr "チャボ・ゲレロ・ジュニア"
+
+msgid "Yoshinobu Kanemaru"
+msgstr "金丸義信"
+
+msgid "Matt Burns"
+msgstr ""
+
+msgid "Fujita Hayato"
+msgstr "フジタ&quot;Jr&quot;ハヤト"
+
+msgid "Teddy Hart"
+msgstr "テディ・ハート"
+
+msgid "Psycho Clown"
+msgstr ""
+
+msgid "Mike Bailey, Kitsune"
+msgstr ""
+
+msgid "El Barbaro Cavernario"
+msgstr ""
+
+msgid "KENSO"
+msgstr ""
+
+msgid "Hallowicked"
+msgstr "ハロウィックド"
+
+msgid "Tye Dillinger"
+msgstr ""
+
+msgid "Johnny Goodtime"
+msgstr ""
+
+msgid "Chasyn Rance"
+msgstr ""
+
+msgid "Lancelot Bravado"
+msgstr ""
+
+msgid "Bill Collier"
+msgstr ""
+
+msgid "JR Kratos"
+msgstr ""
+
+msgid "Masaaki Mochizuki"
+msgstr "望月成晃"
+
+msgid "Josef von Schmidt"
+msgstr ""
+
+msgid "Houston Carson"
+msgstr ""
+
+msgid "Jaxson James"
+msgstr ""
+
+msgid "Byron Wilcott"
+msgstr ""
+
+msgid "Aaron Epic"
+msgstr ""
+
+msgid "Shane Strickland"
+msgstr ""
+
+msgid "Greg Anthony"
+msgstr ""
+
+msgid "Harlem Bravado"
+msgstr ""
+
+msgid "Trauma I"
+msgstr ""
+
+msgid "Thomas Shire"
+msgstr ""
+
+msgid "Angel Metalico"
+msgstr ""
+
+msgid "Willie Mack"
+msgstr ""
+
+msgid "Gran Akuma"
+msgstr ""
+
+msgid "John McChesney"
+msgstr ""
+
+msgid "Trauma II"
+msgstr ""
+
+msgid "Trevor Lee"
+msgstr ""
+
+msgid "Sean Carr"
+msgstr ""
+
+msgid "Scotty O'Shea"
+msgstr ""
+
+msgid "Barrett Brown, Americos"
+msgstr ""
+
+msgid "El Mariachi Loco"
+msgstr ""
+
+msgid "Tim Edison"
+msgstr ""
+
+msgid "Ray Rosas"
+msgstr ""
+
+msgid "Jimmy Havoc"
+msgstr ""
+
+msgid "Buxx Belmar"
+msgstr ""
+
+msgid "Jessy Sorensen"
+msgstr ""
+
+msgid "Gregory Iron"
+msgstr ""
+
+msgid "Chet Sterling"
+msgstr ""
+
+msgid "Brandon Espinosa"
+msgstr ""
+
+msgid "Negro Navarro"
+msgstr "ネグロ・ナバーロ"
+
+msgid "Icarus"
+msgstr ""
+
+msgid "Wes Brisco"
+msgstr "ウェスリー・ブリスコ"
+
+msgid "Zach Gowen"
+msgstr "ザック・ゴーウェン"
+
+msgid "Dru Onyx"
+msgstr ""
+
+msgid "Andrew Everett"
+msgstr ""
+
+msgid "Jeremy Wyatt"
+msgstr ""
+
+msgid "Lince Dorado"
+msgstr ""
+
+msgid "Joe Gacy"
+msgstr ""
+
+msgid "Lance Anoi'a"
+msgstr ""
+
+msgid "Solar"
+msgstr ""
+
+msgid "Maximo Suave"
+msgstr ""
+
+msgid "RJ City"
+msgstr ""
+
+msgid "Robert Anthony"
+msgstr "エゴティスティコ・ファンタスティコ"
+
+msgid "Dylan Drake"
+msgstr ""
+
+msgid "Phoenix Star"
+msgstr ""
+
+msgid "Damian 666"
+msgstr ""
+
+msgid "Hartley Jackson"
+msgstr ""
+
+msgid "Marko Estrada"
+msgstr ""
+
+msgid "Ali M. Shabazz"
+msgstr ""
+
+msgid "Eddie Smooth"
+msgstr ""
+
+msgid "Zokre"
+msgstr ""
+
+msgid "Chester Furnacola"
+msgstr ""
+
+msgid "Eddie Kingston"
+msgstr "エディ・キングストン"
+
+msgid "Hannibal"
+msgstr ""
+
+msgid "BC Killer"
+msgstr ""
+
+msgid "Napalm Bomb"
+msgstr ""
+
+msgid "Hellcat"
+msgstr ""
+
+msgid "Caleb Konley"
+msgstr ""
+
+msgid "Grado"
+msgstr ""
+
+msgid "Greg Excellent"
+msgstr ""
+
+msgid "Collin Cutler"
+msgstr ""
+
+msgid "Manuel Soto"
+msgstr ""
+
+msgid "Lil Cholo"
+msgstr ""
+
+msgid "Shane Matthews/Big Magic"
+msgstr ""
+
+msgid "Super Fly"
+msgstr ""
+
+msgid "Jake Dirden"
+msgstr ""
+
+msgid "Stockade"
+msgstr ""
+
+msgid "Milo Beasley"
+msgstr ""
+
+msgid "Scott Parker"
+msgstr ""
+
+msgid "Michael Tarver"
+msgstr "マイケル・ターヴァー"
+
+msgid "Mad Man Pondo"
+msgstr "マッドマン・ポンド"
+
+msgid "Jody Kristofferson"
+msgstr "ギャレット・ディラン"
+
+msgid "Acid Jaz"
+msgstr ""
+
+msgid "Kevin Bennett"
+msgstr ""
+
+msgid "Brent Banks"
+msgstr ""
+
+msgid "Travis Toxic"
+msgstr ""
+
+msgid "El Ligero"
+msgstr ""
+
+msgid "Tommy Mack"
+msgstr ""
+
+msgid "Kyle Sebastian"
+msgstr ""
+
+msgid "Marshe Rockett"
+msgstr ""
+
+msgid "Jeckles"
+msgstr ""
+
+msgid "Rik Luxury"
+msgstr ""
+
+msgid "Thomas Dubois"
+msgstr ""
+
+msgid "Lou Marconi"
+msgstr ""
+
+msgid "Chris Cooper"
+msgstr ""
+
+msgid "Johnny Devine"
+msgstr "ジョニー・デバイン"
+
+msgid "Chris Cruze"
+msgstr ""
+
+msgid "Rob Sweet"
+msgstr ""
+
+msgid "Bobby Sharp"
+msgstr ""
+
+msgid "Mathieu St-Jacques"
+msgstr ""
+
+msgid "Danny Ramons"
+msgstr ""
+
+msgid "Gabriel Saint"
+msgstr ""
+
+msgid "Nick Hammonds"
+msgstr ""
+
+msgid "Rico Dynamite"
+msgstr ""
+
+msgid "El Mariachi"
+msgstr ""
+
+msgid "Marty Con Dejo"
+msgstr ""
+
+msgid "Alex Reynolds"
+msgstr ""
+
+msgid "Kai Katana"
+msgstr ""
+
+msgid "Adam Thornstowe"
+msgstr ""
+
+msgid "Brandon Thurston"
+msgstr ""
+
+msgid "Jesus Rodriguez"
+msgstr ""
+
+msgid "Francisco Ciatso"
+msgstr ""
+
+msgid "Jay Cruz"
+msgstr ""
+
+msgid "Luster The Legend"
+msgstr ""
+
+msgid "Chaz Taylor"
+msgstr ""
+
+msgid "James Claxton"
+msgstr ""
+
+msgid "Kirk Warmack"
+msgstr ""
+
+msgid "John Silver"
+msgstr ""
+
+msgid "BJ Hancock"
+msgstr ""
+
+msgid "Beer City Bruiser"
+msgstr ""
+
+msgid "AHTU"
+msgstr ""
+
+msgid "Brandon Scott"
+msgstr ""
+
+msgid "Shane Sabre"
+msgstr ""
+
+msgid "David Finlay"
+msgstr "デーブ・フィンレー"
+
+msgid "Gregory James"
+msgstr ""
+
+msgid "Kongo Kong"
+msgstr ""
+
+msgid "Jake O'Reilly"
+msgstr ""
+
+msgid "Eddie Diamond"
+msgstr ""
+
+msgid "Max Smashmaster"
+msgstr ""
+
+msgid "Adam Revolver"
+msgstr ""
+
+msgid "Jack Evans"
+msgstr "ジャック・エヴァンス"
+
+msgid "Kekoa"
+msgstr ""
+
+msgid "Shayne Hawke"
+msgstr ""
+
+msgid "Bobby Shields"
+msgstr ""
+
+msgid "Blaster McMassive"
+msgstr ""
+
+msgid "Ron Falco"
+msgstr ""
+
+msgid "Anthony Darko"
+msgstr ""
+
+msgid "Tyler Bateman"
+msgstr ""
+
+msgid "Alexander James"
+msgstr ""
+
+msgid "Chris Dickinson"
+msgstr ""
+
+msgid "Peter Avalon"
+msgstr ""
+
+msgid "Jaxon Jarvis"
+msgstr ""
+
+msgid "Coconut Jones"
+msgstr ""
+
+msgid "Chrisifix"
+msgstr ""
+
+msgid "Jervis Cottonbelly"
+msgstr ""
+
+msgid "Mr. Juicy"
+msgstr ""
+
+msgid "Kwan Chang"
+msgstr ""
+
+msgid "Damien Wayne"
+msgstr ""
+
+msgid "Dick Justice"
+msgstr ""
+
+msgid "Rip Impact"
+msgstr ""
+
+msgid "Steve Stardom"
+msgstr ""
+
+msgid "Ricky Ruffin"
+msgstr ""
+
+msgid "CJ O'Doyle"
+msgstr ""
+
+msgid "Zack Ryder"
+msgstr "ザック・ライダー"
+
+msgid "Silent Warrior"
+msgstr ""
+
+msgid "John Campbell"
+msgstr ""
+
+msgid "John Saxon"
+msgstr ""
+
+msgid "Billy Blade"
+msgstr ""
+
+msgid "Chris Perish"
+msgstr ""
+
+msgid "Barry Hardy"
+msgstr ""
+
+msgid "Pinky"
+msgstr ""
+
+msgid "Rex Atkins"
+msgstr ""
+
+msgid "Stro"
+msgstr ""
+
+msgid "Chuck Deep"
+msgstr ""
+
+msgid "Dexter Milhouse"
+msgstr ""
+
+msgid "Sebastian Suave"
+msgstr ""
+
+msgid "Matthew Palmer"
+msgstr ""
+
+msgid "Richie Slade"
+msgstr ""
+
+msgid "Arrick Andrews"
+msgstr ""
+
+msgid "Blackjack Phoenix"
+msgstr ""
+
+msgid "Stompin' Steve"
+msgstr ""
+
+msgid "Kay Jutler"
+msgstr ""
+
+msgid "Cheeseburger, Leech Landa"
+msgstr ""
+
+msgid "Hobo"
+msgstr ""
+
+msgid "Dewey Delight"
+msgstr ""
+
+msgid "Brandon Locke"
+msgstr ""
+
+msgid "Space Monkey"
+msgstr ""
+
+msgid "The Undertaker"
+msgstr "マーク・キャラス"
+
+msgid "Eva Marie"
+msgstr ""
+
+msgid "Carmella"
+msgstr ""
+
+msgid "Dana Brooke"
+msgstr ""
+
+msgid "Billie Kay"
+msgstr ""
+
+msgid "Bayley"
+msgstr "パメラ・マルティネス"
+
+msgid "Peyton Royce"
+msgstr ""
+
+msgid "Alicia Fox"
+msgstr "ヴィクトリア・クロフォード"
+
+msgid "Layla"
+msgstr ""
+
+msgid "Cameron"
+msgstr ""
+
+msgid "Nikki Bella"
+msgstr ""
+
+msgid "Brie Bella"
+msgstr ""
+
+msgid "Naomi"
+msgstr ""
+
+msgid "Summer Rae"
+msgstr ""
+
+msgid "AJ Lee"
+msgstr "エイプリル・ジャネット"
+
+msgid "Rosa Mendes"
+msgstr "ミレーナ・ルッカ"
+
+msgid "Paige"
+msgstr "サラヤ・ジェイド・ベヴィス"
+
+msgid "Sasha Banks"
+msgstr "メルセデス・ケストナー・バーナード"
+
+msgid "Becky Lynch"
+msgstr "レベッカ・ノックス"
+
+msgid "Charlotte"
+msgstr "アシュリー・フレアー"
+
+msgid "Tamina"
+msgstr ""
+
+msgid "Natalya"
+msgstr "ナッティ・ナイドハート"
+
+msgid "Emma"
+msgstr "テニール・ダッシュウッド"
+
+msgid "Leva Bates"
+msgstr ""
+
+msgid "Alexa Bliss"
+msgstr ""
+
+msgid "Sexy Star"
+msgstr "セクシー・スター"
+
+msgid "Candice LeRae"
+msgstr ""
+
+msgid "Ivelisse Velez"
+msgstr ""
+
+msgid "Santana Garrett"
+msgstr "サンタナ・ギャレット"
+
+msgid "LuFisto"
+msgstr "ルフィスト"
+
+msgid "Jessicka Havok"
+msgstr ""
+
+msgid "Allysin Kay"
+msgstr "アリシン・ケイ"
+
+msgid "Veda Scott"
+msgstr ""
+
+msgid "Barbi Hayden"
+msgstr ""
+
+msgid "Skarlett"
+msgstr ""
+
+msgid "CM Punk"
+msgstr "C.M.パンク"
+
+msgid "Heidi Lovelace"
+msgstr "ヘイディ・ラブラス"
+
+msgid "Kimber Lee"
+msgstr ""
+
+msgid "Taya Valkyrie"
+msgstr ""
+
+msgid "Asuka"
+msgstr ""
+
+msgid "Aoi Kizuki"
+msgstr "希月あおい"
+
+msgid "Leon"
+msgstr ""
+
+msgid "Neko Nitta"
+msgstr "新田猫子"
+
+msgid "Rina Yamashita"
+msgstr "山下りな"
+
+msgid "Makoto"
+msgstr "真琴"
+
+msgid "DASH Chisako"
+msgstr "金成知佐子"
+
+msgid "Sendai Sachiko"
+msgstr "金成幸子"
+
+msgid "Kaho Kobayashi"
+msgstr ""
+
+msgid "Mayumi Ozaki"
+msgstr "尾崎魔弓"
+
+msgid "Star Fire"
+msgstr ""
+
+msgid "Hailey Hatred"
+msgstr "ヘイリー・ヘイトレッド"
+
+msgid "Eri Susa, Eri"
+msgstr ""
+
+msgid "Hanako Nakamori"
+msgstr "小林華子"
+
+msgid "KAZUKI"
+msgstr ""
+
+msgid "Io Shirai"
+msgstr "紫雷イオ"
+
+msgid "Mayu Iwatani"
+msgstr "岩谷麻優"
+
+msgid "Kaitlyn"
+msgstr "チェレステ・ボニン"
+
+msgid "Black Rose"
+msgstr ""
+
+msgid "Aksana"
+msgstr "アクサナ"
+
+msgid "Chris Benoit"
+msgstr "ワイルド・ペガサス"
+
+msgid "Masahiro Chono"
+msgstr "アリストトリスト"
+
+msgid "Yoshihiro Takayama"
+msgstr "髙山善廣"
+
+msgid "Takeshi Morishima"
+msgstr "森嶋猛"
+
+msgid "Akitoshi Saito"
+msgstr "斎藤彰俊"
+
+msgid "Murder Clown"
+msgstr ""
+
+msgid "Maria Kanellis"
+msgstr "マリア"
+
+msgid "Brock Lesnar"
+msgstr "ブロック・レズナー"
+
+msgid "Ric Flair"
+msgstr "リック・フレアー"
+
+msgid "Triple H"
+msgstr "ハンター・ハースト・ヘルムスリー"
+
+msgid "The Rock"
+msgstr "ザ・ロック"
+
+msgid "Mick Foley"
+msgstr "ミック・フォーリー"
+
+msgid "Sting"
+msgstr "スティーブ・ボーデン"
+
+msgid "Steve Austin"
+msgstr "スティーブオースチン"
+
+msgid "Bret Hart"
+msgstr "ブレット・ハート"
+
+msgid "Rey Mysterio Jr."
+msgstr ""
+
+msgid "Athena"
+msgstr ""
+
+msgid "Chad Gable"
+msgstr ""
