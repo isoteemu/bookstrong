@@ -83,17 +83,17 @@
 <nav>
   <ul class="pagination" id="rank-pagination">
     <li>
-      <a href="#" aria-label="Previous">
+      <a href="#" onclick="rank_previous_page(); return false;" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
-    <li id="rank-page-1"><a href="#" onclick="restack(1); return false;" data-page="1">1</a></li>
-    <li id="rank-page-2"><a href="#" onclick="restack(2); return false;" data-page="2">2</a></li>
-    <li id="rank-page-3"><a href="#" onclick="restack(3); return false;" data-page="3">3</a></li>
-    <li id="rank-page-4"><a href="#" onclick="restack(4); return false;" data-page="4">4</a></li>
-    <li id="rank-page-5"><a href="#" onclick="restack(5); return false;" data-page="5">5</a></li>
+    <li id="rank-page-1" class="active"><a href="#" onclick="rank_page(1); return false;" data-page="1">1</a></li>
+    <li id="rank-page-2"><a href="#" onclick="rank_page(2); return false;" data-page="2">2</a></li>
+    <li id="rank-page-3"><a href="#" onclick="rank_page(3); return false;" data-page="3">3</a></li>
+    <li id="rank-page-4"><a href="#" onclick="rank_page(4); return false;" data-page="4">4</a></li>
+    <li id="rank-page-5"><a href="#" onclick="rank_page(5); return false;" data-page="5">5</a></li>
     <li>
-      <a href="#" aria-label="Next">
+      <a href="#" onclick="rank_next_page(); return false;" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
     </li>
@@ -122,6 +122,8 @@
 var items_per_page = {{config['items_per_page']}};
 var gimmick_search_scheduler;
 
+var rank_page_nr = 1;
+
 function gimmick_search(gimmick) {
     search = new RegExp(gimmick, "i");
     $('.wrestler-rank-item').each(function() {
@@ -131,31 +133,51 @@ function gimmick_search(gimmick) {
             $(this).addClass('gimmick-filter-hide')
         }
     })
-    restack();
+    rank_page();
 }
 
-function restack(page=1) {
-    i = ii = 0
-    $('a.wrestler-rank-item').each(function() {
+function rank_page(page=1) {
+    i = 1
 
-        if(i >= items_per_page ) {
-            $(this).addClass('limit-filter-hide');
-        } else {
-            $(this).removeClass('limit-filter-hide');
-            if($(this).css('display') != 'none') {
-                i = i + 1
+    under = ( page - 1 ) * items_per_page
+    over =  page * items_per_page
+
+    rank_page_nr = page;
+
+    $('a.wrestler-rank-item').each(function() {
+        
+        $(this).removeClass('limit-filter-hide');
+        is_visible = ($(this).css('display') == 'none') ? false : true;
+        if(is_visible) {
+            if(i <= under || i > over) {
+                $(this).addClass('limit-filter-hide');
             }
+            i = i + 1
         }
     });
 
     $('#rank-pagination a').each(function() {
         li = $(this).parent();
-        if($(this).data('page') == page) {
+        
+        pager_nr = $(this).data('page')
+        li.removeClass('active');
+
+        if(pager_nr == page) {
             li.addClass('active');
-        } else {
-            li.removeClass('active');
+        } else if(items_per_page * pager_nr > i) {
+            li.addClass('disabled');
         }
     });
+}
+        
+function rank_previous_page() {
+    if(rank_page_nr <= 1)
+        return false;
+    return rank_page(rank_page_nr - 1);
+}
+
+function rank_next_page() {
+    return rank_page(rank_page_nr + 1);
 }
 
 $('#wrestler-filter').keyup(function() {
@@ -179,7 +201,7 @@ $('a.promotion-filter').click(function(){
             $(this).addClass('promotion-filter-hide');
         }
     })
-    restack();
+    rank_page();
 })
     </script>
     

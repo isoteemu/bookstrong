@@ -141,7 +141,7 @@ body > .container-fluid {
 }
 
 .sidebar .pagination > li > a,
-.sidebar .pagination > li > span, {
+.sidebar .pagination > li > span {
     color:#828282;
     border:0;
     background-color: inherit;
@@ -151,8 +151,16 @@ body > .container-fluid {
     }
 }
 
+.sidebar .pagination > li.disabled > a,
+.sidebar .pagination > li.disabled > span {
+    &:hover {
+        color: inherit;
+        background: inherit;
+    }
+}
 
-.sidebar .pagination > .active > a {
+
+.sidebar .pagination > li.active > a {
     color:@pagination-active-color;
     background-color:@panel-default-heading-bg;
 }
