@@ -50,17 +50,16 @@ def get_face(wrestler):
                         raise RuntimeError('No picture found')
                     urlretrieve(src, w)
                 except e:
-                    logging.warning('Could not crop face: %s' % e)
+                    logging.warning('Did not find image from wikipedia: %s' % e)
                     r = Bing().imageSearch(u'%s wrestler' % wrestler.name, ImageFilters="'Face:Face'")
                     urlretrieve(r[0]['Thumbnail']['MediaUrl'], w)
+
             try:
                 im = crop_face(w, thumb_size)
             except:
-                
                 im = Image.open(w)
                 im = square_image(im, thumb_size)
                 #im = im.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
-
 
             im.save(f, 'JPEG')
         except:
@@ -76,10 +75,11 @@ def crop_face(picture, size=(64,64)):
 
     im = im.crop((x, y, x+w, y+h))
     im.thumbnail(size)
-
-    #im = ImageOps.fit(im, (64,64), Image.ANTIALIAS, 0.2, centering=(left,top))
-    ##image = ImageOps.fit(image, thumbnail_size, Image.ANTIALIAS)
-    #im = im.transform((64, 64), im.EXTENT, (x, y, x+w, y+h))
+    '''
+    im = ImageOps.fit(im, (64,64), Image.ANTIALIAS, 0.2, centering=(left,top))
+    #image = ImageOps.fit(image, thumbnail_size, Image.ANTIALIAS)
+    im = im.transform((64, 64), im.EXTENT, (x, y, x+w, y+h))
+    '''
     return im
 
 
@@ -100,22 +100,36 @@ def find_face(picture):
     return faces[max_idx]
 
 
-def get_wrestlers(from_date=date.today()):
+def get_ranked_wrestlers(to_date=date.today(), from_date=None):
 
-    since = date(from_date.year, from_date.month-1, 1)
+    if not from_date:
+        from_date = date(to_date.year, to_date.month-1, 1)
 
     a = session.query(Score).order_by(desc(func.max(Score.score))).\
-        join(Match).filter(Match.date >= since).\
+        join(Match).filter(Match.date >= from_date).\
+        filter(Match.date <= to_date).\
         join(Wrestler).\
-        group_by(Score.wrestler_nr).slice(0,200).all()
+        group_by(Score.wrestler_nr).slice(0,20).all()
 
     r = []
 
     for (i, w) in enumerate(a):
         w.wrestler.rank = i + 1
+        w.wrestler.score = w.score
         r.append(w.wrestler)
 
     return r
+
+
+def get_wrestler_score(to_date, wrestler):
+    month_ago = date(to_date.year, to_date.month-1, 1)
+    a = session.query(func.max(Score.score)).\
+        join(Wrestler).filter_by(nr=wrestler.nr).\
+        join(Match).filter(Match.date <= to_date).\
+        filter(Match.date >= month_ago).slice(0,1)
+
+    score, = a.one()
+    return score
 
 
 def translate_html(page, translation):
@@ -126,7 +140,10 @@ def translate_html(page, translation):
     lang = translation.info()['language']
 
     soup = BeautifulSoup(page, 'lxml')
-    for span in soup.select('span[lang="en"]'):
+    
+    tags = soup.select('span[lang="en"]') + soup.select('title[lang="en"]')
+
+    for span in tags:
         t_span = copy(span)
         t_span['lang'] = lang
 
@@ -136,7 +153,12 @@ def translate_html(page, translation):
             pass
 
         t_span.string = translation.gettext(t_span.string)
-        span.insert_after(t_span)
+
+        # TODO Title check
+        if t_span.string != span.string:
+            span.insert_before(t_span)
+        else:
+            del span['lang']
 
     return soup.prettify()
 
@@ -156,13 +178,28 @@ if __name__ == '__main__':
 
     wd = WikiData()
 
+    to_date = date.today()
+    prev_date = date(to_date.year, to_date.month-1, 1)
+
     promotions = session.query(Promotion).join(Wrestler).filter(Wrestler.nr != None).all()
-    wrestlers = get_wrestlers()
+    wrestlers = get_ranked_wrestlers(to_date=to_date, from_date=prev_date)
 
     for w in wrestlers:
+        w.prev_score = get_wrestler_score(to_date=prev_date, wrestler=w)
+        #print(w.rank, w.name, w.score, w.prev_score)
         w.face = get_face(w)
 
-    #print(wrestlers[0].rank)
+    # Find highest riser
+    max_score = -10000
+    top_riser = None
+    for w in wrestlers:
+        if w.prev_score is None:
+            continue
+
+        score_diff = w.score / w.prev_score
+        if score_diff > max_score:
+            max_score = score_diff
+            top_riser = w
 
     call(['lessc', '-rp=ass/', '-ru', 'style.less', 'style.css']) and exit()
 
@@ -172,4 +209,5 @@ if __name__ == '__main__':
         config=config
     )
 
+    #print(output)
     print(translate_html(output, translations))
