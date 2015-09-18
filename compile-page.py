@@ -7,6 +7,8 @@ from kayfabe.scrapper import WikiData
 
 from sqlalchemy import asc, desc, func
 
+import gettext
+
 from jinja2 import Template
 from jinja2 import Environment, FileSystemLoader
 
@@ -19,7 +21,8 @@ import json
 
 from subprocess import call, check_output
 
-tpl = Environment(loader=FileSystemLoader('tpl'))
+from bs4 import BeautifulSoup
+from copy import copy
 
 from teemu.Bing import Bing
 from teemu.Image import square_image
@@ -32,7 +35,7 @@ def get_face(wrestler):
         http://www.cagematch.net/site/main/img/portrait/00000293.jpg
     '''
     
-    thumb_size = (124,124)
+    thumb_size = (80,80)
 
     w = 'ass/w/{:0>8}.jpg'.format(wrestler.nr)
     f = 'ass/f/{:0>8}.jpg'.format(wrestler.nr)
@@ -65,6 +68,7 @@ def get_face(wrestler):
 
     return f
 
+
 def crop_face(picture, size=(64,64)):
     x,y,w,h = find_face(picture)
 
@@ -77,6 +81,7 @@ def crop_face(picture, size=(64,64)):
     ##image = ImageOps.fit(image, thumbnail_size, Image.ANTIALIAS)
     #im = im.transform((64, 64), im.EXTENT, (x, y, x+w, y+h))
     return im
+
 
 def find_face(picture):
     data = check_output(["python2", "face-detect.py", picture]).decode('utf-8')
@@ -94,6 +99,7 @@ def find_face(picture):
 
     return faces[max_idx]
 
+
 def get_wrestlers(from_date=date.today()):
 
     since = date(from_date.year, from_date.month-1, 1)
@@ -101,7 +107,7 @@ def get_wrestlers(from_date=date.today()):
     a = session.query(Score).order_by(desc(func.max(Score.score))).\
         join(Match).filter(Match.date >= since).\
         join(Wrestler).\
-        group_by(Score.wrestler_nr).slice(0,100).all()
+        group_by(Score.wrestler_nr).slice(0,200).all()
 
     r = []
 
@@ -111,6 +117,29 @@ def get_wrestlers(from_date=date.today()):
 
     return r
 
+
+def translate_html(page, translation):
+    '''
+        Translate lang elements
+    '''
+
+    lang = translation.info()['language']
+
+    soup = BeautifulSoup(page, 'lxml')
+    for span in soup.select('span[lang="en"]'):
+        t_span = copy(span)
+        t_span['lang'] = lang
+
+        try:
+            t_span['title'] = translation.gettext(t_span['title'])
+        except KeyError:
+            pass
+
+        t_span.string = translation.gettext(t_span.string)
+        span.insert_after(t_span)
+
+    return soup.prettify()
+
 if __name__ == '__main__':
 
     config={
@@ -119,8 +148,14 @@ if __name__ == '__main__':
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
+    translations = gettext.translation('bookstrong', localedir='ass/locale', languages=['jp'])
+    translations.install()
+
+    tpl = Environment(loader=FileSystemLoader('tpl'), extensions=['jinja2.ext.i18n'])
+    tpl.install_gettext_translations(translations)
+
     wd = WikiData()
-    
+
     promotions = session.query(Promotion).join(Wrestler).filter(Wrestler.nr != None).all()
     wrestlers = get_wrestlers()
 
@@ -131,8 +166,10 @@ if __name__ == '__main__':
 
     call(['lessc', '-rp=ass/', '-ru', 'style.less', 'style.css']) and exit()
 
-    print(tpl.get_template('index.tpl.html').render(
+    output = tpl.get_template('index.tpl.html').render(
         promotions=promotions,
         wrestlers=wrestlers,
         config=config
-    ))
+    )
+
+    print(translate_html(output, translations))

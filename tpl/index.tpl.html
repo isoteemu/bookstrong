@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="jp">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title lang="en">Book Strong</title>
-    <title lang="jp">強力なブック</title>
+    <title lang="jp">{{ _('Book Strong') }}</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -23,6 +23,9 @@
 
     <style>
     html:lang(en) span:lang(jp) {
+        display:none;
+    }
+    html:lang(jp) span:lang(en) {
         display:none;
     }
 
@@ -46,16 +49,14 @@
       <div class="input-group-btn">
         <button id="promotion-filter" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="txt">
-                <span lang="jp">プロモーション</span>
                 <span lang="en">Promotion</span>
             </span>
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right">            
             {% for promotion in promotions %}
-                <li><a class="promotion-filter" data-promotion="{{ promotion.cm_id }}" href="#promotion-{{ promotion.cm_id }}" title="{{ promotion.name|escape }}">
-                    <span lang="en">{{ promotion.abbrevation }}</span>
-                    <span lang="jp">{{ promotion.abbrevation }}</span>
+                <li><a class="promotion-filter" data-promotion="{{ promotion.cm_id }}" href="#promotion-{{ promotion.cm_id }}">
+                    <span lang="en" title="{{ promotion.name|escape }}">{{ promotion.abbrevation }}</span>
                 </a></li>
             {% endfor %}
           <li role="separator" class="divider"></li>
@@ -70,7 +71,9 @@
                             {% for wrestler in wrestlers %}
                                 <a href="#" class="list-group-item wrestler-rank-item {% if loop.index > config['items_per_page'] %}limit-filter-hide{%endif%}" data-promotion="{{ wrestler.promotion.cm_id }}" data-nr="{{ wrestler.nr }}" data-gimmicks="{% for gimmick in wrestler.gimmicks %}{{gimmick.gimmick|escape}}, {% endfor %}">
                                     <div class="bg" style="background-image:url({{wrestler.face}});"></div>
-                                    <h4 class="list-group-item-heading"><span class="label label-info rank-nr">{{ wrestler.rank }}</span> {{ wrestler.name|escape }}</h4>
+                                    <h4 class="list-group-item-heading"><span class="label label-info rank-nr">{{ wrestler.rank }}</span> 
+                                        <span lang="en">{{ wrestler.name|escape }}</span>
+                                    </h4>
                                     <p class="list-group-item-text">
                                         <span lang="en">{{wrestler.promotion.name|escape}}</span>
                                     </p>
