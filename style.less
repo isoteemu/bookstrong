@@ -1,6 +1,9 @@
 @import 'bootstrap/less/variables.less';
 @import 'bootstrap/less/mixins.less';
 
+@brand-primary:                 #FFFC47;
+
+@text-color:                    #727272;
 
 @sidebar-bg:                    #2D2D2D;
 
@@ -19,9 +22,8 @@
 
 html,body {
     min-height:100%;
-}
-body {
-    #gradient.vertical(#222222, #000000, 0, 100%)
+    background-color:#000;
+    color:@text-color;
 }
 
 body > .container-fluid {
@@ -80,6 +82,8 @@ body > .container-fluid {
     color: @list-group-link-color;
     border: 0 none;
 
+    z-index:5;
+
     #gradient.vertical(@list-group-bg; #000; 0%; 100%);
     
     &:hover,
@@ -93,6 +97,8 @@ body > .container-fluid {
     
 .sidebar .list-group-item.active {
     border-left: 15px solid @list-group-hover-bg;
+
+    z-index:4;
 
     margin-right:-15px;
     .transition-property(~"border-left-width, margin-right");
@@ -148,6 +154,8 @@ body > .container-fluid {
     &:hover {
         color: #e2e2e2;
         background: #212121;
+        text-shadow: 0px 1px 1px #000;
+        box-shadow: inset 1px 1px 1px rgba(0,0,0,.15), inset -1px -1px 1px rgba(255,255,255,.15);
     }
 }
 
@@ -171,8 +179,8 @@ body > .container-fluid {
     left:0;
     right:0;
     bottom:0;
-    filter:blur(4px);
-    -webkit-filter: blur(4px);
+    filter:blur(5px);
+    -webkit-filter: blur(5px);
     background-size: cover;
     display: block;
     background-position: center 40%;
@@ -196,9 +204,48 @@ body > .container-fluid {
 a.wrestler-rank-item:hover .bg:after {
     opacity:0;
 }
-    
-.main {
-    min-height:100%;
+
+#lang-select {
+    float:right;
+}
+
+#logo-btn {
+    float: right;
+    margin-right: @grid-gutter-width / 2;
+}
+
+#logo-btn img {
+    background-color:@brand-primary;
+    height:(@line-height-base * 1em);
+    margin-right: @padding-large-horizontal;
 }
     
+.main {
+    #gradient.vertical(#222222, #000000, 0, 100%);
+    min-height:100%;
+}
+
+#top-riser {
+    margin-left:  ceil((@grid-gutter-width / -2));
+    margin-right: floor((@grid-gutter-width / -2));
+    background-color: @panel-default-heading-bg;
+    #gradient.vertical(darken(@panel-default-heading-bg, 5%), lighten(@panel-default-heading-bg, 5%), 0, 100%);
+    border-top:1px solid darken(@panel-default-heading-bg, 15%);
+    border-bottom:1px solid darken(@panel-default-heading-bg, 15%);
+    border-left: 0 none;
+    border-right: 0 none;
+
+    border-radius:0;
+    
+    margin-top: @panel-body-padding;
+    margin-bottom: @panel-body-padding;
+}
+
+header .btn-group {
+    margin-top:-5px;
+}
+
+footer {
+    background-color:#000;
+}
     

@@ -22,13 +22,13 @@
 
     <style>
     html:lang(en) span:lang(en) {
-        display:inherit;
+        display:inline;
     }
     html:lang(en) span:lang(ja) {
         display:none;
     }
     html:lang(ja) span:lang(ja) {
-        display:inherit;
+        display:inline;
     }
     html:lang(ja) span:lang(en) {
         display:none;
@@ -114,11 +114,6 @@
 			
 			<div class="col-sm-7 col-md-8 main">
                 <header class="header">
-                    <div class="btn-group btn-group-lg" role="group">
-                        <a type="button" class="btn btn-primary">
-                            <span lang="en">Book Strong</span>
-                        </a>
-                    </div>
 
                     <div id="lang-select" class="btn-group btn-group-sm" data-toggle="buttons">
                         <label class="btn btn-info active">
@@ -130,6 +125,14 @@
                             <span lang="en">English</span>
                         </label>
                     </div>
+                    
+                    <div class="btn-group btn-group-lg" role="group" id="logo-btn">
+                        <a type="button" class="btn btn-primary">
+                            <img src="ass/logo.gif" class="img-responsive img-circle" align="left" />
+                            <span lang="en">Book Strong</span>
+                        </a>
+                    </div>
+
                 </header>
 
                 <div>
