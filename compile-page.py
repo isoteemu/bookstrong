@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from kayfabe import session
+from kayfabe import session, BASE_SCORE
 from kayfabe.models import *
 from kayfabe.scrapper import WikiData, duck_duck_go
 
 from sqlalchemy import asc, desc, func
 
-import gettext
+import gettext, locale
 
 from jinja2 import Template
 from jinja2 import Environment, FileSystemLoader
@@ -17,17 +17,39 @@ from datetime import date
 from os import path
 from urllib.request import urlretrieve
 from PIL import Image, ImageOps
+from glob import glob
 import json
+
 
 from subprocess import call, check_output
 
 from bs4 import BeautifulSoup
 from copy import copy
 
-
 from teemu.google import CSE
 from teemu.Bing import Bing
 from teemu.Image import square_image
+
+def format_datetime(value, format='date'):
+    el = '<time datetime="{iso}">{locale}</time>'
+
+    if format == 'date':
+        lang = 'en'
+        try:
+            lang = locale.getlocale()[0].split('_')[0]
+        except:
+            pass
+
+        innards = value.strftime('%Y.%m.%d (<span lang="{lang}">%a</span>)'.format(lang=lang))
+
+    return el.format(iso=value.isoformat(), locale=innards)
+
+
+def get_image_path(obj):
+    if isinstance(obj, Promotion):
+        return get_promotion_logo(obj)
+    elif isinstance(obj, Wrestler):
+        return get_wrestler_photo(obj)
 
 
 def get_face(wrestler):
@@ -40,6 +62,8 @@ def get_face(wrestler):
 
     thumb_size = (100,100)
 
+    name = wrestler.name.strip()
+
     w = 'ass/f/{:0>8}.jpg'.format(wrestler.nr)
     f = 'ass/t/f/{:0>8}.jpg'.format(wrestler.nr)
     if not path.isfile(f):
@@ -47,7 +71,7 @@ def get_face(wrestler):
             if not path.isfile(w):
                 img_url = None
                 try:
-                    data = wd.search_wrestler(wrestler.name)
+                    data = wd.search_wrestler(name)
                     pic = wd.get_claim_values(data, wd.CLAIM_IMAGE)[0]
                     src = wd.get_image_url(pic)
                     if src:
@@ -58,7 +82,7 @@ def get_face(wrestler):
 
                 try:
                     if not img_url:
-                        ddg = duck_duck_go(wrestler.name)
+                        ddg = duck_duck_go(name)
                         img_url = ddg['Image']
                         logging.info('Image %s from duck duck go' % img_url)
 
@@ -71,7 +95,7 @@ def get_face(wrestler):
                             'imgType':      'face',
                             'searchType':   'image'
                         }
-                        r = CSE().query(wrestler.name, params=params)
+                        r = CSE().query(name, params=params)
                         if 'items' in r:
                             img_url = r['items'][0]['link']
                 except:
@@ -79,7 +103,7 @@ def get_face(wrestler):
 
                 try:
                     if not img_url:
-                        r = Bing().imageSearch(u'%s' % wrestler.name, ImageFilters="'Face:Face'")
+                        r = Bing().imageSearch(u'%s' % name, ImageFilters="'Face:Face'")
                         if len(r):
                             img_url = r[0]['Thumbnail']['MediaUrl']
                 except:
@@ -106,9 +130,9 @@ def get_face(wrestler):
     return f
 
 def crop_face(picture, size=(64,64)):
-    
+
     # TODO dont upscale
-    
+
     x, y, w, h = find_face(picture)
 
     im = Image.open(picture)
@@ -141,9 +165,17 @@ def find_face(picture):
 
 
 def get_promotion_logo(promotion):
-    # TODO
-    return
+    pics = glob('ass/p/{:0>8}.*'.format(promotion.cm_id))
+    if len(pics):
+        return pics[0]
+    return None
 
+
+def get_wrestler_photo(wrestler):
+    pics = glob('ass/f/{:0>8}.*'.format(wrestler.nr))
+    if len(pics):
+        return pics[0]
+    return None
 
 def get_ranked_wrestlers(to_date=date.today(), from_date=None):
 
@@ -154,7 +186,7 @@ def get_ranked_wrestlers(to_date=date.today(), from_date=None):
         join(Match).filter(Match.date >= from_date).\
         filter(Match.date <= to_date).\
         join(Wrestler).\
-        group_by(Score.wrestler_nr).slice(0,24).all()
+        group_by(Score.wrestler_nr).slice(0,160).all()
 
     r = []
 
@@ -207,6 +239,23 @@ def translate_html(page, translation):
 
     return soup.prettify()
 
+
+def get_riser_stuff(wrestler):
+    scores = session.query(Score).filter_by(wrestler_nr=wrestler.nr).\
+        join(Match).order_by(asc(Match.date))
+
+    matches = []
+
+    prev_score = BASE_SCORE
+
+    for score in scores:
+        score_diff = score.score / prev_score
+        prev_score = score.score
+        matches.append((score_diff, score.match))
+
+    top = sorted(matches, key=lambda diff: diff[0], reverse=True)[0:5]
+    return [i[1] for i in top]
+
 if __name__ == '__main__':
 
     config = {
@@ -220,6 +269,8 @@ if __name__ == '__main__':
 
     tpl = Environment(loader=FileSystemLoader('tpl'), extensions=['jinja2.ext.i18n'])
     tpl.install_gettext_translations(translations)
+    tpl.filters['timetag'] = format_datetime
+    tpl.filters['img'] = get_image_path
 
     wd = WikiData()
 
@@ -246,13 +297,21 @@ if __name__ == '__main__':
             max_score = score_diff
             top_riser = w
 
+    riser_events = get_riser_stuff(top_riser)
+
+    for e in riser_events:
+        event, location = e.event_name.split('@')
+        e.event_name = event
+        e.event_location = location.split(',')[0]
+
     call(['lessc', '-rp=ass/', '-ru', 'style.less', 'style.css']) and exit()
 
     output = tpl.get_template('index.tpl.html').render(
         promotions=promotions,
         wrestlers=wrestlers,
         config=config,
-        top_riser=top_riser
+        top_riser=top_riser,
+        events=riser_events
     )
 
     #print(output)

@@ -1,26 +1,46 @@
 {% extends "layout.tpl.html" %}
 {% block content %}
 
+<link href='https://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
+
 <div id="top-riser" class="well">
     <div class="bg"></div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-5">
-
-<div class="item">
-  <img src="ass/w/{{ '%08d'|format(top_riser.nr) }}.jpg" class="img-responsive" />
-  <div class="carousel-caption">
-    <h3><span lang="en">{{top_riser.name|escape}}</span></h3>
-    <ul>
-        {% for gimmick in top_riser.gimmicks %}<li><span lang="en">{{gimmick.gimmick|escape}}</span></li>{% endfor %}
-    </ul>
-  </div>
-</div>
-
-                
-            </div>
             <div class="col-sm-7">
-                DATAA
+                <table class="table">
+                    {% for e in events %}
+                    <tr>
+                        {% if loop.index == 1 %}
+                        <td class="wrestler" rowspan="{{ loop.length }}">
+                            <div class="ranks-risen">
+                                <div class="rank">{{top_riser.rank}}</div>
+                                <div class="ranks">【Risen 6<sup class="glyphicon glyphicon-triangle-top"></sup>】</div>
+                            </div>
+                            <img class="riser-photo" src="{{ top_riser|img }}" class="img-responsive" />
+                            <div class="riser-info">
+                                <div>
+                                    <h3><span lang="en">{{top_riser.name|escape}}</span></h3>
+
+                                    <img src="{{ top_riser.promotion|img }}" class="promotion" alt="{{top_riser.promotion.name}}" class="img-responsive" />
+                                </div>
+                            </div>
+                        </td>
+                        {% endif %}
+                        <td>
+                            {{ e.date|timetag }}
+                        </td>
+                        <td>
+                            <div class="ln"><span lang="en">{{e.event_name|escape}}</span></div>
+                            <div class="ln">{{e.event_location|escape}}</div>
+                        </td>
+                        <td class="stipulation">
+                        <span class="label label-success" title="{{e.type_desc|escape}}">
+                            {% if e.type_desc %}{{e.type_desc|escape}}{% else %}<span lang="en">{{e.type}}</span>{% endif %}
+                        </span></td>
+                    </tr>
+                    {% endfor %}
+                </table>
             </div>
         </div>
     </div>
