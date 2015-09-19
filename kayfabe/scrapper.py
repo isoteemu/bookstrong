@@ -42,22 +42,29 @@ class WikiData(Scrapper):
     COMMONS_URL = 'https://commons.wikimedia.org/wiki/File:'
 
     WRESTLER_ID = 13474373
+    PROMOTION_ID = 131359
+    COMPANY_ID = 783794
 
     CLAIM_IMAGE = 'P18'
     CLAIM_OCCUPATION = 'P106'
-    
+    CLAIM_INDUSTRY = 'P452'
+    CLAIM_INSTANCE = 'P31'
+
     def search(self, search, **kwargs):
         kwargs.setdefault('language', 'en')
         kwargs.setdefault('action', 'wbsearchentities')
         kwargs.setdefault('search', search)
+        kwargs.setdefault('limit', 25)
         r = self.get(self.API_URL, params=kwargs)
         return r.json()
+
 
     def search_wrestler(self, search):
         r = self.search(search)
         ids = []
         for e in r['search']:
             ids.append(e['id'])
+
         entities = self.entities(ids)
 
         wrestlers = {}
@@ -69,13 +76,17 @@ class WikiData(Scrapper):
                 continue
 
             jobs = self.get_claim_values(entity, self.CLAIM_OCCUPATION)
+
             if self.WRESTLER_ID in jobs:
                 wrestlers[id] = entity
             elif 'en' in entity['descriptions'] and 'wrestler' in entity['descriptions']['en']['value']:
                 wrestlers[id] = entity
 
+        logging.debug('Found %d wrestlers' % len(wrestlers))
+
         if len(wrestlers) == 1:
             return list(wrestlers.items())[0][1]
+
 
     def get_claim_values(self, entity, claim):
         r = []
@@ -93,10 +104,10 @@ class WikiData(Scrapper):
         kwargs.setdefault('titles', 'File:%s' % title)
         kwargs.setdefault('prop', 'imageinfo')
         kwargs.setdefault('iiprop', 'url')
-        
+
         r = self.get(self.API_URL, params=kwargs).json()
         return r['query']['pages']['-1']['imageinfo'][0]['url']
-        
+
     def entities(self, ids, **kwargs):
         kwargs.setdefault('action', 'wbgetentities')
         kwargs.setdefault('ids', '|'.join(ids))
@@ -239,7 +250,6 @@ class CageMatch(Scrapper):
 		details['promotion'] = id_from_url(soup.select('a[href^="?id=8&nr="]')[0]['href'])
 
 
-
 	def matches(self, id):
 		''' Too complicated to add here, see scrape-matches.py '''
 		return
@@ -250,3 +260,18 @@ class CageMatch(Scrapper):
 		nr = href['nr'][0]
 		return int(nr)
 
+
+def duck_duck_go(query):
+    params = {
+        'q': query,
+        'format': 'json'
+    }
+
+    r = requests.get('https://api.duckduckgo.com/', params=params)
+    d = r.json()
+    if d['Type'] == 'D':
+        params['q'] = '%s wrestler' % params['q']
+        r = requests.get('https://api.duckduckgo.com/', params=params)
+        d = r.json()
+
+    return d

@@ -3,7 +3,7 @@
 
 from kayfabe import session
 from kayfabe.models import *
-from kayfabe.scrapper import WikiData
+from kayfabe.scrapper import WikiData, duck_duck_go
 
 from sqlalchemy import asc, desc, func
 
@@ -24,6 +24,8 @@ from subprocess import call, check_output
 from bs4 import BeautifulSoup
 from copy import copy
 
+
+from teemu.google import CSE
 from teemu.Bing import Bing
 from teemu.Image import square_image
 
@@ -32,14 +34,14 @@ def get_face(wrestler):
     '''
         Get wrestler face pic
         TODO: OpenCV3 when supported by my python
-        
+
         http://www.cagematch.net/site/main/img/portrait/00000293.jpg
     '''
 
-    thumb_size = (80,80)
+    thumb_size = (100,100)
 
-    w = 'ass/w/{:0>8}.jpg'.format(wrestler.nr)
-    f = 'ass/f/{:0>8}.jpg'.format(wrestler.nr)
+    w = 'ass/f/{:0>8}.jpg'.format(wrestler.nr)
+    f = 'ass/t/f/{:0>8}.jpg'.format(wrestler.nr)
     if not path.isfile(f):
         try:
             if not path.isfile(w):
@@ -50,14 +52,34 @@ def get_face(wrestler):
                     src = wd.get_image_url(pic)
                     if src:
                         img_url = src
-
                 except:
                     logging.debug('Did not find image from wikipedia')
                     pass
 
                 try:
                     if not img_url:
-                        r = Bing().imageSearch(u'%s wrestler' % wrestler.name, ImageFilters="'Face:Face'")
+                        ddg = duck_duck_go(wrestler.name)
+                        img_url = ddg['Image']
+                        logging.info('Image %s from duck duck go' % img_url)
+
+                except:
+                    pass
+
+                try:
+                    if not img_url:
+                        params = {
+                            'imgType':      'face',
+                            'searchType':   'image'
+                        }
+                        r = CSE().query(wrestler.name, params=params)
+                        if 'items' in r:
+                            img_url = r['items'][0]['link']
+                except:
+                    pass
+
+                try:
+                    if not img_url:
+                        r = Bing().imageSearch(u'%s' % wrestler.name, ImageFilters="'Face:Face'")
                         if len(r):
                             img_url = r[0]['Thumbnail']['MediaUrl']
                 except:
@@ -83,8 +105,10 @@ def get_face(wrestler):
 
     return f
 
-
 def crop_face(picture, size=(64,64)):
+    
+    # TODO dont upscale
+    
     x, y, w, h = find_face(picture)
 
     im = Image.open(picture)
@@ -116,6 +140,11 @@ def find_face(picture):
     return faces[max_idx]
 
 
+def get_promotion_logo(promotion):
+    # TODO
+    return
+
+
 def get_ranked_wrestlers(to_date=date.today(), from_date=None):
 
     if not from_date:
@@ -125,7 +154,7 @@ def get_ranked_wrestlers(to_date=date.today(), from_date=None):
         join(Match).filter(Match.date >= from_date).\
         filter(Match.date <= to_date).\
         join(Wrestler).\
-        group_by(Score.wrestler_nr).slice(0,200).all()
+        group_by(Score.wrestler_nr).slice(0,24).all()
 
     r = []
 
@@ -222,9 +251,9 @@ if __name__ == '__main__':
     output = tpl.get_template('index.tpl.html').render(
         promotions=promotions,
         wrestlers=wrestlers,
-        config=config
+        config=config,
+        top_riser=top_riser
     )
 
-    exit()
     #print(output)
     print(translate_html(output, translations))
