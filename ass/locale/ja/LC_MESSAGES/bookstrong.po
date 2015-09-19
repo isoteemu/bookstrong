@@ -297,8 +297,8 @@ msgstr ""
 msgid "BxB Hulk"
 msgstr "BBハルク"
 
-msgid "Miz"
-msgstr ""
+msgid "The Miz"
+msgstr "ザ・ミズ"
 
 msgid "Tyler Breeze"
 msgstr "マイク・ダルトン"
@@ -619,7 +619,7 @@ msgid "Aero Star"
 msgstr "エアロスター"
 
 msgid "YAMATO"
-msgstr ""
+msgstr "小野寺 正人"
 
 msgid "Adam Ryder"
 msgstr ""
@@ -661,7 +661,7 @@ msgid "Extreme Tiger, Tigre Uno"
 msgstr ""
 
 msgid "Hideki Suzuki"
-msgstr ""
+msgstr "鈴木 秀樹"
 
 msgid "Jeff Jarrett"
 msgstr "ジェフ・ジャレット"
@@ -753,8 +753,8 @@ msgstr ""
 msgid "Takashi Sugiura"
 msgstr "杉浦貴"
 
-msgid "Mistico"
-msgstr ""
+msgid "Místico"
+msgstr "ミステシス"
 
 msgid "Mandrews"
 msgstr ""
@@ -1850,3 +1850,37 @@ msgstr ""
 
 msgid "Chad Gable"
 msgstr ""
+
+msgid "Source"
+msgstr "ソース"
+
+msgid "Most pushed"
+msgstr "最もプッシュ"
+
+msgid "Pay Per View"
+msgstr "パービューを支払います"
+
+# Laskentatapa
+msgid "Method"
+msgstr "計算方法"
+
+msgid "Sun"
+msgstr "日"
+
+msgid "Mon"
+msgstr "月"
+
+msgid "Tue"
+msgstr "火"
+
+msgid "Wed"
+msgstr "水"
+
+msgid "Thu"
+msgstr "木"
+
+msgid "Fri"
+msgstr "金"
+
+msgid "Sat"
+msgstr "土"
