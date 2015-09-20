@@ -4,6 +4,8 @@
 from kayfabe import session, BASE_SCORE
 from kayfabe.models import *
 from kayfabe.scrapper import WikiData, duck_duck_go
+from kayfabe.view import *
+from kayfabe.scoring import *
 
 from sqlalchemy import asc, desc, func
 
@@ -23,34 +25,10 @@ import json
 
 from subprocess import call, check_output
 
-from bs4 import BeautifulSoup
-from copy import copy
 
 from teemu.google import CSE
 from teemu.Bing import Bing
 from teemu.Image import square_image
-
-def format_datetime(value, format='date'):
-    el = '<time datetime="{iso}">{locale}</time>'
-
-    if format == 'date':
-        lang = 'en'
-        try:
-            lang = locale.getlocale()[0].split('_')[0]
-        except:
-            pass
-
-        innards = value.strftime('%Y.%m.%d (<span lang="{lang}">%a</span>)'.format(lang=lang))
-
-    return el.format(iso=value.isoformat(), locale=innards)
-
-
-def get_image_path(obj):
-    if isinstance(obj, Promotion):
-        return get_promotion_logo(obj)
-    elif isinstance(obj, Wrestler):
-        return get_wrestler_photo(obj)
-
 
 def get_face(wrestler):
     '''
@@ -164,39 +142,6 @@ def find_face(picture):
     return faces[max_idx]
 
 
-def get_promotion_logo(promotion):
-    pics = glob('ass/p/{:0>8}.*'.format(promotion.cm_id))
-    if len(pics):
-        return pics[0]
-    return None
-
-
-def get_wrestler_photo(wrestler):
-    pics = glob('ass/f/{:0>8}.*'.format(wrestler.nr))
-    if len(pics):
-        return pics[0]
-    return None
-
-def get_ranked_wrestlers(to_date=date.today(), from_date=None):
-
-    if not from_date:
-        from_date = date(to_date.year, to_date.month-1, 1)
-
-    a = session.query(Score).order_by(desc(func.max(Score.score))).\
-        join(Match).filter(Match.date >= from_date).\
-        filter(Match.date <= to_date).\
-        join(Wrestler).\
-        group_by(Score.wrestler_nr).slice(0,160).all()
-
-    r = []
-
-    for (i, w) in enumerate(a):
-        w.wrestler.rank = i + 1
-        w.wrestler.score = w.score
-        r.append(w.wrestler)
-
-    return r
-
 
 def get_wrestler_score(to_date, wrestler):
     month_ago = date(to_date.year, to_date.month-1, 1)
@@ -207,37 +152,6 @@ def get_wrestler_score(to_date, wrestler):
 
     score, = a.one()
     return score
-
-
-def translate_html(page, translation):
-    '''
-        Translate lang elements
-    '''
-
-    lang = translation.info()['language']
-
-    soup = BeautifulSoup(page, 'lxml')
-
-    tags = soup.select('span[lang="en"]') + soup.select('title[lang="en"]')
-
-    for span in tags:
-        t_span = copy(span)
-        t_span['lang'] = lang
-
-        try:
-            t_span['title'] = translation.gettext(t_span['title'])
-        except KeyError:
-            pass
-
-        t_span.string = translation.gettext(t_span.string)
-
-        # TODO Title check
-        if t_span.string != span.string:
-            span.insert_before(t_span)
-        else:
-            del span['lang']
-
-    return soup.prettify()
 
 
 def get_riser_stuff(wrestler):
@@ -256,6 +170,14 @@ def get_riser_stuff(wrestler):
     top = sorted(matches, key=lambda diff: diff[0], reverse=True)[0:5]
     return [i[1] for i in top]
 
+
+def get_previous_rank(wrestler):
+    if not hasattr(get_previous_rank, "ranking"):
+        get_previous_rank.ranking
+    get_previous_rank.ranking
+    return
+
+
 if __name__ == '__main__':
 
     config = {
@@ -269,6 +191,7 @@ if __name__ == '__main__':
 
     tpl = Environment(loader=FileSystemLoader('tpl'), extensions=['jinja2.ext.i18n'])
     tpl.install_gettext_translations(translations)
+
     tpl.filters['timetag'] = format_datetime
     tpl.filters['img'] = get_image_path
 
@@ -278,25 +201,27 @@ if __name__ == '__main__':
     prev_date = date(to_date.year, to_date.month-1, 1)
 
     promotions = session.query(Promotion).join(Wrestler).filter(Wrestler.nr != None).all()
-    wrestlers = get_ranked_wrestlers(to_date=to_date, from_date=prev_date)
-
-    for w in wrestlers:
-        w.prev_score = get_wrestler_score(to_date=prev_date, wrestler=w)
-        #print(w.rank, w.name, w.score, w.prev_score)
-        w.face = get_face(w)
+    
+    ranking = Ranking()
+    #wrestlers = get_ranked_wrestlers(to_date=to_date, from_date=prev_date)
 
     # Find highest riser
-    max_score = -10000
+    max_risen = -10000
     top_riser = None
-    for w in wrestlers:
-        if w.prev_score is None:
+    for w in ranking:
+        rank =  ranking.get_rank(w)
+        prev_rank = ranking.get_previous_rank(w)
+
+        if prev_rank is None or rank is None:
             continue
 
-        score_diff = w.score / w.prev_score
-        if score_diff > max_score:
-            max_score = score_diff
+        rank_diff = prev_rank - rank
+
+        if rank_diff > max_risen:
+            max_risen = rank_diff
             top_riser = w
 
+    top_riser.ranks_risen = ranking.get_previous_rank(top_riser) - ranking.get_rank(top_riser)
     riser_events = get_riser_stuff(top_riser)
 
     for e in riser_events:
@@ -308,7 +233,7 @@ if __name__ == '__main__':
 
     output = tpl.get_template('index.tpl.html').render(
         promotions=promotions,
-        wrestlers=wrestlers,
+        ranking=ranking,
         config=config,
         top_riser=top_riser,
         events=riser_events
