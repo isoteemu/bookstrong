@@ -22,9 +22,7 @@ from PIL import Image, ImageOps
 from glob import glob
 import json
 
-
 from subprocess import call, check_output
-
 
 from teemu.google import CSE
 from teemu.Bing import Bing
@@ -35,7 +33,6 @@ def get_face(wrestler):
         Get wrestler face pic
         TODO: OpenCV3 when supported by my python
 
-        http://www.cagematch.net/site/main/img/portrait/00000293.jpg
     '''
 
     thumb_size = (100,100)
@@ -95,11 +92,14 @@ def get_face(wrestler):
 
             try:
                 im = crop_face(w, thumb_size)
-            except:
-                im = Image.open(w)
-                im = square_image(im, thumb_size)
+            except Exception as e:
+                logging.warning('Failed copping face, squaring. Error: %s' % e)
+
+                im = crop_thumb(w, thumb_size)
+
                 #im = im.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
 
+            #im.show()
             im.save(f, 'JPEG')
         except Exception as e:
             logging.warning('Could not save image: %s' % e.msg)
@@ -107,16 +107,35 @@ def get_face(wrestler):
 
     return f
 
-def crop_face(picture, size=(64,64)):
-
-    # TODO dont upscale
-
-    x, y, w, h = find_face(picture)
-
+def crop_thumb(picture, size):
     im = Image.open(picture)
+
+    w,h = im.size
+    if h > w:
+        y = int(max(h / 3 - (w/2), 0))
+        h = w
+        x = 0
+    else:
+        y = 0
+        x = int(max(w/2 - (h/2), 0))
+        w = h
+
+    x,y,w,h = img_bounding_box((x,y,w,h), size, picture)
 
     im = im.crop((x, y, x+w, y+h))
     im.thumbnail(size)
+    return im
+
+def crop_face(picture, size):
+
+    box = find_face(picture)
+
+    x, y, w, h = img_bounding_box(box, size, picture)
+
+    im = Image.open(picture)
+    im = im.crop((x, y, x+w, y+h))
+    im.thumbnail(size)
+
     '''
     im = ImageOps.fit(im, (64,64), Image.ANTIALIAS, 0.2, centering=(left,top))
     #image = ImageOps.fit(image, thumbnail_size, Image.ANTIALIAS)
@@ -124,6 +143,34 @@ def crop_face(picture, size=(64,64)):
     '''
     return im
 
+def img_bounding_box(box, size, picture):
+
+    x,y,w,h = box
+
+    im = Image.open(picture)
+    width, height = im.size
+
+    if width >= size[0] and w < size[0]:
+        center = x + (w/2)
+        x = int(center - size[0] / 2)
+        w = int(size[0])
+
+        if x < 0:
+            x = 0
+        elif x + w > width:
+            x = x - (x + w - width)
+
+    if height >= size[1] and h < size[1]:
+        middle = y + h/2
+        y = int(middle - size[1] / 2)
+        h = int(size[1])
+
+        if y < 0:
+            y = 0
+        elif y + h > height:
+            y -= y + h - height
+
+    return (x,y,w,h)
 
 def find_face(picture):
     data = check_output(["python2", "face-detect.py", picture]).decode('utf-8')
@@ -140,19 +187,6 @@ def find_face(picture):
 #    print('Biggest face', max_idx, faces[max_idx])
 
     return faces[max_idx]
-
-
-
-def get_wrestler_score(to_date, wrestler):
-    month_ago = date(to_date.year, to_date.month-1, 1)
-    a = session.query(func.max(Score.score)).\
-        join(Wrestler).filter_by(nr=wrestler.nr).\
-        join(Match).filter(Match.date <= to_date).\
-        filter(Match.date >= month_ago).slice(0,1)
-
-    score, = a.one()
-    return score
-
 
 def get_riser_stuff(wrestler):
     scores = session.query(Score).filter_by(wrestler_nr=wrestler.nr).\
@@ -178,6 +212,20 @@ def get_previous_rank(wrestler):
     return
 
 
+def get_event_stuff(wrestler):
+    wrestler.ranks_risen = ranking.get_previous_rank(wrestler) - ranking.get_rank(wrestler)
+    wrestler_events = get_riser_stuff(wrestler)
+
+    for e in wrestler_events:
+        if '@' in e.event_name:
+            event, location = e.event_name.split('@')
+            e.event_name = event
+            e.event_location = location.split(',')[0]
+        else:
+            e.event_name = e.event_name
+
+    return (wrestler, wrestler_events)
+
 if __name__ == '__main__':
 
     config = {
@@ -202,32 +250,42 @@ if __name__ == '__main__':
 
     promotions = session.query(Promotion).join(Wrestler).filter(Wrestler.nr != None).all()
     
-    ranking = Ranking()
-    #wrestlers = get_ranked_wrestlers(to_date=to_date, from_date=prev_date)
+    ranking = Ranking(limit=40)
 
-    # Find highest riser
-    max_risen = -10000
-    top_riser = None
+    # Find highest riser, and worst
+    max_r_risen = max_s_risen = -10000
+    max_r_dropped = 0
+    score_riser = rank_riser = rank_dropper = None
     for w in ranking:
+
+        get_face(w)
+
         rank =  ranking.get_rank(w)
         prev_rank = ranking.get_previous_rank(w)
 
         if prev_rank is None or rank is None:
             continue
 
+        score = ranking.get_score(w)
+        prev_score = ranking.get_previous_score(w)
+
         rank_diff = prev_rank - rank
-
-        if rank_diff > max_risen:
-            max_risen = rank_diff
-            top_riser = w
-
-    top_riser.ranks_risen = ranking.get_previous_rank(top_riser) - ranking.get_rank(top_riser)
-    riser_events = get_riser_stuff(top_riser)
-
-    for e in riser_events:
-        event, location = e.event_name.split('@')
-        e.event_name = event
-        e.event_location = location.split(',')[0]
+        score_diff = score / prev_score
+        if rank_diff > max_r_risen:
+            max_r_risen = rank_diff
+            rank_riser = w
+        elif score_diff > max_s_risen:
+            max_s_risen = score_diff
+            score_riser = w
+        elif rank_diff < max_r_dropped:
+            rank_dropper = w
+            max_r_dropped = rank_diff
+    
+    carousel = [
+        get_event_stuff(rank_riser),
+        get_event_stuff(score_riser),
+        get_event_stuff(rank_dropper)
+    ]
 
     call(['lessc', '-rp=ass/', '-ru', 'style.less', 'style.css']) and exit()
 
@@ -235,8 +293,7 @@ if __name__ == '__main__':
         promotions=promotions,
         ranking=ranking,
         config=config,
-        top_riser=top_riser,
-        events=riser_events
+        carousel=carousel
     )
 
     #print(output)
