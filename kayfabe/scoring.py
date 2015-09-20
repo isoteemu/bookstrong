@@ -15,7 +15,7 @@ class Ranking(Sequence):
 
     to_date         = date.today()
     time_range      = RANK_TIME
-    limit           = 200
+    limit           = 400
 
     rank            = None
     prev_rank       = None
@@ -28,7 +28,7 @@ class Ranking(Sequence):
     def __init__(self, **kwargs):
         self.to_date = kwargs.get('to_date', self.to_date)
         self.time_range = kwargs.get('time_range', self.time_range)
-        self.limit = kwargs.get('time_range', self.limit)
+        self.limit = kwargs.get('limit', self.limit)
         self.get_ranking()
 
     def next(self):
