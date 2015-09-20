@@ -74,9 +74,9 @@
 					</div>
 					<div class="panel-body">
                         <nav class="list-group rank">
-                            {% for wrestler in wrestlers %}
+                            {% for wrestler in ranking %}
                                 <a href="#" class="list-group-item wrestler-rank-item {% if loop.index > config['items_per_page'] %}limit-filter-hide{%endif%}" data-promotion="{{ wrestler.promotion.cm_id }}" data-nr="{{ wrestler.nr }}" data-gimmicks="{% for gimmick in wrestler.gimmicks %}{{gimmick.gimmick|escape}}, {% endfor %}">
-                                    <div class="bg" style="background-image:url({{wrestler.face}});"></div>
+                                    <div class="bg" style="background-image:url({{wrestler|img(t='thumb')}});"></div>
                                     <h4 class="list-group-item-heading"><span class="label label-info rank-nr">{{ wrestler.rank }}</span> 
                                         <div class="ln"><span lang="en">{{ wrestler.name|escape }}</span></div>
                                     </h4>
@@ -101,7 +101,6 @@
     <li id="rank-page-3"><a href="#" onclick="rank_page(3); return false;" data-page="3">3</a></li>
     <li id="rank-page-4"><a href="#" onclick="rank_page(4); return false;" data-page="4">4</a></li>
     <li id="rank-page-5"><a href="#" onclick="rank_page(5); return false;" data-page="5">5</a></li>
-    <li id="rank-page-6"><a href="#" onclick="rank_page(6); return false;" data-page="6">6</a></li>
     <li>
       <a href="#" onclick="rank_next_page(); return false;" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>

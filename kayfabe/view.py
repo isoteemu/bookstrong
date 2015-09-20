@@ -8,9 +8,9 @@ from bs4 import BeautifulSoup
 from copy import copy
 
 import locale
+import logging
 
 from glob import glob
-
 
 def translate_html(page, translation):
     ''' Translate lang elements.
@@ -61,28 +61,32 @@ def format_datetime(value, format='date'):
     return el.format(iso=value.isoformat(), locale=innards)
 
 
-def get_image_path(obj):
+def get_image_path(obj, t="full"):
+
     ''' Return suitable image for object.
     '''
+    ass_path = 'ass'
+    if t.lower() == 'thumb':
+        ass_path = '%s/t' % ass_path
+
     if isinstance(obj, Promotion):
-        return get_promotion_logo(obj)
+        id = obj.cm_id
+        path = '%s/p' % ass_path
     elif isinstance(obj, Wrestler):
-        return get_wrestler_photo(obj)
+        id = obj.nr
+        path = '%s/f' % ass_path
 
+    src = get_img(id, path)
+    if not src:
+        src = 'ass/1.gif'
 
-def get_promotion_logo(promotion):
-    ''' Get promotion logo image.
-    '''
-    pics = glob('ass/p/{:0>8}.*'.format(promotion.cm_id))
+    return src
+
+def get_img(id, path):
+    
+    g = '{path}/{id:0>8}.*'.format(path=path,id=id)
+
+    pics = glob(g)
     if len(pics):
         return pics[0]
-    return None
-
-
-def get_wrestler_photo(wrestler):
-    ''' Get wrestler image.
-    '''
-    pics = glob('ass/f/{:0>8}.*'.format(wrestler.nr))
-    if len(pics):
-        return pics[0]
-    return None
+    return ''

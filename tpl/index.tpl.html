@@ -15,14 +15,14 @@
                         <td class="wrestler" rowspan="{{ loop.length }}">
                             <div class="ranks-risen">
                                 <div class="rank">{{top_riser.rank}}</div>
-                                <div class="ranks">【Risen 6<sup class="glyphicon glyphicon-triangle-top"></sup>】</div>
+                                <div class="ranks">【Risen {{top_riser.ranks_risen}}<sup class="glyphicon glyphicon-triangle-top"></sup>】</div>
                             </div>
                             <img class="riser-photo" src="{{ top_riser|img }}" class="img-responsive" />
                             <div class="riser-info">
                                 <div>
-                                    <h3><span lang="en">{{top_riser.name|escape}}</span></h3>
+                                    <h3 class="ln"><span lang="en">{{top_riser.name|escape}}</span></h3>
 
-                                    <img src="{{ top_riser.promotion|img }}" class="promotion" alt="{{top_riser.promotion.name}}" class="img-responsive" />
+                                    <img src="{{ top_riser.promotion|img }}" class="promotion thumbnail" alt="{{top_riser.promotion.name}}" class="img-responsive" />
                                 </div>
                             </div>
                         </td>
