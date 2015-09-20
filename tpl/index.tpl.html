@@ -8,39 +8,26 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-7">
-                <table class="table">
-                    {% for e in events %}
-                    <tr>
-                        {% if loop.index == 1 %}
-                        <td class="wrestler" rowspan="{{ loop.length }}">
-                            <div class="ranks-risen">
-                                <div class="rank">{{top_riser.rank}}</div>
-                                <div class="ranks">【Risen {{top_riser.ranks_risen}}<sup class="glyphicon glyphicon-triangle-top"></sup>】</div>
-                            </div>
-                            <img class="riser-photo" src="{{ top_riser|img }}" class="img-responsive" />
-                            <div class="riser-info">
-                                <div>
-                                    <h3 class="ln"><span lang="en">{{top_riser.name|escape}}</span></h3>
+                <div id="frontpage-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner" role="listbox">
+                        {% for wrestler, events in carousel %}
+                        <div class="item {% if loop.index == 1%} active {%endif%}">
+                            {% include 'riser.tpl.html' %}
+                        </div>
+                        {% endfor %}
+                    </div>
 
-                                    <img src="{{ top_riser.promotion|img }}" class="promotion thumbnail" alt="{{top_riser.promotion.name}}" class="img-responsive" />
-                                </div>
-                            </div>
-                        </td>
-                        {% endif %}
-                        <td>
-                            {{ e.date|timetag }}
-                        </td>
-                        <td>
-                            <div class="ln"><span lang="en">{{e.event_name|escape}}</span></div>
-                            <div class="ln">{{e.event_location|escape}}</div>
-                        </td>
-                        <td class="stipulation">
-                        <span class="label label-success" title="{{e.type_desc|escape}}">
-                            {% if e.type_desc %}{{e.type_desc|escape}}{% else %}<span lang="en">{{e.type}}</span>{% endif %}
-                        </span></td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                    <!--
+                    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                    </a>
+                    -->
+                </div>
             </div>
         </div>
     </div>

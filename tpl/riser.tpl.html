@@ -1,0 +1,39 @@
+<table class="table">
+    {% for e in events %}
+    <tr>
+        {% if loop.index == 1 %}
+        <td class="wrestler" rowspan="{{ loop.length }}">
+            <div class="ranks-risen">
+                <div class="rank">{{wrestler.rank}}</div>
+                <div class="ranks">
+                {% if wrestler.ranks_risen > 0 %}
+                    【<span lang="en">Risen</span> {{wrestler.ranks_risen}}】<sup class="glyphicon glyphicon-triangle-top"></sup>
+                {% elif wrestler.ranks_risen < 0 %}
+                    【<span lang="en">Dropped</span> {{wrestler.ranks_risen}}】<sup class="glyphicon glyphicon-triangle-bottom"></sup>
+                {% endif %}
+                </div>
+            </div>
+            <img class="riser-photo" src="{{ wrestler|img }}" class="img-responsive" />
+            <div class="riser-info">
+                <div>
+                    <h3 class="ln"><span lang="en">{{wrestler.name|escape}}</span></h3>
+
+                    <img src="{{ wrestler.promotion|img }}" class="promotion thumbnail" alt="{{wrestler.promotion.name}}" class="img-responsive" />
+                </div>
+            </div>
+        </td>
+        {% endif %}
+        <td>
+            {{ e.date|timetag }}
+        </td>
+        <td>
+            <div class="ln"><span lang="en">{{e.event_name|escape}}</span></div>
+            <div class="ln">{{e.event_location|escape}}</div>
+        </td>
+        <td class="stipulation">
+        <span class="label label-success" title="{{e.type_desc|escape}}">
+            {% if e.type_desc %}{{e.type_desc|escape}}{% else %}<span lang="en">{{e.type}}</span>{% endif %}
+        </span></td>
+    </tr>
+    {% endfor %}
+</table>

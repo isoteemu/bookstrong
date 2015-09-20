@@ -1,27 +1,7 @@
 @import 'bootstrap/less/variables.less';
 @import 'bootstrap/less/mixins.less';
 
-@brand-primary:                 #FFFC47;
-
-@text-color:                    #727272;
-
-@sidebar-bg:                    #2D2D2D;
-
-@list-group-link-color:         #c2c2c2;
-@list-group-link-hover-color:   lighten(@list-group-link-color, 15%);
-@list-group-bg:                 #2A2A2A;
-@list-group-border:             #323232;
-@list-group-hover-bg:           #385666;
-
-@panel-default-heading-bg:      #272727;
-@list-group-link-heading-color: #fff;
-
-@pagination-bg:                 #323232;
-@pager-bg:                      @pagination-bg;
-
-
-@candy-red:                     rgba(255, 8, 0, 0.5);
-
+@import 'ass/brand.less';
 
 html,body {
     min-height:100%;
@@ -298,7 +278,7 @@ header.header {
     text-overflow: ellipsis;
     
     // TODO: Skaalaudu sivun mukaan
-    max-width: 14em;
+    max-width: 10em;
 }
 
 .ln {
@@ -318,8 +298,8 @@ header.header {
     background: rgba(247,248,204,0.3);
 
     border-radius: 50%;
-    width:200px;
-    height:200px;
+    width:150px;
+    height:150px;
     position:absolute;
     top:0;
     right:0;
@@ -338,18 +318,24 @@ header.header {
 
 .ranks-risen .rank {
     font-family:serif;
-    font-size:90px;
+    font-size:60px;
 }
 
 .ranks-risen .ranks {
-    margin-top:-30px;
+    margin-top:-22px;
     text-transform: uppercase;
-    font-size:120%;
+    font-size:105%;
+    white-space: nowrap;
 }
 
-.ranks-risen .ranks .glyphicon {
+.ranks-risen .ranks .glyphicon-triangle-top {
     color:@brand-success;
-    top:-5px;
+    vertical-align: top;
+}
+.ranks-risen .ranks .glyphicon-triangle-bottom {
+    color:@brand-warning;
+
+    vertical-align: bottom;
 }
 
 .riser-info {
@@ -360,7 +346,6 @@ header.header {
     font-family: 'Gloria Hallelujah', cursive;
     position:relative;
     z-index:2;
-    text-decoration: underline;
     margin-bottom: -10px;
     text-shadow:
      -1px -1px 0 #000,  
@@ -372,7 +357,10 @@ header.header {
 .riser-info .promotion {
     margin-left: 20px;
     max-width: 150px;
-    margin-bottom: 0;
+    max-height: 100px;
+
+    margin-bottom: -20px;
+
 }
 
 .riser-photo {
@@ -381,6 +369,29 @@ header.header {
     bottom:2em;
     left: 0;
     max-width: 100%;
+    max-height: 100%;
+}
+
+#frontpage-carousel .carousel-inner {
+    overflow: visible;
+}
+
+#frontpage-carousel .carousel-inner > .item {
+
+    .opacity(0);
+
+    .transition-property(~"opacity, left");
+    .transition-duration(.6s);
+    .transition-timing-function(ease-in-out);    
+    &.next.left {
+        .opacity(1);
+    }
+    &.active.left {
+        .opacity(0);
+    }
+    &.active {
+        .opacity(1);
+    }
 }
 
 header .btn-group {
