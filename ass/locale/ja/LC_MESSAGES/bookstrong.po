@@ -76,7 +76,7 @@ msgid "World Wrestling Council"
 msgstr "プロレス"
 
 msgid "Union Pro Wrestling"
-msgstr ""
+msgstr "DDTプロレスリング"
 
 msgid "Toryumon Mexico"
 msgstr "闘龍門"
@@ -103,7 +103,7 @@ msgid "Japanese Women Pro-Wrestling Project"
 msgstr "JWP女子プロレス"
 
 msgid "OSAKA Women's Pro-Wrestling"
-msgstr ""
+msgstr "OSAKA女子プロレス"
 
 msgid "REINA"
 msgstr ""
@@ -172,13 +172,13 @@ msgid "Jay Lethal"
 msgstr ""
 
 msgid "Lashley"
-msgstr ""
+msgstr "ボビー・ラシュリー"
 
 msgid "Minoru Suzuki"
 msgstr "鈴木実"
 
-msgid "King Barrett"
-msgstr ""
+msgid "Wade Barrett"
+msgstr "ステュアート・ベネット"
 
 msgid "Bray Wyatt"
 msgstr "デューク・ロトンド"
@@ -196,7 +196,7 @@ msgid "Kurt Angle"
 msgstr "カート・アングル"
 
 msgid "El Mesias"
-msgstr ""
+msgstr "リッキー・バンデラス"
 
 msgid "Kazuchika Okada"
 msgstr "岡田かずちか"
@@ -219,8 +219,8 @@ msgstr "ジョン・モリソン"
 msgid "Darren Young"
 msgstr "ダレン・ヤング"
 
-msgid "KUSHIDA"
-msgstr ""
+msgid "Yujiro Kushida"
+msgstr "KUSHIDA"
 
 msgid "Kyle O'Reilly"
 msgstr "カイル・オライリー"
@@ -229,7 +229,7 @@ msgid "Big Show"
 msgstr "ポール・ワイト"
 
 msgid "Drew Galloway"
-msgstr ""
+msgstr "ドリュー・ギャロウェイ"
 
 msgid "Hideo Itami"
 msgstr "小林健太"
@@ -316,16 +316,16 @@ msgid "Stardust"
 msgstr "コーディ・ローズ"
 
 msgid "Matt Jackson"
-msgstr ""
+msgstr "マット・ジャクソン"
 
 msgid "Nick Jackson"
-msgstr ""
+msgstr "とニック・ジャクソン"
 
 msgid "Hiroyoshi Tenzan"
 msgstr "山本広吉"
 
-msgid "Frankie Kazarian, Kazarian"
-msgstr ""
+msgid "Frankie Kazarian"
+msgstr "フランキー・カザリアン"
 
 msgid "Mark Briscoe"
 msgstr ""
@@ -358,13 +358,13 @@ msgid "Karl Anderson"
 msgstr "カール・アンダーソン"
 
 msgid "Tetsuya Naito"
-msgstr ""
+msgstr "内藤哲也"
 
 msgid "Davey Boy Smith Jr."
-msgstr ""
+msgstr "デイビーボーイ・スミス・ジュニア"
 
 msgid "Michael Bennett"
-msgstr ""
+msgstr "マイケル・ベネット"
 
 msgid "Rob Conway"
 msgstr "ロブ・コンウェイ"
@@ -376,10 +376,10 @@ msgid "Cedric Alexander"
 msgstr ""
 
 msgid "Baron Corbin"
-msgstr ""
+msgstr "トム・ペストック"
 
 msgid "El Texano Jr."
-msgstr ""
+msgstr "テハノ・ジュニア"
 
 msgid "Akebono"
 msgstr "モンスター・ボノ"
@@ -388,13 +388,13 @@ msgid "Goldust"
 msgstr "ヴァージル・ラネルズ3世"
 
 msgid "Bad Luck Fale"
-msgstr ""
+msgstr "ファレ・シミタイトコ"
 
 msgid "MVP"
-msgstr ""
+msgstr "アルヴィン・バーク・ジュニア"
 
 msgid "Lance Archer"
-msgstr ""
+msgstr "ランス・ホイット"
 
 msgid "Damien Sandow"
 msgstr "アーロン・スティーブンス"
@@ -409,7 +409,7 @@ msgid "Matt Taven"
 msgstr "マット・ターバン"
 
 msgid "Low Ki"
-msgstr "Senshi"
+msgstr "ブランドン・シルベストリー"
 
 msgid "Satoshi Kojima"
 msgstr "愚零斗孤士"
@@ -457,22 +457,22 @@ msgid "Abyss"
 msgstr "クリス・パークス"
 
 msgid "Rockstar Spud"
-msgstr ""
+msgstr "ジェームス・カーティン"
 
-msgid "Matt Sydal"
-msgstr ""
+msgid "Evan Bourne"
+msgstr "マット・コークラン"
 
 msgid "Daisuke Sekimoto"
 msgstr "関本大介"
 
-msgid "Murphy"
+msgid "Buddy Murphy"
+msgstr "マット・シルバ"
+
+msgid "Angélico"
 msgstr ""
 
-msgid "Angelico"
-msgstr ""
-
-msgid "Mr. Anderson"
-msgstr ""
+msgid "Ken Anderson"
+msgstr "ケン・アンダーソン"
 
 msgid "Rich Swann"
 msgstr "リッチ・スワン"
@@ -480,8 +480,8 @@ msgstr "リッチ・スワン"
 msgid "Kalisto"
 msgstr "サムライ・デル・ソル"
 
-msgid "Blake"
-msgstr ""
+msgid "Wesley Blake"
+msgstr "コリー・ウェストン"
 
 msgid "Rey Bucanero"
 msgstr "レイ・ブカネロ"
@@ -490,22 +490,22 @@ msgid "Katsuyori Shibata"
 msgstr "魔界4号"
 
 msgid "Bram"
-msgstr ""
+msgstr "トム・ラティマー"
 
 msgid "Drago"
 msgstr ""
 
-msgid "PJ Black"
-msgstr ""
+msgid "Justin Gabriel"
+msgstr "ポール・ロイド・ジュニア"
 
 msgid "Matt Cross"
-msgstr ""
+msgstr "マット・クロス"
 
 msgid "Togi Makabe"
 msgstr "真壁伸也"
 
 msgid "Bubba Ray Dudley"
-msgstr ""
+msgstr "マーク・ロモナコ"
 
 msgid "Mark Henry"
 msgstr "マーク・ヘンリー"
@@ -538,10 +538,10 @@ msgid "Luke Hawx"
 msgstr ""
 
 msgid "Jax Dane"
-msgstr ""
+msgstr "ジャックス・デイン"
 
 msgid "Masato Yoshino"
-msgstr "YOSSINO"
+msgstr "吉野正人"
 
 msgid "Curtis Axel"
 msgstr "ジョー・ヘニング"
@@ -553,19 +553,19 @@ msgid "Volador Jr."
 msgstr "ボラドール・ジュニア"
 
 msgid "Rhyno"
-msgstr ""
+msgstr "ライノ"
 
 msgid "Blue Demon Jr."
-msgstr ""
+msgstr "ブルー・デーモン・ジュニア"
 
-msgid "TJ Perkins, TJP, Manik"
+msgid "T.J. Perkins"
 msgstr ""
 
 msgid "Viktor"
 msgstr "エリック・トンプソン"
 
 msgid "Robbie E"
-msgstr ""
+msgstr "ロバート・ストラウス"
 
 msgid "Jun Akiyama"
 msgstr "秋山潤"
@@ -577,7 +577,7 @@ msgid "Crazzy Steve"
 msgstr ""
 
 msgid "T-Hawk"
-msgstr ""
+msgstr "苫小牧卓也"
 
 msgid "Moose"
 msgstr ""
@@ -592,19 +592,19 @@ msgid "Colt Cabana"
 msgstr "スコット・コルトン"
 
 msgid "SUSHI"
-msgstr ""
+msgstr "雷陣明"
 
-msgid "Angel de Oro"
-msgstr ""
+msgid "Ángel de Oro"
+msgstr "アンヘル・デ・オロ"
 
 msgid "Diego"
 msgstr "エディ・コロン"
 
 msgid "Fernando"
-msgstr ""
+msgstr "オーランド・コロン"
 
-msgid "Fenix"
-msgstr ""
+msgid "Fénix"
+msgstr "フェニックス"
 
 msgid "Tommy End"
 msgstr ""
@@ -613,7 +613,7 @@ msgid "Jessie Godderz"
 msgstr "ジェシー・ゴッダーズ"
 
 msgid "Zack Sabre Jr."
-msgstr ""
+msgstr "ザック・セイバー・ジュニア"
 
 msgid "Aero Star"
 msgstr "エアロスター"
@@ -628,19 +628,19 @@ msgid "Mephisto"
 msgstr "メフィスト"
 
 msgid "Dr. Wagner Jr."
-msgstr ""
+msgstr "ドクトル・ワグナー・ジュニア"
 
 msgid "Titus O'Neil"
 msgstr "タイタス・オニール"
 
-msgid "BJ Whitmer"
-msgstr ""
+msgid "B.J. Whitmer"
+msgstr "B.J.ホイットマー"
 
-msgid "Masada, MASADA"
-msgstr ""
+msgid "Masada"
+msgstr "MASADA"
 
-msgid "Rey Escorpion"
-msgstr ""
+msgid "Rey Escorpión"
+msgstr "レイ・エスコルピオン"
 
 msgid "Eric Young"
 msgstr ""
@@ -649,16 +649,16 @@ msgid "Naruki Doi"
 msgstr "土井成樹"
 
 msgid "Big Ryck"
-msgstr ""
+msgstr "エゼキエル・ジャクソン"
 
 msgid "Kotaro Suzuki"
 msgstr "鈴木鼓太郎"
 
 msgid "Mahabali Shera"
-msgstr ""
+msgstr "マハーバリ・シェラ"
 
-msgid "Extreme Tiger, Tigre Uno"
-msgstr ""
+msgid "Tigre Uno"
+msgstr "エクストリーム・タイガー"
 
 msgid "Hideki Suzuki"
 msgstr "鈴木 秀樹"
@@ -667,7 +667,7 @@ msgid "Jeff Jarrett"
 msgstr "ジェフ・ジャレット"
 
 msgid "Fandango"
-msgstr ""
+msgstr "カーティス・ハッセイ"
 
 msgid "Shane Haste"
 msgstr "シェイン・ヘイスト"
@@ -679,10 +679,10 @@ msgid "KAI"
 msgstr ""
 
 msgid "Adam Rose"
-msgstr ""
+msgstr "レイ・レッパン"
 
 msgid "Micah"
-msgstr ""
+msgstr "テヴィタ・フィフィタ"
 
 msgid "Heath Slater"
 msgstr "ヒース・スレーター"
@@ -691,13 +691,13 @@ msgid "Adam Page"
 msgstr ""
 
 msgid "DJ Z"
-msgstr ""
+msgstr "マイケル・パリス"
 
 msgid "Mojo Rawley"
-msgstr ""
+msgstr "ディーン・ムータディ"
 
-msgid "LA Par-K"
-msgstr ""
+msgid "La Parka"
+msgstr "ラ・パルカ"
 
 msgid "Kento Miyahara"
 msgstr "宮原健斗"
@@ -705,14 +705,14 @@ msgstr "宮原健斗"
 msgid "Kahagas"
 msgstr "カハガス"
 
-msgid "Eli Drake, Shaun Ricker"
-msgstr ""
+msgid "Shaun Ricker"
+msgstr "ショーン・リッカー"
 
 msgid "Apollo Crews"
 msgstr "ウーハー・ネイション"
 
-msgid "Ultimo Guerrero"
-msgstr ""
+msgid "Último Guerrero"
+msgstr "ウルティモ・ゲレーロ"
 
 msgid "Papadon"
 msgstr ""
@@ -721,7 +721,7 @@ msgid "Tim Storm"
 msgstr ""
 
 msgid "HARASHIMA"
-msgstr "HERO!"
+msgstr "HARASHIMA"
 
 msgid "Rey Horus"
 msgstr ""
@@ -766,7 +766,7 @@ msgid "Silas Young"
 msgstr ""
 
 msgid "Donovan Dijak"
-msgstr ""
+msgstr "ドノヴァン・ダイジャック"
 
 msgid "Ricky Reyes"
 msgstr ""
@@ -775,12 +775,12 @@ msgid "Masato Tanaka"
 msgstr "田中正人"
 
 msgid "Chicano"
-msgstr ""
+msgstr "チカーノ"
 
 msgid "Will Ferrara"
 msgstr ""
 
-msgid "Ashley Remington, Dalton Castle"
+msgid "Dalton Castle"
 msgstr ""
 
 msgid "Chase Owens"
@@ -793,7 +793,7 @@ msgid "Steve Anthony"
 msgstr ""
 
 msgid "Shuji Ishikawa"
-msgstr ""
+msgstr "石川修司"
 
 msgid "Enzo Amore"
 msgstr "エリック・アーント"
@@ -808,7 +808,7 @@ msgid "Christopher Silvio/Chris Silvio"
 msgstr ""
 
 msgid "Jushin Thunder Liger"
-msgstr ""
+msgstr "獣神サンダー・ライガー"
 
 msgid "Jason Kincaid"
 msgstr ""
@@ -822,8 +822,8 @@ msgstr "高山圭司"
 msgid "Facade"
 msgstr ""
 
-msgid "Jesus De Leon, Mr. 450"
-msgstr ""
+msgid "Hammett"
+msgstr "Mr.450"
 
 msgid "Kohei Sato"
 msgstr "佐藤耕平"
@@ -837,8 +837,8 @@ msgstr "大島伸彦"
 msgid "Tyson Dux"
 msgstr ""
 
-msgid "Jado, Captain NOAH"
-msgstr ""
+msgid "Jado"
+msgstr "邪道"
 
 msgid "Hanson"
 msgstr ""
@@ -847,7 +847,7 @@ msgid "Charlie Haas"
 msgstr "チャーリー・ハース"
 
 msgid "Hernandez"
-msgstr ""
+msgstr "ショーン・ヘルナンデス"
 
 msgid "Matt Tremont"
 msgstr ""
@@ -859,16 +859,16 @@ msgid "Mighty Ursas"
 msgstr ""
 
 msgid "Samuel Shaw"
-msgstr ""
+msgstr "サム・ショー"
 
 msgid "The Brian Kendrick"
-msgstr ""
+msgstr "ブライアン・ケンドリック"
 
 msgid "Sherman Tank"
 msgstr ""
 
 msgid "Solomon Crowe"
-msgstr ""
+msgstr "サミ・キャラハン"
 
 msgid "Stevie Richards"
 msgstr "マイケル・マナ"
@@ -879,8 +879,8 @@ msgstr "M.c.KZ."
 msgid "J. Diesel"
 msgstr ""
 
-msgid "Jay Bradley, Aiden O'Shea"
-msgstr ""
+msgid "Jay Bradley"
+msgstr "ブラッド・ブラッドリー"
 
 msgid "Shingo Takagi"
 msgstr "鷹木信悟"
@@ -891,11 +891,17 @@ msgstr "ライアン・ドラゴ"
 msgid "Scorpio Sky"
 msgstr ""
 
-msgid "Brian Myers"
-msgstr ""
+msgid "Gail Kim"
+msgstr "ゲイル・キム"
+
+msgid "Awesome Kong"
+msgstr "アメージング・コング"
+
+msgid "Curt Hawkins"
+msgstr "カート・ホーキンス"
 
 msgid "BLK Jeez"
-msgstr ""
+msgstr "ダーネル・キットレル"
 
 msgid "Tomoaki Honma"
 msgstr "本間朋晃"
@@ -927,16 +933,16 @@ msgstr "コーディ・ディーナー"
 msgid "Jeff Cobb"
 msgstr ""
 
-msgid "Ultimo Dragon"
-msgstr ""
+msgid "Último Dragón"
+msgstr "ウルティモ・ドラゴン"
 
 msgid "Gory"
 msgstr ""
 
 msgid "Isami Kodaka"
-msgstr "Isami"
+msgstr "木高イサミ"
 
-msgid "Chuck Taylor, Mr. Azerbaijan"
+msgid "Chuck Taylor"
 msgstr ""
 
 msgid "Aeroboy"
@@ -966,7 +972,7 @@ msgstr "ネグロ・カサス"
 msgid "Darin Corbin"
 msgstr ""
 
-msgid "Player Dos, Stupefied"
+msgid "Stupefied"
 msgstr ""
 
 msgid "Danny Havoc"
@@ -1057,7 +1063,7 @@ msgid "Jake Crist"
 msgstr ""
 
 msgid "Atlantis"
-msgstr ""
+msgstr "アトランティス"
 
 msgid "Famous B"
 msgstr ""
@@ -1738,7 +1744,7 @@ msgid "Taya Valkyrie"
 msgstr ""
 
 msgid "Asuka"
-msgstr ""
+msgstr "華名"
 
 msgid "Aoi Kizuki"
 msgstr "希月あおい"
@@ -1843,7 +1849,7 @@ msgid "Bret Hart"
 msgstr "ブレット・ハート"
 
 msgid "Rey Mysterio Jr."
-msgstr ""
+msgstr "レイ・ミステリオ・ジュニア"
 
 msgid "Athena"
 msgstr ""
@@ -1859,6 +1865,12 @@ msgstr "最もプッシュ"
 
 msgid "Pay Per View"
 msgstr "パービューを支払います"
+
+msgid "TV-Show"
+msgstr "テレビショー"
+
+msgid "Royal Rumble"
+msgstr "ロイヤルランブル"
 
 # Laskentatapa
 msgid "Method"
