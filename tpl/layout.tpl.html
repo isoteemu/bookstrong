@@ -60,7 +60,7 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right">            
-            {% for promotion in promotions %}
+            {% for id, promotion in promotions.items() %}
                 <li><a class="promotion-filter" data-promotion="{{ promotion.cm_id }}" href="#promotion-{{ promotion.cm_id }}">
                     <span lang="en" title="{{ promotion.name|escape }}">{{ promotion.abbrevation }}</span>
                 </a></li>

@@ -271,7 +271,7 @@ if __name__ == '__main__':
     to_date = date.today()
     prev_date = date(to_date.year, to_date.month-1, 1)
 
-    promotions = session.query(Promotion).join(Wrestler).filter(Wrestler.nr != None).all()
+    promotions = dict()
 
     ranking = Ranking(limit=20)
 
@@ -282,6 +282,9 @@ if __name__ == '__main__':
     for w in ranking:
 
         get_face(w)
+
+        if w.promotion_id not in promotions:
+            promotions[w.promotion_id] = session.query(Promotion).filter_by(cm_id=w.promotion_id).one()
 
         rank =  ranking.get_rank(w)
         prev_rank = ranking.get_previous_rank(w)
@@ -303,7 +306,7 @@ if __name__ == '__main__':
         elif rank_diff < max_r_dropped:
             rank_dropper = w
             max_r_dropped = rank_diff
-    
+
     carousel = [
         get_event_stuff(rank_riser),
         get_event_stuff(score_riser),
