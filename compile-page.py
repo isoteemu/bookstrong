@@ -26,7 +26,6 @@ from subprocess import call, check_output
 
 from teemu.google import CSE
 from teemu.Bing import Bing
-from teemu.Image import square_image
 
 def get_face(wrestler):
     '''
@@ -120,7 +119,7 @@ def crop_thumb(picture, size):
         x = int(max(w/2 - (h/2), 0))
         w = h
 
-    x,y,w,h = img_bounding_box((x,y,w,h), size, picture)
+    x,y,w,h = img_bounding_box((x,y,w,h), size, img_size=im.size)
 
     im = im.crop((x, y, x+w, y+h))
     im.thumbnail(size)
@@ -128,11 +127,15 @@ def crop_thumb(picture, size):
 
 def crop_face(picture, size):
 
-    box = find_face(picture)
-
-    x, y, w, h = img_bounding_box(box, size, picture)
 
     im = Image.open(picture)
+
+    box = find_face(picture)
+
+    box = zoom_box(box, img_size=im.size)
+
+    x, y, w, h = img_bounding_box(box, size, img_size=im.size)
+
     im = im.crop((x, y, x+w, y+h))
     im.thumbnail(size)
 
@@ -143,12 +146,37 @@ def crop_face(picture, size):
     '''
     return im
 
-def img_bounding_box(box, size, picture):
+
+def zoom_box(box, img_size, scale=0.6):
+    ''' Dummy function for zooming cropbox outwards
+    '''
+    x, y, w, h = box
+    width, height = img_size
+
+    scale = max(scale, w / width, h / height)
+
+    z_w = w / scale
+    z_h = h / scale
+
+    x = x - ((z_w - w) / 2)
+    y = y - ((z_h - h) / 2)
+
+    return (int(x),int(y),int(z_w),int(z_h))
+
+
+def img_bounding_box(box, size, img_size):
 
     x,y,w,h = box
 
-    im = Image.open(picture)
-    width, height = im.size
+    width, height = img_size
+
+    # TODO width and height checks
+    if x < 0:
+        w -= x
+        x = 0
+    if y < 0:
+        h -= y
+        y = 0
 
     if width >= size[0] and w < size[0]:
         center = x + (w/2)
@@ -161,6 +189,7 @@ def img_bounding_box(box, size, picture):
             x = x - (x + w - width)
 
     if height >= size[1] and h < size[1]:
+        
         middle = y + h/2
         y = int(middle - size[1] / 2)
         h = int(size[1])
@@ -188,6 +217,7 @@ def find_face(picture):
 
     return faces[max_idx]
 
+
 def get_riser_stuff(wrestler):
     scores = session.query(Score).filter_by(wrestler_nr=wrestler.nr).\
         join(Match).order_by(asc(Match.date))
@@ -203,13 +233,6 @@ def get_riser_stuff(wrestler):
 
     top = sorted(matches, key=lambda diff: diff[0], reverse=True)[0:5]
     return [i[1] for i in top]
-
-
-def get_previous_rank(wrestler):
-    if not hasattr(get_previous_rank, "ranking"):
-        get_previous_rank.ranking
-    get_previous_rank.ranking
-    return
 
 
 def get_event_stuff(wrestler):
@@ -249,8 +272,8 @@ if __name__ == '__main__':
     prev_date = date(to_date.year, to_date.month-1, 1)
 
     promotions = session.query(Promotion).join(Wrestler).filter(Wrestler.nr != None).all()
-    
-    ranking = Ranking(limit=40)
+
+    ranking = Ranking(limit=20)
 
     # Find highest riser, and worst
     max_r_risen = max_s_risen = -10000
