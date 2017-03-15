@@ -134,143 +134,143 @@ class WikiData(Scrapper):
 
 
 class CageMatch(Scrapper):
-	URLS = {
-		'SEARCH': 'http://www.cagematch.net/?id=666',
-		'PROMOTION': 'http://www.cagematch.net/?id=8',
-		'WRESTLER': 'http://www.cagematch.net/?id=2',
-		'MATCHES': 'http://www.cagematch.net/?id=2&page=4',
-		'TITLE_SEARCH': 'http://www.cagematch.net/?id=5&view=names',
-		'TITLE': 'http://www.cagematch.net/?id=5'
-	}
+    URLS = {
+        'SEARCH': 'http://www.cagematch.net/?id=666',
+        'PROMOTION': 'http://www.cagematch.net/?id=8',
+        'WRESTLER': 'http://www.cagematch.net/?id=2',
+        'MATCHES': 'http://www.cagematch.net/?id=2&page=4',
+        'TITLE_SEARCH': 'http://www.cagematch.net/?id=5&view=names',
+        'TITLE': 'http://www.cagematch.net/?id=5'
+    }
 
 
-	scrape_delay = 5
+    scrape_delay = 5
 
-	_title_cache = None
+    _title_cache = None
 
-	def search(self, name):
-		'''
-			Search wrestler cagematch ID
-		'''
+    def search(self, name):
+        '''
+            Search wrestler cagematch ID
+        '''
 
-		page = self.get(self.URLS['SEARCH'], params={'search': name}).text
+        page = self.get(self.URLS['SEARCH'], params={'search': name}).text
 
-		soup = BeautifulSoup(page)
-		workers = soup.find('a', href='#wrestler').parent.parent.find_all('img', class_='WorkerPicture')
+        soup = BeautifulSoup(page)
+        workers = soup.find('a', href='#wrestler').parent.parent.find_all('img', class_='WorkerPicture')
 
-		'''
-			Create list of found wrestlers, where key is cagematch id and value is
-			number of counts wrestler was listed in cagematch.net search results
-		'''
+        '''
+            Create list of found wrestlers, where key is cagematch id and value is
+            number of counts wrestler was listed in cagematch.net search results
+        '''
 
-		wrestlers = {}
+        wrestlers = {}
 
-		for worker in workers:
-			nr = self.id_from_url(worker.parent['href'])
-			wrestlers.setdefault(nr, 0)
-			wrestlers[nr] = wrestlers[nr] + 1
+        for worker in workers:
+            nr = self.id_from_url(worker.parent['href'])
+            wrestlers.setdefault(nr, 0)
+            wrestlers[nr] = wrestlers[nr] + 1
 
-		return wrestlers
+        return wrestlers
 
-		#print(container.find_all('img', class_='WorkerPicture'))
-		#?id=2&nr=2250&gimmick=Seth+Rollins
+        #print(container.find_all('img', class_='WorkerPicture'))
+        #?id=2&nr=2250&gimmick=Seth+Rollins
 
-	def search_title(self, name):
-		name = name.strip()
+    def search_title(self, name):
+        name = name.strip()
 
-		if name in self._title_cache:
-			return self._title_cache.get(name)
+        if name in self._title_cache:
+            return self._title_cache.get(name)
 
-		''' Search title by name '''
-		page = self.get(self.URLS['TITLE_SEARCH'], params={'search':name}).text
-		soup = BeautifulSoup(page)
+        ''' Search title by name '''
+        page = self.get(self.URLS['TITLE_SEARCH'], params={'search':name}).text
+        soup = BeautifulSoup(page)
 
-		titles = []
+        titles = []
 
-		for result in soup.select('td a[href^="?id=5&nr="]'):
-			title_nr = self.id_from_url(result['href'])
-			if title_nr not in titles:
-				titles.append(title_nr)
+        for result in soup.select('td a[href^="?id=5&nr="]'):
+            title_nr = self.id_from_url(result['href'])
+            if title_nr not in titles:
+                titles.append(title_nr)
 
-		self._title_cache[name] = titles
+        self._title_cache[name] = titles
 
-		return titles
+        return titles
 
-	def wrestler(self, id):
+    def wrestler(self, id):
 
-		details = {
-			'name': '',
-			'promotion': None,
-			'gimmicks': []
-		}
+        details = {
+            'name': '',
+            'promotion': None,
+            'gimmicks': []
+        }
 
-		page = self.get(self.URLS['WRESTLER'], params={'nr': id}).text
-		soup = BeautifulSoup(page)
+        page = self.get(self.URLS['WRESTLER'], params={'nr': id}).text
+        soup = BeautifulSoup(page)
 
-		details['name'] = soup.find('h1', class_='TextHeader').text
+        details['name'] = soup.find('h1', class_='TextHeader').text
 
-		promotion = soup.select('td.InformationBoxContents a[href^="?id=8&nr="]')
-		if promotion:
-			details['promotion'] = int(parse_qs(promotion[0]['href'])['nr'][0])
+        promotion = soup.select('td.InformationBoxContents a[href^="?id=8&nr="]')
+        if promotion:
+            details['promotion'] = int(parse_qs(promotion[0]['href'])['nr'][0])
 
-		parent_gimmick = ''
-		gimmicks = soup.select('td.InformationBoxContents a[href^="?id=2&nr=%d&page=4&gimmick="]' % id)
-		for gimmick in gimmicks:
-			prev = gimmick.previous_sibling
+        parent_gimmick = ''
+        gimmicks = soup.select('td.InformationBoxContents a[href^="?id=2&nr=%d&page=4&gimmick="]' % id)
+        for gimmick in gimmicks:
+            prev = gimmick.previous_sibling
 
-			# They use &nbsp; in a.k.a. tag.
-			if prev and prev == '  ':
-				details['gimmicks'].append((parent_gimmick, gimmick.get_text()))
-			else:
-				parent_gimmick = gimmick.get_text().strip()
-				details['gimmicks'].append(parent_gimmick)
+            # They use &nbsp; in a.k.a. tag.
+            if prev and prev == '  ':
+                details['gimmicks'].append((parent_gimmick, gimmick.get_text()))
+            else:
+                parent_gimmick = gimmick.get_text().strip()
+                details['gimmicks'].append(parent_gimmick)
 
-		return details
+        return details
 
-	def promotion(self, id):
+    def promotion(self, id):
 
-		data = {
-			'name': '',
-			'abbrevation': ''
-		}
+        data = {
+            'name': '',
+            'abbrevation': ''
+        }
 
-		page = self.get(self.URLS['PROMOTION'], params={'nr': id}).text
-		soup = BeautifulSoup(page)
+        page = self.get(self.URLS['PROMOTION'], params={'nr': id}).text
+        soup = BeautifulSoup(page)
 
-		soup.find('h1', class_='TextHeader').text
+        soup.find('h1', class_='TextHeader').text
 
-		name = soup.find('td', class_='InformationBoxTitle', text='Current name:').\
-			find_next_sibling('td', class_='InformationBoxContents')
-		data['name'] = name.get_text().strip()
+        name = soup.find('td', class_='InformationBoxTitle', text='Current name:').\
+            find_next_sibling('td', class_='InformationBoxContents')
+        data['name'] = name.get_text().strip()
 
-		abbr = soup.find('td', class_='InformationBoxTitle', text='Current abbreviation:').\
-			find_next_sibling('td', class_='InformationBoxContents')
-		data['abbrevation'] = abbr.get_text().strip()
+        abbr = soup.find('td', class_='InformationBoxTitle', text='Current abbreviation:').\
+            find_next_sibling('td', class_='InformationBoxContents')
+        data['abbrevation'] = abbr.get_text().strip()
 
-		return data
+        return data
 
-	def title(self, nr):
-		details = {
-			'name': '',
-			'nr': nr,
-			'promotion': 0
-		}
+    def title(self, nr):
+        details = {
+            'name': '',
+            'nr': nr,
+            'promotion': 0
+        }
 
-		page = self.get(self.URLS['TITLE'], params={'nr': id}).text
-		soup = BeautifulSoup(page)
-		details['name'] = soup.select('h1.TextHeader')[0].get_text()
-		details['promotion'] = id_from_url(soup.select('a[href^="?id=8&nr="]')[0]['href'])
+        page = self.get(self.URLS['TITLE'], params={'nr': id}).text
+        soup = BeautifulSoup(page)
+        details['name'] = soup.select('h1.TextHeader')[0].get_text()
+        details['promotion'] = id_from_url(soup.select('a[href^="?id=8&nr="]')[0]['href'])
 
 
-	def matches(self, id):
-		''' Too complicated to add here, see scrape-matches.py '''
-		return
+    def matches(self, id):
+        ''' Too complicated to add here, see scrape-matches.py '''
+        return
 
-	def id_from_url(self, url):
-		parts = urlparse(url)
-		href = parse_qs(parts[4])
-		nr = href['nr'][0]
-		return int(nr)
+    def id_from_url(self, url):
+        parts = urlparse(url)
+        href = parse_qs(parts[4])
+        nr = href['nr'][0]
+        return int(nr)
 
 
 class FaceFetcher():
