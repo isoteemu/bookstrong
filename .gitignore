@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
+*~
 cagematch.sqlite3
 
 .kdev4/
