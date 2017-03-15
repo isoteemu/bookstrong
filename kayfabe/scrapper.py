@@ -10,6 +10,7 @@ from urllib.parse import urlparse, parse_qs
 from urllib.request import urlretrieve
 
 import time
+from glob import glob
 
 try:
     from teemu.google import CSE
@@ -276,7 +277,8 @@ class FaceFetcher():
 
     METHODS = []
 
-    target_folder = 'ass/w'
+    target_folder   = 'ass/w'
+    extensions      = ['jpg', 'jpeg', 'gif', 'png']
 
     wikidata = None
     googlecse = None
@@ -306,17 +308,41 @@ class FaceFetcher():
         self.METHODS.append((weight, method))
         return;
 
-    def get_face(self, wrestler):
+    def get_face(self, wrestler, path=None):
         ''' Get wrestler photo.
             :param wrestler:    Wrestler Model.
-        '''
-
-    def fetch_face(self, wrestler, path=None):
-        ''' Iterate throug self.METHODS, until something is found.
+            :param path:        Path to lookup/store images
         '''
 
         if not path:
             path = self.target_folder
+
+        glob_path = '{path}/{id:0>8}.*'.format(path=path,id=wrestler.nr)
+
+        pics = glob(glob_path)
+
+        for image in pics:
+            ext = image.split('.')[-1].lower().strip()
+            if ext in self.extensions:
+                return image
+
+        for url in self.fetch_face(wrestler):
+
+            ext = url.split('.')[-1].lower().strip()
+            if ext not in self.extensions:
+                ext = 'jpg'
+                logging.warning('Could not detect file extension for url \'%s\', fallback to .%s' % (url, ext))
+
+            save = '{path}/{id:0>8}.{ext}'.format(path=path, id=wrestler.nr, ext=ext)
+
+            fetch = urlretrieve(url, save)
+            if fetch:
+                logging.debug('Found wrestler image: "%s". Saving to: %s' % (url, save))
+                return save
+
+    def fetch_face(self, wrestler):
+        ''' Iterate throug self.METHODS, until something is found.
+        '''
 
         methods = sorted(self.METHODS, key=lambda m: m[0], reverse=False)
 
@@ -325,18 +351,7 @@ class FaceFetcher():
                 logging.debug("Trying fetch image for '%s' using '%s'" % (wrestler.name, method))
                 url = method(wrestler)
                 if url:
-                    ext = url.split('.')[-1].lower().strip()
-                    if ext not in ['jpg', 'jpeg', 'gif', 'png']:
-                        ext = 'jpg'
-                        logging.warning('Could not detect file extension for url \'%s\', fallback to .%s' % (url, ext))
-
-                    save = '{path}/{id:0>8}.{ext}'.format(path=path, id=wrestler.nr, ext=ext)
-
-                    logging.debug('Found wrestler image: "%s". Saving to: %s' % (url, save))
-                    fetch = urlretrieve(url, save)
-
-                    if fetch:
-                        return save
+                    yield url
 
             except Exception as e:
                 logging.warning('Error occured while fetching face: %s' % e)
