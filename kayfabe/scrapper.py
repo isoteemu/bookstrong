@@ -308,23 +308,25 @@ class FaceFetcher():
         self.METHODS.append((weight, method))
         return;
 
-    def get_face(self, wrestler, path=None):
+    def get_face(self, wrestler, path=None, force_update=False):
         ''' Get wrestler photo.
-            :param wrestler:    Wrestler Model.
-            :param path:        Path to lookup/store images
+            :param wrestler:        Wrestler Model.
+            :param path:            Path to lookup/store images.
+            :param force_update:    Force retrieving new picture.
         '''
 
         if not path:
             path = self.target_folder
 
-        glob_path = '{path}/{id:0>8}.*'.format(path=path,id=wrestler.nr)
+        if not force_update:
+            glob_path = '{path}/{id:0>8}.*'.format(path=path,id=wrestler.nr)
 
-        pics = glob(glob_path)
+            pics = glob(glob_path)
 
-        for image in pics:
-            ext = image.split('.')[-1].lower().strip()
-            if ext in self.extensions:
-                return image
+            for image in pics:
+                ext = image.split('.')[-1].lower().strip()
+                if ext in self.extensions:
+                    return image
 
         for url in self.fetch_face(wrestler):
 
