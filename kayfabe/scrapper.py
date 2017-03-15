@@ -156,7 +156,8 @@ class CageMatch(Scrapper):
         page = self.get(self.URLS['SEARCH'], params={'search': name}).text
 
         soup = BeautifulSoup(page)
-        workers = soup.find('a', href='#wrestler').parent.parent.find_all('img', class_='WorkerPicture')
+
+        workers = soup.select('td a[href^="?id=2&nr="]')
 
         '''
             Create list of found wrestlers, where key is cagematch id and value is
@@ -166,7 +167,7 @@ class CageMatch(Scrapper):
         wrestlers = {}
 
         for worker in workers:
-            nr = self.id_from_url(worker.parent['href'])
+            nr = self.id_from_url(worker['href'])
             wrestlers.setdefault(nr, 0)
             wrestlers[nr] = wrestlers[nr] + 1
 
@@ -446,3 +447,5 @@ def duck_duck_go(query):
         d = r.json()
 
     return d
+
+cagematchnet = CageMatch()
