@@ -299,12 +299,6 @@ class FaceFetcher():
         self.METHODS.append((weight, method))
         return;
 
-    def get_photo(self, wrestler):
-        img = Photo(wrestler).get()
-        if not img:
-            
-        
-
     def fetch_face(self, wrestler, path=None):
         ''' Iterate throug self.METHODS, until something is found.
         '''
