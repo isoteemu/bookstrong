@@ -7,8 +7,19 @@ import requests
 from bs4 import BeautifulSoup
 
 from urllib.parse import urlparse, parse_qs
+from urllib.request import urlretrieve
 
 import time
+
+try:
+    from teemu.google import CSE
+except:
+    pass
+
+try:
+    from teemu.Bing import Bing
+except:
+    pass
 
 
 class Scrapper:
@@ -259,6 +270,141 @@ class CageMatch(Scrapper):
 		href = parse_qs(parts[4])
 		nr = href['nr'][0]
 		return int(nr)
+
+
+class FaceFetcher():
+
+    METHODS = []
+
+    target_folder = 'ass/f'
+
+    wikidata = None
+    googlecse = None
+    bing = None
+
+    def __init__(self, register_default_methods=True):
+        '''
+            :param register_default_methods:     Register default methods.
+        '''
+        if register_default_methods:
+            self.register_method(self.url_from_wikidata, 10)
+            self.register_method(self.url_from_duckduckgo, 60)
+
+            if CSE:
+                self.register_method(self.url_from_googlecse, 70)
+            if Bing:
+                self.register_method(self.url_from_bing, 80)
+
+    def register_method(self, method, weight=50):
+        self.METHODS.append((weight, method))
+        return;
+
+    def get_photo(self, wrestler):
+        img = Photo(wrestler).get()
+        if not img:
+            
+        
+
+    def fetch_face(self, wrestler, path=None):
+        ''' Iterate throug self.METHODS, until something is found.
+        '''
+
+        if not path:
+            path = self.target_folder
+
+        methods = sorted(self.METHODS, key=lambda m: m[0], reverse=False)
+
+        for weight, method in methods:
+            try:
+                logging.debug("Trying fetch image for '%s' using '%s'" % (wrestler.name, method))
+                url = method(wrestler)
+                if url:
+                    ext = url.split('.')[-1].lower().strip()
+                    if ext not in ['jpg', 'jpeg', 'gif', 'png']:
+                        ext = 'jpg'
+                        logging.warning('Could not detect file extension for url \'%s\', fallback to .%s' % (url, ext))
+
+                    save = '{path}/{id:0>8}.{ext}'.format(path=path, id=wrestler.nr, ext=ext)
+                    fetch = urlretrieve(url, save)
+
+                    if fetch:
+                        return save
+
+            except Exception as e:
+                logging.warning('Error occured while fetching face: %s' % e)
+
+        return
+
+    def url_from_wikidata(self, wrestler):
+        if not self.wikidata:
+            self.wikidata = WikiData()
+
+        wd = self.wikidata
+        name = wrestler.name
+
+        try:
+            data = wd.search_wrestler(name)
+            pic = wd.get_claim_values(data, wd.CLAIM_IMAGE)[0]
+            src = wd.get_image_url(pic)
+
+            if src:
+                return src
+        except Exception as e:
+            logging.debug('Did not find image from wikipedia: %s' % e)
+
+        return None
+    
+    def url_from_duckduckgo(self, wrestler):
+        
+        name = wrestler.name.strip()
+        queries = ['%s wrestler' % name, name]
+        
+        for q in queries:
+            ddg = duck_duck_go(name)
+            if ddg['Image']:
+                return ddg['Image']
+
+        return None
+    
+    def url_from_googlecse(self, wrestler):
+        name = wrestler.name.strip()
+        queries = ['%s wrestler' % name, name]
+        
+        if not self.googlecse:
+            self.googlecse = CSE()
+
+        params = {
+            'imgType':      'face',
+            'searchType':   'image'
+        }
+
+        for q in queries:
+            try:
+                r = self.googlecse.query(q, params=params)
+                if 'items' in r:
+                    return r['items'][0]['link']
+            except Exception as e:
+                logging.warning('Could not query Google CSE: %s' % e)
+
+        return None
+
+
+    def url_from_bing(self, wrestler):
+        name = wrestler.name.strip()
+        queries = ['%s wrestler' % name, name]
+        
+        if not self.bing:
+            self.bing = Bing()
+
+        for q in queries:
+            try:
+                r = self.bing.imageSearch(u'%s' % name, ImageFilters="'Face:Face'")
+                if len(r):
+                    return r[0]['Thumbnail']['MediaUrl']
+            except Exception as e:
+                logging.warning('Could not query Bing: %s' % e)
+
+        return None
 
 
 def duck_duck_go(query):
