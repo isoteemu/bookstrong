@@ -7,55 +7,45 @@ from .FaceDetect import face_detect
 
 import logging
 
-def crop_thumb(picture, size):
+
+
+def crop_thumb(picture, thumb_size=(100,100)):
+    ''' Crop thumbnail.
+    
+        :param picture:     Picture file to generate thumbnail
+        :param thumb_size:  (tuple) Target thumbnail size 
+        
+        :return:            Image object.
+    '''
+
     im = Image.open(picture)
+    im = upscale_if_needed(im, thumb_size)
 
     w,h = im.size
 
-    if h > w:
-        y = int(max(h / 3 - (w/2), 0))
-        h = w
-        x = 0
-    else:
-        y = 0
-        x = int(max(w/2 - (h/2), 0))
-        w = h
-    
-    im = upscale_if_needed(im, size)
+    try:
+        ''' Search for face '''
+        (x,y,w,h) = find_face(picture)
+    except Exception as e:
+        ''' Crop about according golden line '''
+        if h > w:
+            y = int(max(h / 3 - (w/2), 0))
+            h = w
+            x = 0
+        else:
+            y = 0
+            x = int(max(w/2 - (h/2), 0))
+            w = h
 
     x,y,w,h = zoom_box((x,y,w,h), img_size=im.size)
 
     im = im.crop((x, y, x+w, y+h))
+    im.thumbnail(thumb_size)
 
-    im.thumbnail(size)
     return im
-
-
-def crop_face(picture, size):
-    im = Image.open(picture)
-
-    im = upscale_if_needed(im, size)
-
-    box = find_face(picture)
-
-    box = zoom_box(box, img_size=im.size)
-
-    x, y, w, h = box
-
-    im = im.crop((x, y, x+w, y+h))
-    im.thumbnail(size)
-
-    '''
-    im = ImageOps.fit(im, (64,64), Image.ANTIALIAS, 0.2, centering=(left,top))
-    #image = ImageOps.fit(image, thumbnail_size, Image.ANTIALIAS)
-    im = im.transform((64, 64), im.EXTENT, (x, y, x+w, y+h))
-    '''
-    return im
-
 
 def upscale_if_needed(im, size):
-    # TODO: Käytä numeroita, älä Imagea
-    ''' Upscale image, if thumb is going to be smaller than @param size
+    ''' Upscale image, if thumb is going to be smaller than :param size:
     '''
     w,h = im.size
 
