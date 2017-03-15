@@ -34,8 +34,8 @@ class Scrapper:
             from cachecontrol.caches import FileCache
             import tempfile
             self._requests = CacheControl(self._requests, cache=FileCache(tempfile.gettempdir()+'/cagematch-cache', forever=True))
-        except:
-            logging.warning('CacheControl not available')
+        except Exception as e:
+            logging.warning('CacheControl not available:', e)
 
         self._requests.headers.update({'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'})
 
@@ -276,7 +276,7 @@ class FaceFetcher():
 
     METHODS = []
 
-    target_folder = 'ass/f'
+    target_folder = 'ass/w'
 
     wikidata = None
     googlecse = None
@@ -290,14 +290,26 @@ class FaceFetcher():
             self.register_method(self.url_from_wikidata, 10)
             self.register_method(self.url_from_duckduckgo, 60)
 
-            if CSE:
-                self.register_method(self.url_from_googlecse, 70)
-            if Bing:
-                self.register_method(self.url_from_bing, 80)
+            try:
+                if CSE:
+                    self.register_method(self.url_from_googlecse, 70)
+            except NameError as e:
+                pass
+            
+            try:
+                if Bing:
+                    self.register_method(self.url_from_bing, 80)
+            except NameError as e:
+                pass
 
     def register_method(self, method, weight=50):
         self.METHODS.append((weight, method))
         return;
+
+    def get_face(self, wrestler):
+        ''' Get wrestler photo.
+            :param wrestler:    Wrestler Model.
+        '''
 
     def fetch_face(self, wrestler, path=None):
         ''' Iterate throug self.METHODS, until something is found.
@@ -319,6 +331,8 @@ class FaceFetcher():
                         logging.warning('Could not detect file extension for url \'%s\', fallback to .%s' % (url, ext))
 
                     save = '{path}/{id:0>8}.{ext}'.format(path=path, id=wrestler.nr, ext=ext)
+
+                    logging.debug('Found wrestler image: "%s". Saving to: %s' % (url, save))
                     fetch = urlretrieve(url, save)
 
                     if fetch:
@@ -352,9 +366,9 @@ class FaceFetcher():
         
         name = wrestler.name.strip()
         queries = ['%s wrestler' % name, name]
-        
+
         for q in queries:
-            ddg = duck_duck_go(name)
+            ddg = duck_duck_go(q)
             if ddg['Image']:
                 return ddg['Image']
 
