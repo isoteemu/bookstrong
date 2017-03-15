@@ -7,8 +7,6 @@ from .FaceDetect import face_detect
 
 import logging
 
-
-
 def crop_thumb(picture, thumb_size=(100,100)):
     ''' Crop thumbnail.
     
@@ -26,7 +24,8 @@ def crop_thumb(picture, thumb_size=(100,100)):
     try:
         ''' Search for face '''
         (x,y,w,h) = find_face(picture)
-    except Exception as e:
+    except AttributeError:
+        logging.debug('Could not find face, using golden ration')
         ''' Crop about according golden line '''
         if h > w:
             y = int(max(h / 3 - (w/2), 0))
@@ -54,7 +53,7 @@ def upscale_if_needed(im, size):
 
         im = im.resize((int(w * factor),int(h * factor)),  Image.ANTIALIAS)
 
-        logging.debug('Scaled image with factor %f' % factor)
+        logging.debug('Upscaled image with factor %f' % factor)
 
     return im
 
