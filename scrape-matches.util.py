@@ -36,7 +36,9 @@ def get_gimmick_id(id, gimmick):
 def scrape_matches(wrestler_nr, match_offset=0):
     print('Processing %d:%d' % (wrestler_nr, match_offset))
 
-    c_file = 'cache/matches-{wrestler}-{offset}.txt'.format(wrestler=wrestler_nr, offset=match_offset)
+    c_file = '/tmp/cm-matches-{wrestler}-{offset}.txt'.format(
+        wrestler=wrestler_nr, offset=match_offset
+    )
 
     try:
         page = open(c_file)
@@ -253,7 +255,7 @@ if __name__ == '__main__':
     cmdline = argparse.ArgumentParser(description='Find wrestler matches from cagematch.')
 
     cmdline.add_argument('wrestler_id', help='Wrestler ID number[s].',
-                            type=int, nargs='*')
+                         type=int, nargs='*')
     cmdline.add_argument('--debug', help='Debug', action='store_true')
 
     args = cmdline.parse_args()
@@ -264,12 +266,15 @@ if __name__ == '__main__':
     cm = cagematchnet
 
     # HACK
-    #workers = session.query(Wrestler).filter(Wrestler.nr < 1000000).filter(Wrestler.pwi == None).order_by(Wrestler.nr)
-    workers = session.query(Wrestler).filter(Wrestler.nr.in_(args.wrestler_id))
+    if len(args.wrestler_id):
+        workers = session.query(Wrestler).filter(Wrestler.nr.in_(args.wrestler_id))
+    else:
+        # Wrestlers over 1000000 have no cagematch page.
+        workers = session.query(Wrestler).filter(Wrestler.nr < 1000000).order_by(Wrestler.nr)
 
-    print("Wrestler to process:", workers.count())
-
-    #workers = [session.query(Wrestler).get(12698)]
+    if workers.count() == 0:
+        logging.error('No wrestler found.')
+        sys.exit(128)
 
     i = 1
     for worker in workers.all():
@@ -277,7 +282,7 @@ if __name__ == '__main__':
 
         scrape_matches(worker.nr)
 
-        ''' Less than 100 rows, break '''
+        # Less than 100 rows, break
         print('Processed wrestler #', i, worker.name)
         i = i +1
 
