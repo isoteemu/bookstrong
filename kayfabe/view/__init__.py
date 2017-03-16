@@ -79,25 +79,26 @@ def get_image_path(obj: object, size: str ="full") -> str:
 
     # Select suitable folder based on object type.
     if isinstance(obj, Promotion):
-        image = os.path.join(ass_path, 'p', obj.cm_id)
+        image = os.path.join(ass_path, 'p', '{:0>8}'.format(obj.cm_id))
         image = _get_image(image)
 
     elif isinstance(obj, Wrestler):
-        image = os.path.join(ass_path, 'w', obj.cm_id)
+        image = os.path.join(ass_path, 'w', '{:0>8}'.format(obj.nr))
         image = _get_image(image)
+
         if not image:
             image = FaceFetcher().get_face(obj, path=os.path.join(ass_path, 'w'))
 
     if not image:
         image = 'ass/1.gif'
-    elif size not "full":
+    elif size != "full":
         # Set size into tuple.
-        if size is "small":
+        if size == "thumb":
             size = (100,100)
         else:
             size = tuple(size.split('x'))
 
-        image = get_thumb(image, size)
+        image = get_thumb(image, thumb_size=size)
     return image
 
 
