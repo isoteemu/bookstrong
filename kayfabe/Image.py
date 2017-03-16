@@ -5,7 +5,38 @@ from PIL import Image, ImageOps
 
 from .FaceDetect import face_detect
 
+import os
 import logging
+
+def get_thumb(picture, thumb_path='ass/img/t', thumb_size=(100,100)):
+    ''' Get thumb picture. Create one if missing.
+        :param picture:     Original image
+        :param thumb_path:  Thumbnail folder.
+        :param thumb_size:  Thumbnail target size.
+    '''
+
+    # Check for existing one.
+
+    basename = os.path.basename(picture)
+    filename, ext = os.path.splitext(basename)
+    
+    size = '%dx%d' % thumb_size
+
+    thumb = os.path.join(thumb_path, size, filename)
+    thumb += ".jpg"
+
+    if os.path.exists(thumb):
+        return thumb
+
+    logging.debug("Creating new thumbnail %s -> %s", picture, thumb)
+
+    # Create new.
+    _make_dir(thumb)
+
+    im = crop_thumb(picture, thumb_size)
+    im.save(thumb, im.format, quality=85)
+
+    return thumb
 
 def crop_thumb(picture, thumb_size=(100,100)):
     ''' Crop thumbnail.
@@ -36,12 +67,16 @@ def crop_thumb(picture, thumb_size=(100,100)):
             x = int(max(w/2 - (h/2), 0))
             w = h
 
+    w = max(thumb_size[0], w)
+    h = max(thumb_size[1], h)
+
     x,y,w,h = zoom_box((x,y,w,h), img_size=im.size)
 
     im = im.crop((x, y, x+w, y+h))
-    im.thumbnail(thumb_size)
+    im.thumbnail(thumb_size, Image.ANTIALIAS)
 
     return im
+
 
 def upscale_if_needed(im, size):
     ''' Upscale image, if thumb is going to be smaller than :param size:
@@ -112,3 +147,12 @@ def find_face(picture):
     return faces[max_idx]
 
 
+def _make_dir(name, dirmode=0o0755):
+    ''' Create directory for file
+        :param name: Filename.
+    '''
+
+    try:
+        os.makedirs(os.path.dirname(name), dirmode)
+    except (IOError, OSError):
+        pass
