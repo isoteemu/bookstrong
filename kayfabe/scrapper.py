@@ -12,6 +12,8 @@ from urllib.request import urlretrieve
 import time
 from glob import glob
 
+from .models import Wrestler
+
 try:
     from teemu.google import CSE
 except:
@@ -34,7 +36,9 @@ class Scrapper:
             from cachecontrol import CacheControl
             from cachecontrol.caches import FileCache
             import tempfile
-            self._requests = CacheControl(self._requests, cache=FileCache(tempfile.gettempdir()+'/cagematch-cache', forever=True))
+            self._requests = CacheControl(self._requests, cache=FileCache(
+                tempfile.gettempdir()+'/cagematch-cache', forever=True
+            ))
         except Exception as e:
             logging.warning('CacheControl not available:', e)
 
@@ -133,6 +137,67 @@ class WikiData(Scrapper):
         return super().get(url, **kwargs)
 
 
+class ProWrestlingWiki(Scrapper):
+
+    SEARCH_URL = "http://prowrestling.wikia.com/api/v1/Search/List"
+    ARTICLE_URL = "http://prowrestling.wikia.com/api/v1/Articles/Details"
+
+    def search_id(self, wrestler, **kwargs):
+        ''' Search for article ID. Uses name to compare title.'''
+
+        kwargs.setdefault('namespaces', 0)
+
+        gimmicks = ['%s' % g.gimmick.lower().strip() for g in wrestler.gimmicks]
+
+        query = ', '.join(gimmicks)
+
+        r = self.search(query, **kwargs)
+        for entry in r['items']:
+
+            title = entry['title'].lower()
+            if title in gimmicks:
+                return entry['id']
+
+    def search(self, query: str, **kwargs):
+        ''' Search for article '''
+        kwargs.setdefault('limit', 25)
+        kwargs['query'] = query
+
+        r = self.get(self.SEARCH_URL, params=kwargs)
+        return r.json()
+
+    def search_image(self, wrestler: Wrestler) -> str:
+        ''' Search for wrestler image. '''
+
+        image = None
+
+        id = self.search_id(wrestler)
+        if id:
+            article = self.article(id)
+
+            image = article['thumbnail']
+            if image:
+                image = image[:image.find('/revision/latest/')]
+
+        return image
+
+    def article(self, id, **kwargs):
+        ''' Return article contents.
+            :param id:     article id
+            :param titles:  Titles with underscores instead of spaces, comma-separated
+            :param abstract: The desired length for the article's abstract
+            :param width:   The desired width for the thumbnail
+            :param height:  The desired height for the thumbnail
+        '''
+
+        kwargs['ids'] = id
+
+        r = self.get(self.ARTICLE_URL, params=kwargs)
+        a = r.json()['items'].popitem()[1]
+
+        return a
+
+
 class CageMatch(Scrapper):
     URLS = {
         'SEARCH': 'http://www.cagematch.net/?id=666',
@@ -197,6 +262,7 @@ class CageMatch(Scrapper):
 
         return titles
 
+
     def wrestler(self, id):
 
         details = {
@@ -208,7 +274,7 @@ class CageMatch(Scrapper):
         page = self.get(self.URLS['WRESTLER'], params={'nr': id}).text
         soup = BeautifulSoup(page)
 
-        details['name'] = soup.find('h1', class_='TextHeader').text
+        details['name'] = soup.find('h1', class_='TextHeader').text.strip()
 
         promotion = soup.select('td.InformationBoxContents a[href^="?id=8&nr="]')
         if promotion:
@@ -221,7 +287,7 @@ class CageMatch(Scrapper):
 
             # They use &nbsp; in a.k.a. tag.
             if prev and prev == '  ':
-                details['gimmicks'].append((parent_gimmick, gimmick.get_text()))
+                details['gimmicks'].append((parent_gimmick, gimmick.get_text().strip()))
             else:
                 parent_gimmick = gimmick.get_text().strip()
                 details['gimmicks'].append(parent_gimmick)
@@ -276,21 +342,31 @@ class CageMatch(Scrapper):
 
 class FaceFetcher():
 
-    METHODS = []
+    METHODS = None
 
-    target_folder   = 'ass/w'
+    target_folder   = 'ass/img/w'
     extensions      = ['jpg', 'jpeg', 'gif', 'png']
 
-    wikidata = None
+    wikidata = WikiData()
+    pww = ProWrestlingWiki()
+
     googlecse = None
     bing = None
+
+    # Only try once per session
+    processed = []
+
 
     def __init__(self, register_default_methods=True):
         '''
             :param register_default_methods:     Register default methods.
         '''
+        self.METHODS = []
         if register_default_methods:
+            logging.debug("Registering default methods")
             self.register_method(self.url_from_wikidata, 10)
+
+            self.register_method(self.url_from_prowrestlingwiki, 30)
             self.register_method(self.url_from_duckduckgo, 60)
 
             try:
@@ -298,23 +374,36 @@ class FaceFetcher():
                     self.register_method(self.url_from_googlecse, 70)
             except NameError as e:
                 pass
-            
+
             try:
                 if Bing:
                     self.register_method(self.url_from_bing, 80)
             except NameError as e:
                 pass
 
+
     def register_method(self, method, weight=50):
+
         self.METHODS.append((weight, method))
-        return;
+        logging.debug("Adding method %s. Count %d", method, len(self.METHODS))
+        return
+
 
     def get_face(self, wrestler, path=None, force_update=False):
         ''' Get wrestler photo.
+
+            TODO: Always scrap, remove existing logic.
+
             :param wrestler:        Wrestler Model.
             :param path:            Path to lookup/store images.
             :param force_update:    Force retrieving new picture.
         '''
+
+        # Check that wrestler is not processed.
+        if wrestler.nr in FaceFetcher.processed and force_update is False:
+            return None
+
+        FaceFetcher.processed.append(wrestler.nr)
 
         if not path:
             path = self.target_folder
@@ -343,6 +432,7 @@ class FaceFetcher():
                 logging.debug('Found wrestler image: "%s". Saving to: %s' % (url, save))
                 return save
 
+
     def fetch_face(self, wrestler):
         ''' Iterate throug self.METHODS, until something is found.
         '''
@@ -351,15 +441,26 @@ class FaceFetcher():
 
         for weight, method in methods:
             try:
-                logging.debug("Trying fetch image for '%s' using '%s'" % (wrestler.name, method))
+                logging.debug("Trying fetch image for '%s' using '%s'", wrestler.name, method)
                 url = method(wrestler)
                 if url:
                     yield url
+                else:
+                    next
 
             except Exception as e:
                 logging.warning('Error occured while fetching face: %s' % e)
-
+            time.sleep(2)
         return
+
+
+    def url_from_prowrestlingwiki(self, wrestler):
+        ''' Search image using Pro Wrestling Wikia '''
+        if not self.pww:
+            self.pww = ProWrestlingWiki()
+
+        return self.pww.search_image(wrestler)
+
 
     def url_from_wikidata(self, wrestler):
         if not self.wikidata:
@@ -379,9 +480,10 @@ class FaceFetcher():
             logging.debug('Did not find image from wikipedia: %s' % e)
 
         return None
-    
+
+
     def url_from_duckduckgo(self, wrestler):
-        
+
         name = wrestler.name.strip()
         queries = ['%s wrestler' % name, name]
 
