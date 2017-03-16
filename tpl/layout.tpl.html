@@ -70,13 +70,22 @@
         </ul>
       </div><!-- /btn-group -->
     </form><!-- /input-group -->
-
-					</div>
+				</div>
 					<div class="panel-body">
+					
+                        <style>
+                            {% for wrestler in ranking %}
+a[data-nr="{{ wrestler.nr }}"].wrestler-rank-item .rank-nr:after,
+a[data-nr="{{ wrestler.nr }}"].wrestler-rank-item .bg {
+    background-image: url('{{wrestler|img('thumb')}}');
+}
+                            {% endfor %}
+                        </style>
+					
                         <nav class="list-group rank">
                             {% for wrestler in ranking %}
                                 <a href="#" class="list-group-item wrestler-rank-item {% if loop.index > config['items_per_page'] %}limit-filter-hide{%endif%}" data-promotion="{{ wrestler.promotion.cm_id }}" data-nr="{{ wrestler.nr }}" data-gimmicks="{% for gimmick in wrestler.gimmicks %}{{gimmick.gimmick|escape}}, {% endfor %}">
-                                    <div class="bg" style="background-image:url({{wrestler|img(t='thumb')}});"></div>
+                                    <div class="bg"></div>
                                     <h4 class="list-group-item-heading"><span class="label label-info rank-nr">{{ wrestler.rank }}</span> 
                                         <div class="ln"><span lang="en">{{ wrestler.name|escape }}</span></div>
                                     </h4>
