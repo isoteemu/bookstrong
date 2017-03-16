@@ -6,11 +6,14 @@ from . import session
 
 from sqlalchemy import asc, desc, func
 
-from datetime import date
+from datetime import date, timedelta
 from collections import Sequence
+
+import logging
 
 RANK_TIME = 3
 
+# TODO: Restructure
 class Ranking(Sequence):
 
     to_date         = date.today()
@@ -55,22 +58,32 @@ class Ranking(Sequence):
 
     def get_previus_ranking(self):
         if not self.prev_rank:
-            to_date = date(self.to_date.year, self.to_date.month - self.time_range, 1)
-            self.prev_rank_idx, self.prev_rank, self.prev_scores = self.get_ranked_wrestlers(to_date, time_range=self.time_range)
+            to_date = date(self.to_date.year, self.to_date.month, 1) - timedelta(days=self.time_range*30)
+            self.prev_rank_idx, self.prev_rank, self.prev_scores = self.get_ranked_wrestlers(to_date, time_range=self.time_range, limit=False, update=False)
 
         return self.prev_rank
 
-    def get_ranked_wrestlers(self, to_date=date.today(), from_date=None, time_range=RANK_TIME, update=False):
+    def get_ranked_wrestlers(self, to_date=date.today(), from_date=None, time_range=RANK_TIME, limit=None, update=False):
+
+        if limit == None:
+            limit = self.limit
 
         if not from_date:
-            from_date = date(to_date.year, to_date.month - time_range, 1)
+            from_date = date(to_date.year, to_date.month, 1) - timedelta(days=time_range*30)
 
-        a = session.query(Score).order_by(desc(func.max(Score.score))).\
+        q = session.query(Score).order_by(desc(func.max(Score.score))).\
             join(Match).filter(Match.date >= from_date).\
             filter(Match.date <= to_date).\
-            join(Wrestler).group_by(Score.wrestler_nr).\
-            slice(0,self.limit).all()
+            join(Wrestler).group_by(Score.wrestler_nr)
 
+        logging.debug("Found %d ranked wrestler for %s - %s", q.count(), from_date, to_date)
+
+        if limit:
+            q = q.slice(0,limit)
+
+
+
+        a = q.all()
 
         idx = {}
         r = []
@@ -129,3 +142,6 @@ class Ranking(Sequence):
         if isinstance(nr, Score):
             nr = nr.wrestler_nr
         return nr
+
+
+
