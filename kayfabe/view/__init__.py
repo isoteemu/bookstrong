@@ -67,7 +67,7 @@ def format_datetime(value, format='date'):
     return el.format(iso=value.isoformat(), locale=innards)
 
 
-def get_image_path(obj, size="full"):
+def get_image_path(obj: object, size: str ="full") -> str:
     ''' Return suitable image for object.
 
         :param obj:     Object to create image url for.
@@ -85,12 +85,17 @@ def get_image_path(obj, size="full"):
     elif isinstance(obj, Wrestler):
         image = os.path.join(ass_path, 'w', obj.cm_id)
         image = _get_image(image)
+        if not image:
+            image = FaceFetcher().get_face(obj, path=os.path.join(ass_path, 'w'))
 
     if not image:
         image = 'ass/1.gif'
     elif size not "full":
+        # Set size into tuple.
         if size is "small":
             size = (100,100)
+        else:
+            size = tuple(size.split('x'))
 
         image = get_thumb(image, size)
     return image
