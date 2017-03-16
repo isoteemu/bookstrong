@@ -23,7 +23,7 @@ def get_thumb(picture, thumb_path='ass/img/t', thumb_size=(100,100)):
     size = '%dx%d' % thumb_size
 
     thumb = os.path.join(thumb_path, size, filename)
-    thumb += ".jpg"
+    thumb += ext
 
     if os.path.exists(thumb):
         return thumb
