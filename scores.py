@@ -33,11 +33,12 @@ EVENT_MODIFIERS={
     'PAY PER VIEW': 17
 }
 
-CHAMPIONSHIP_INCREMENT=1
+CHAMPIONSHIP_INCREMENT = 1
 
-DIFFERENCE_MAKER=5
+DIFFERENCE_MAKER = 5
 
-SCORE_CACHE={}
+SCORE_CACHE = {}
+
 
 def get_wrestler_score(nr):
 
@@ -74,19 +75,30 @@ def update_score(nr, match, score):
 
     SCORE_CACHE[nr] = new_score.score
 
+
 if __name__ == '__main__':
 
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    import argparse
 
-    cm = CageMatch()
+    cmdline = argparse.ArgumentParser(description='Update scores.')
+
+    cmdline.add_argument('--full', help='Force updating full score table.', action='store_true')
+
+    args = cmdline.parse_args()
+
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
     '''
     matches = session.query(Match).join(MatchWrestler).join(Wrestler).\
         distinct(Match.id).order_by(Match.date, desc(Match.id))
+
     '''
-    matches = session.query(Match).order_by(asc(Match.date), asc(Match.id))
-        #filter(Wrestler.pwi >= 502).\
-    #filter(MatchWrestler.wrestler_id.in_(test)).\
+
+    if args.full:
+        matches = session.query(Match).distinct(Match.id).order_by(asc(Match.date), desc(Match.id))
+    else:
+        last = session.query(Score).order_by(desc(Score.id)).limit(1).one()
+        matches = session.query(Match).distinct(Match.id).order_by(asc(Match.date), desc(Match.id)).filter(Match.id > last.match.id)
 
     matches_count = matches.count()
 
@@ -175,7 +187,7 @@ if __name__ == '__main__':
         for loser in losers:
             update_score(loser.wrestler_id, match, -score_base)
 
-        if i % 1000 == 0:
+        if i % 5000 == 0:
             session.commit()
         i = i + 1
 
