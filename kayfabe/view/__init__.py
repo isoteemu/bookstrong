@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# TODO: Depracete - siirrä jinjan functioksi jos on niikseen.
 
 from kayfabe.models import *
+from kayfabe.scrapper import FaceFetcher
+from kayfabe.Image import get_thumb
 
 from bs4 import BeautifulSoup
 from copy import copy
@@ -10,7 +13,10 @@ from copy import copy
 import locale
 import logging
 
+import os
 from glob import glob
+
+IMAGES_PATH = 'ass/img/'
 
 def translate_html(page, translation):
     ''' Translate lang elements.
@@ -61,32 +67,44 @@ def format_datetime(value, format='date'):
     return el.format(iso=value.isoformat(), locale=innards)
 
 
-def get_image_path(obj, t="full"):
-
+def get_image_path(obj, size="full"):
     ''' Return suitable image for object.
+
+        :param obj:     Object to create image url for.
+        :param size:    Image size. "full" for full size, otherwise "WIDTHxHEIGHT".
     '''
-    ass_path = 'ass'
-    if t.lower() == 'thumb':
-        ass_path = '%s/t' % ass_path
 
+    image = None
+    ass_path = IMAGES_PATH
+
+    # Select suitable folder based on object type.
     if isinstance(obj, Promotion):
-        id = obj.cm_id
-        path = '%s/p' % ass_path
+        image = os.path.join(ass_path, 'p', obj.cm_id)
+        image = _get_image(image)
+
     elif isinstance(obj, Wrestler):
-        id = obj.nr
-        path = '%s/f' % ass_path
+        image = os.path.join(ass_path, 'w', obj.cm_id)
+        image = _get_image(image)
 
-    src = get_img(id, path)
-    if not src:
-        src = 'ass/1.gif'
+    if not image:
+        image = 'ass/1.gif'
+    elif size not "full":
+        if size is "small":
+            size = (100,100)
 
-    return src
+        image = get_thumb(image, size)
+    return image
 
-def get_img(id, path):
-    
-    g = '{path}/{id:0>8}.*'.format(path=path,id=id)
+
+def _get_image(basename):
+    ''' Get suitable image.
+        TODO: Implement extension checking.
+    '''
+
+    g = '{basename}.*'.format(basename=basename)
 
     pics = glob(g)
     if len(pics):
         return pics[0]
-    return ''
+
+    return None
