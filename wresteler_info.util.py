@@ -72,7 +72,7 @@ if __name__ == '__main__':
     ringnames = [g.gimmick for g in proxy.gimmicks(force_update)]
     print("Ringnames: %s" % ', '.join(ringnames))
 
-    print("Promotion: %s" % proxy.promotion(force_update))
+    print("Promotion: %s" % proxy.promotion(force_update).name)
 
 
     pww = ProWrestlingWiki()

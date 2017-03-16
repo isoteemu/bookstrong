@@ -11,10 +11,9 @@ import logging
 
 class ModelProxy():
     force_update = False
-    model = None
 
 class WrestlerProxy(ModelProxy):
-    ''' Proxy for wrestler info scraping '''
+    ''' Proxy for wrestler info scraping. '''
 
     _cagematch = None
     wrestler = None
@@ -58,8 +57,12 @@ class WrestlerProxy(ModelProxy):
         try:
             promotion = session.query(Promotion).get(promotion_id)
         except exc.NoResultFound:
-            promotion_data = cagematchnet.promotion(data['promotion'])
-            promotion = Promotion(cm_id=data['promotion'], name=promotion_data['name'],
+            promotion = None
+            pass
+
+        if not promotion:
+            promotion_data = cagematchnet.promotion(promotion_id)
+            promotion = Promotion(cm_id=promotion_id, name=promotion_data['name'],
                                   abbrevation=promotion_data['abbrevation'])
 
             logging.debug("Creating new Promotion: %s", promotion)
