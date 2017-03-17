@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageChops
 
 from .FaceDetect import face_detect
 
@@ -50,6 +50,8 @@ def crop_thumb(picture, thumb_size=(100,100)):
     '''
 
     im = Image.open(picture)
+
+    im = trim_borders(im)
     im = upscale_if_needed(im, thumb_size)
 
     w,h = im.size
@@ -134,6 +136,19 @@ def zoom_box(box, img_size, scale=1):
 
     return (int(x),int(y),int(z_w),int(z_h))
 
+
+def trim_borders(im):
+    ''' Trim image borders.
+    From: http://stackoverflow.com/questions/10615901/trim-whitespace-using-pil
+    '''
+
+    bg = Image.new(im.mode, im.size, im.getpixel((0,0)))
+    diff = ImageChops.difference(im, bg)
+    diff = ImageChops.add(diff, diff, 1.0, -100)
+    bbox = diff.getbbox()
+    if bbox:
+        return im.crop(bbox)
+    return im
 
 def find_face(picture):
 
