@@ -10,6 +10,7 @@ import logging
 
 def get_thumb(picture, thumb_path='ass/img/t', thumb_size=(100,100)):
     ''' Get thumb picture. Create one if missing.
+
         :param picture:     Original image
         :param thumb_path:  Thumbnail folder.
         :param thumb_size:  Thumbnail target size.
@@ -19,7 +20,7 @@ def get_thumb(picture, thumb_path='ass/img/t', thumb_size=(100,100)):
 
     basename = os.path.basename(picture)
     filename, ext = os.path.splitext(basename)
-    
+
     size = '%dx%d' % thumb_size
 
     thumb = os.path.join(thumb_path, size, filename)
@@ -38,12 +39,13 @@ def get_thumb(picture, thumb_path='ass/img/t', thumb_size=(100,100)):
 
     return thumb
 
+
 def crop_thumb(picture, thumb_size=(100,100)):
     ''' Crop thumbnail.
-    
+
         :param picture:     Picture file to generate thumbnail
         :param thumb_size:  (tuple) Target thumbnail size 
-        
+
         :return:            Image object.
     '''
 
@@ -52,9 +54,12 @@ def crop_thumb(picture, thumb_size=(100,100)):
 
     w,h = im.size
 
+    scale = 1
+
     try:
         ''' Search for face '''
         (x,y,w,h) = find_face(picture)
+        scale = 0.35
     except AttributeError:
         logging.debug('Could not find face, using golden ration')
         ''' Crop about according golden line '''
@@ -70,7 +75,7 @@ def crop_thumb(picture, thumb_size=(100,100)):
     w = max(thumb_size[0], w)
     h = max(thumb_size[1], h)
 
-    x,y,w,h = zoom_box((x,y,w,h), img_size=im.size)
+    x,y,w,h = zoom_box((x,y,w,h), img_size=im.size, scale=scale)
 
     im = im.crop((x, y, x+w, y+h))
     im.thumbnail(thumb_size, Image.ANTIALIAS)
@@ -93,7 +98,7 @@ def upscale_if_needed(im, size):
     return im
 
 
-def zoom_box(box, img_size, scale=0.6):
+def zoom_box(box, img_size, scale=1):
     ''' Dummy function for zooming cropbox outwards
     
         :param box:         Current box from where to scale outwards
@@ -133,6 +138,8 @@ def zoom_box(box, img_size, scale=0.6):
 def find_face(picture):
 
     faces = face_detect(picture)
+
+    logging.debug("Found %d faces for picture %s", len(faces), picture)
 
     max_idx = None
     max_size = 0
