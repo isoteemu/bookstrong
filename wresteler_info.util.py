@@ -12,6 +12,11 @@ from kayfabe.view import get_image_path
 
 import logging, sys
 
+from sqlalchemy import asc, desc, func
+
+def get_last_match(wrestler: Wrestler) -> Match:
+    q = session.query(Match).join(MatchWrestler).filter_by(wrestler_id=wrestler.nr).order_by(desc(Match.date)).limit(1)
+    return q.one()
 
 if __name__ == '__main__':
     import argparse
@@ -74,13 +79,15 @@ if __name__ == '__main__':
 
     print("Promotion: %s" % proxy.promotion(force_update).name)
 
-
-    pww = ProWrestlingWiki()
-    pww.search_image(proxy.wrestler)
-
+    try:
+        print("Last match: %s" % get_last_match(wrestler).date)
+    except:
+        pass
 
     picture = get_image_path(wrestler)
     print('Picture: %s' % picture)
 
-    if (args.add or args.update) and ( session.dirty or session.new ):
+
+
+    if args.add or args.update:
         session.commit()
