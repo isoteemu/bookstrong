@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 
 from urllib.parse import urlparse, parse_qs
 from urllib.request import urlretrieve
+from urllib.error import HTTPError
 
 import time
 from glob import glob
@@ -16,11 +17,6 @@ from .models import Wrestler
 
 try:
     from teemu.google import CSE
-except:
-    pass
-
-try:
-    from teemu.Bing import Bing
 except:
     pass
 
@@ -427,10 +423,13 @@ class FaceFetcher():
 
             save = '{path}/{id:0>8}.{ext}'.format(path=path, id=wrestler.nr, ext=ext)
 
-            fetch = urlretrieve(url, save)
-            if fetch:
-                logging.debug('Found wrestler image: "%s". Saving to: %s' % (url, save))
-                return save
+            try:
+                fetch = urlretrieve(url, save)
+                if fetch:
+                    logging.debug('Found wrestler image: "%s". Saving to: %s' % (url, save))
+                    return save
+            except HTTPError as e:
+                logging.warning("URL retrieval error: %s", e)
 
 
     def fetch_face(self, wrestler):
