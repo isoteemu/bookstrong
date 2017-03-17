@@ -28,16 +28,6 @@ class Scrapper:
     _last_scrape = 0
 
     def __init__(self):
-        try:
-            from cachecontrol import CacheControl
-            from cachecontrol.caches import FileCache
-            import tempfile
-            self._requests = CacheControl(self._requests, cache=FileCache(
-                tempfile.gettempdir()+'/cagematch-cache', forever=True
-            ))
-        except Exception as e:
-            logging.warning('CacheControl not available:', e)
-
         self._requests.headers.update({'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'})
 
     def get(self, url, **kwargs):
@@ -47,6 +37,42 @@ class Scrapper:
 
         self._last_scrape = time.time()
         return self._requests.get(url, **kwargs)
+
+
+try:
+    ''' Set cache control for requests '''
+    from cachecontrol import CacheControl
+    from cachecontrol.caches import FileCache
+    import tempfile
+
+    import calendar
+    from cachecontrol.heuristics import BaseHeuristic
+    from datetime import datetime, timedelta
+    from email.utils import parsedate, formatdate
+
+    class OneWeekHeuristic(BaseHeuristic):
+        ''' Class to force storing pages in CacheControl.
+
+        From CacheControl examples.
+        '''
+
+        def update_headers(self, response):
+            date = parsedate(response.headers['date'])
+            expires = datetime(*date[:6]) + timedelta(weeks=1)
+            return {
+                'expires' : formatdate(calendar.timegm(expires.timetuple())),
+                'cache-control' : 'public',
+            }
+
+    Scrapper._requests = CacheControl(Scrapper._requests, cache=FileCache(
+        tempfile.gettempdir()+'/cagematch-cache', forever=True,
+        
+    ), heuristic=OneWeekHeuristic())
+
+except Exception as e:
+    logging.warning('CacheControl not available:', e)
+
+
 
 class WikiData(Scrapper):
 
@@ -173,7 +199,7 @@ class ProWrestlingWiki(Scrapper):
 
             image = article['thumbnail']
             if image:
-                image = image[:image.find('/revision/latest/')]
+                image = image[:image.find('/revision/latest')]
 
         return image
 
@@ -368,12 +394,6 @@ class FaceFetcher():
             try:
                 if CSE:
                     self.register_method(self.url_from_googlecse, 70)
-            except NameError as e:
-                pass
-
-            try:
-                if Bing:
-                    self.register_method(self.url_from_bing, 80)
             except NameError as e:
                 pass
 
