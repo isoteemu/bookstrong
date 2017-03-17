@@ -18,7 +18,7 @@ class Ranking(Sequence):
 
     to_date         = date.today()
     time_range      = RANK_TIME
-    limit           = 400
+    limit           = 500
 
     rank            = None
     prev_rank       = None
@@ -127,13 +127,14 @@ class Ranking(Sequence):
             return self.scores[self.rank_idx[nr]].score
 
         return None
-    
+
     def get_previous_score(self, nr):
         self.get_previus_ranking()
         nr = self._get_nr(nr)
 
         if nr in self.rank_idx:
-            return self.prev_scores[self.rank_idx[nr]].score
+            score = self.prev_scores[self.prev_rank_idx[nr]].score
+            return score
 
     def _get_nr(self, nr):
 
