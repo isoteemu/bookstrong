@@ -8,16 +8,17 @@ from .FaceDetect import face_detect
 import os
 import logging
 
-def get_thumb(picture, thumb_path='ass/img/t', thumb_size=(100,100)):
-    ''' Get thumb picture. Create one if missing.
+logger = logging.getLogger(__name__)
 
-        :param picture:     Original image
-        :param thumb_path:  Thumbnail folder.
-        :param thumb_size:  Thumbnail target size.
-    '''
 
-    # Check for existing one.
+def get_thumb(picture, thumb_path='ass/img/t', thumb_size=(100, 100), force_regen=False):
+    """Get thumb picture. Create one if missing.
 
+    :param picture:     Original image
+    :param thumb_path:  Thumbnail folder.
+    :param thumb_size:  Thumbnail target size.
+    :param force_regen: Force thumbnail regeneration
+    """
     basename = os.path.basename(picture)
     filename, ext = os.path.splitext(basename)
 
@@ -26,10 +27,10 @@ def get_thumb(picture, thumb_path='ass/img/t', thumb_size=(100,100)):
     thumb = os.path.join(thumb_path, size, filename)
     thumb += ext
 
-    if os.path.exists(thumb):
+    if not force_regen and os.path.exists(thumb):
         return thumb
 
-    logging.debug("Creating new thumbnail %s -> %s", picture, thumb)
+    logger.debug('Creating new thumbnail %s -> %s', picture, thumb)
 
     # Create new.
     _make_dir(thumb)
@@ -40,81 +41,143 @@ def get_thumb(picture, thumb_path='ass/img/t', thumb_size=(100,100)):
     return thumb
 
 
-def crop_thumb(picture, thumb_size=(100,100)):
-    ''' Crop thumbnail.
+def crop_thumb(picture, thumb_size=(100, 100), **kwargs):
+    """Crop thumbnail.
 
-        :param picture:     Picture file to generate thumbnail
-        :param thumb_size:  (tuple) Target thumbnail size 
+    :param picture:     Picture file to generate thumbnail
+    :param thumb_size:  (tuple) Target thumbnail size 
 
-        :return:            Image object.
-    '''
+    :return:            Image object.
+    """
+    scale = kwargs.get('scale', 1)
 
     im = Image.open(picture)
 
-    im = trim_borders(im)
-    im = upscale_if_needed(im, thumb_size)
-
-    w,h = im.size
-
-    scale = 1
+    logger.debug("Image dimenssions: %s", im.size)
 
     try:
         ''' Search for face '''
-        (x,y,w,h) = find_face(picture)
+        face_box = find_face(picture)
+
         scale = 0.35
+        crop = zoom_box(im, face_box, scale)
+        logger.debug('Face box: %s, Zoom box: %s', face_box, crop)
+        aspect_ratio = thumb_size[0] / thumb_size[1]
+
+        crop = crop_to_aspectratio(im, crop, aspect_ratio=aspect_ratio)
+
+        im = im.crop(crop)
+        im = upscale_if_needed(im, thumb_size)
+
+        logger.debug('Box size: %s, thumb target: %s', crop, thumb_size)
+        # Move viewbox according
+
     except AttributeError:
-        logging.debug('Could not find face, using golden ration')
-        ''' Crop about according golden line '''
-        if h > w:
-            y = int(max(h / 3 - (w/2), 0))
-            h = w
-            x = 0
-        else:
-            y = 0
-            x = int(max(w/2 - (h/2), 0))
-            w = h
+        logger.debug('Could not find face, using dummy cropping.')
 
-    w = max(thumb_size[0], w)
-    h = max(thumb_size[1], h)
+        im = trim_borders(im)
+        im = upscale_if_needed(im, thumb_size)
 
-    x,y,w,h = zoom_box((x,y,w,h), img_size=im.size, scale=scale)
+        crop = _dummy_crop_box(im, size=thumb_size)
+        im = im.crop(crop)
 
-    im = im.crop((x, y, x+w, y+h))
     im.thumbnail(thumb_size, Image.ANTIALIAS)
 
     return im
 
 
+def _check_bounds(im, box):
+    """Check box agains image dimenssions, reposition if necessary."""
+    width, height = im.size
+    x, y, w, h = box
+
+    if x < 0:
+        x = 0
+    elif x + w > width:
+        x = width - w
+
+    if y < 0:
+        y = 0
+    elif y + h > height:
+        y = height - h
+
+    return (x, y, w, h)
+
+
+def _dummy_crop_box(im, size):
+    """ Dummy image cropping.
+
+    Center on horizontal crop, and from top on vertical crop.
+    :param im:          Image object.
+    :param thumb_size:  tuple of requested size()
+    :return:            tuple(x, y, w, h)
+    """
+
+    target_aspect_ratio = size[0] / size[1]
+
+    width, height = im.size
+    source_aspect_ratio = width / height
+
+    if source_aspect_ratio > target_aspect_ratio:
+        # Crop on horizontal axis, using center point
+        y = 0
+        x = width / 2 - (height / 2)
+        width = height
+    elif source_aspect_ratio < target_aspect_ratio:
+        x = y = 0
+        height = width
+    else:
+        x = y = 0
+
+    x, y, w, h = _check_bounds(im, (x, y, width, height))
+    return (x, y, x+width, y+height)
+
+
 def upscale_if_needed(im, size):
-    ''' Upscale image, if thumb is going to be smaller than :param size:
-    '''
-    w,h = im.size
+    """Upscale image, if thumb is going to be smaller than :param size:
+
+    :param size:    Minimum image size allowed.
+    """
+    w, h = im.size
+
+    min_width, min_height = size
+
+    logger.debug("Width, height: %s x %s", w, h)
 
     if w < size[0] or h < size[1]:
-        factor = max(1, size[0] / w, size[1] / h)
+        factor = max(1, min_width / w, min_height / h)
 
-        im = im.resize((int(w * factor),int(h * factor)),  Image.ANTIALIAS)
+        new_width = int(w * factor)
+        new_height = int(h * factor)
+        im = im.resize((new_width, new_height),  Image.ANTIALIAS)
 
-        logging.debug('Upscaled image with factor %f' % factor)
+        logger.debug('Upscaled image with factor %f -> (%d, %d)',
+                     factor, new_width, new_height)
 
     return im
 
 
-def zoom_box(box, img_size, scale=1):
-    ''' Dummy function for zooming cropbox outwards
-    
-        :param box:         Current box from where to scale outwards
-        :param img_size:    Current image dimenssions.
-        :param scale:       Maximum scale to zoom outwars, if possible.
-    '''
+def zoom_box(im, box, scale, target_size=None):
+    """Dummy function for zooming cropbox outwards.
+
+    :param box:         Current box from where to scale outwards
+    :param img_size:    Current image dimenssions.
+    :param scale:       Maximum scale to zoom outwars, if possible.
+    :param target_size: Target size. Keep inside thease bounds.
+    """
     x, y, w, h = box
-    
+
     # zoomed width and height
     z_w = z_h = 0
 
-    width, height = img_size
-    
+    width, height = im.size
+
     scale = max(scale, w / width, h / height)
+
+    max_width = max(scale * w, width)
+    max_height = max(scale * h, height)
+
+    #im = upscale_if_needed(im, (max_width, max_height))
 
     z_w = w / scale
     z_h = h / scale
@@ -122,19 +185,43 @@ def zoom_box(box, img_size, scale=1):
     # Move box according scaling.
     x = x - ((z_w - w) / 2)
     y = y - ((z_h - h) / 2)
-    
+
     ''' Sanity check that we are inside image dimenssions. '''
-    if x < 0:
-        x = 0
-    elif x + z_w > width:
-        x = width - z_w
 
-    if y < 0:
-        y = 0
-    elif y + z_h > height:
-        y = height - z_h
+    return _check_bounds(im, (int(x), int(y), int(z_w), int(z_h)))
 
-    return (int(x),int(y),int(z_w),int(z_h))
+
+def crop_to_aspectratio(im, box, aspect_ratio):
+    """Crops image to fit inside defined aspect ration.
+    Enlarge if possible, crop if necessary.
+    """
+    width, height = im.size
+    x, y, box_width, box_height = box
+
+    center = (x + box_width/2) / width
+    middle = (y + box_height/2) / height
+
+    target_width = box_width * aspect_ratio
+    target_height = box_height
+
+    diff_width = width / target_width
+    diff_height = height / target_height
+
+    scale = max(diff_width, diff_height)
+    if scale < 1:
+        logger.debug('New bounding box too big, scaling down.')
+        target_width = target_width * scale
+        target_height = target_height * scale
+
+    logger.debug("Targets: %s x %s", target_width, target_height)
+
+    new_x = width * center - (target_width/2)
+    new_y = height * middle - (target_height/2)
+
+    bounds = (int(new_x), int(new_y), int(target_width), int(target_height))
+    x, y, w, h = _check_bounds(im, bounds)
+
+    return (x, y, x+w, y+h)
 
 
 def trim_borders(im):
@@ -144,7 +231,7 @@ def trim_borders(im):
 
     bg = Image.new(im.mode, im.size, im.getpixel((0,0)))
     diff = ImageChops.difference(im, bg)
-    diff = ImageChops.add(diff, diff, 1.0, -100)
+    diff = ImageChops.add(diff, diff, 1.1, -100)
     bbox = diff.getbbox()
     if bbox:
         return im.crop(bbox)
@@ -154,7 +241,7 @@ def find_face(picture):
 
     faces = face_detect(picture)
 
-    logging.debug("Found %d faces for picture %s", len(faces), picture)
+    logger.debug("Found %d faces for picture %s", len(faces), picture)
 
     max_idx = None
     max_size = 0
