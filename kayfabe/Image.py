@@ -61,12 +61,18 @@ def crop_thumb(picture, thumb_size=(100, 100), **kwargs):
 
         scale = 0.35
         crop = zoom_box(im, face_box, scale)
-        logger.debug('Face box: %s, Zoom box: %s', face_box, crop)
         aspect_ratio = thumb_size[0] / thumb_size[1]
 
-        crop = crop_to_aspectratio(im, crop, aspect_ratio=aspect_ratio)
+        x, y, w, h = crop_to_aspectratio(im, crop, aspect_ratio=aspect_ratio)
 
-        im = im.crop(crop)
+        if y > 0:
+            face_offset = h * 0.13
+        else:
+            face_offset = 0
+
+        crop = _check_bounds(im, (x, y + face_offset, w, h))
+
+        im = _crop(im, crop)
         im = upscale_if_needed(im, thumb_size)
 
         logger.debug('Box size: %s, thumb target: %s', crop, thumb_size)
@@ -79,12 +85,24 @@ def crop_thumb(picture, thumb_size=(100, 100), **kwargs):
         im = upscale_if_needed(im, thumb_size)
 
         crop = _dummy_crop_box(im, size=thumb_size)
-        im = im.crop(crop)
+        im = _crop(im, crop)
 
     im.thumbnail(thumb_size, Image.ANTIALIAS)
 
     return im
 
+
+def _crop(im, box):
+    """Wrapper for Image.crop(), but uses box instead of area."""
+    x, y, w, h = box
+
+    left = x
+    top = y
+    right = x + w
+    bottom = y + h
+
+    im = im.crop((left, top, right, bottom))
+    return im
 
 def _check_bounds(im, box):
     """Check box agains image dimenssions, reposition if necessary."""
@@ -129,8 +147,7 @@ def _dummy_crop_box(im, size):
     else:
         x = y = 0
 
-    x, y, w, h = _check_bounds(im, (x, y, width, height))
-    return (x, y, x+width, y+height)
+    return _check_bounds(im, (x, y, width, height))
 
 
 def upscale_if_needed(im, size):
@@ -219,9 +236,8 @@ def crop_to_aspectratio(im, box, aspect_ratio):
     new_y = height * middle - (target_height/2)
 
     bounds = (int(new_x), int(new_y), int(target_width), int(target_height))
-    x, y, w, h = _check_bounds(im, bounds)
 
-    return (x, y, x+w, y+h)
+    return _check_bounds(im, bounds)
 
 
 def trim_borders(im):
