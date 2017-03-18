@@ -384,11 +384,13 @@ class FaceFetcher():
             :param register_default_methods:     Register default methods.
         '''
         self.METHODS = []
+
+
         if register_default_methods:
             logging.debug("Registering default methods")
-            self.register_method(self.url_from_wikidata, 10)
 
-            self.register_method(self.url_from_prowrestlingwiki, 30)
+            self.register_method(self.url_from_prowrestlingwiki, 10)
+            self.register_method(self.url_from_wikidata, 30)
             self.register_method(self.url_from_duckduckgo, 60)
 
             try:
