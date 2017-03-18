@@ -83,10 +83,17 @@ if __name__ == '__main__':
     cmdline = argparse.ArgumentParser(description='Update scores.')
 
     cmdline.add_argument('--full', help='Force updating full score table.', action='store_true')
+    cmdline.add_argument('--debug', help='Debug', action='store_true')
 
     args = cmdline.parse_args()
 
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    if args.debug:
+        logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    else:
+        logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+
+    logger = logging.getLogger()
+    debugging = lgger.isEnabledFor(logging.DEBUG)
 
     '''
     matches = session.query(Match).join(MatchWrestler).join(Wrestler).\
@@ -148,8 +155,6 @@ if __name__ == '__main__':
             logging.info("Match '{name}' [{id}] at {at} was no contest ({resolution})".format(name=match.event_name, id=match.id, at=match.date, resolution=match.resolution))
             continue
 
-        print('scores', winners, '[%d]' % winner_score, 'v.', losers, '[%d]' % loser_score)
-
         event_titles = match.titles
         if event_titles:
             for title in event_titles:
@@ -178,9 +183,10 @@ if __name__ == '__main__':
         score_base = score_diff * DIFFERENCE_MAKER * event_modifier * champ / dq_penalty
         score_base = max(score_base, 1)
 
-        print('score:{score}, sqrt(loser:{loser}[{l_len}] / winner:{winner}[{w_len}]) / m:{m} * {MULT} * event:{event} * champ:{champ} / dq:{dq}'.format(
-            score=score_base, loser=loser_score, m=m, winner=winner_score, MULT=DIFFERENCE_MAKER, champ=champ, event=event_modifier, dq=dq_penalty, l_len=len(losers), w_len=len(winners)
-        ))
+        if debugging:
+            print('score:{score}, sqrt(loser:{loser}[{l_len}] / winner:{winner}[{w_len}]) / m:{m} * {MULT} * event:{event} * champ:{champ} / dq:{dq}'.format(
+                score=score_base, loser=loser_score, m=m, winner=winner_score, MULT=DIFFERENCE_MAKER, champ=champ, event=event_modifier, dq=dq_penalty, l_len=len(losers), w_len=len(winners)
+            ))
 
         for winner in winners:
             update_score(winner.wrestler_id, match, score_base)
