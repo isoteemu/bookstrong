@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from kayfabe.models import *
 from kayfabe.scrapper import CageMatch, cagematchnet
 from kayfabe import session
+from kayfabe.util import get_gimmick_id
 
 from random import randint
 from time import strptime
@@ -25,15 +26,7 @@ from time import sleep
 
 import argparse
 
-def get_gimmick_id(id, gimmick):
-    '''
-        Get gimmick ID by gimmick name
-    '''
-    gimmick_query = session.query(Gimmick).filter_by(wrestler_nr=id, gimmick=gimmick)
-    if gimmick_query.count() >= 1:
-        return gimmick_query.first().id
-
-def scrape_matches(wrestler_nr, match_offset=0):
+def scrape_matches(wrestler_nr, match_offset=0, skip_processed=False):
     print('Processing %d:%d' % (wrestler_nr, match_offset))
 
     c_file = '/tmp/cm-matches-{wrestler}-{offset}.txt'.format(
@@ -42,6 +35,10 @@ def scrape_matches(wrestler_nr, match_offset=0):
 
     try:
         page = open(c_file)
+        if page and skip_processed:
+            logging.debug("Skipping processed wresler")
+            return
+
     except:
         page = cm.get('http://www.cagematch.net/?id=2&page=4', params={'nr': wrestler_nr, 's':match_offset}).text
         open(c_file, 'w').write(page)
@@ -158,7 +155,7 @@ def scrape_matches(wrestler_nr, match_offset=0):
             First, retieve approximation of suitable matches, and later check if it
             might be one we are just processing.
         '''
-        
+
         existing_match = False
         winner_list = [i[0] for i in winners]
         loser_list = [i[0] for i in losers]
@@ -183,17 +180,17 @@ def scrape_matches(wrestler_nr, match_offset=0):
             for wrestler in match_wrestlers.all():
                 ''' check for correct resolution '''
                 if wrestler.resolution >= MatchWrestler.NC and wrestler.wrestler_id not in winner_list:
-                    existing_match = False;
+                    existing_match = False
                     break
                 elif wrestler.resolution < MatchWrestler.NC and wrestler.wrestler_id not in loser_list:
-                    existing_match = False;
+                    existing_match = False
                     break
 
             if existing_match == True:
                 break
 
         if existing_match == True:
-            logging.info("Match '%s' exists, skipping" % event_name)
+            logging.info("Match '%s' exists, skipping", event_name)
             print('!!! EXISTING MATCH')
             continue
 
@@ -257,11 +254,16 @@ if __name__ == '__main__':
     cmdline.add_argument('wrestler_id', help='Wrestler ID number[s].',
                          type=int, nargs='*')
     cmdline.add_argument('--debug', help='Debug', action='store_true')
+    cmdline.add_argument('--full', help='Skip processed wrestlers.', action='store_true')
 
     args = cmdline.parse_args()
 
     if args.debug:
         logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+
+    logger = logging.getLogger(__name__)
+
+    skip_processed = not args.full
 
     cm = cagematchnet
 
@@ -280,14 +282,13 @@ if __name__ == '__main__':
     for worker in workers.all():
         print('Processing wrestler #', i, worker.name)
 
-        scrape_matches(worker.nr)
+        scrape_matches(worker.nr, skip_processed=skip_processed)
 
         # Less than 100 rows, break
         print('Processed wrestler #', i, worker.name)
         i = i +1
 
-        if session.dirty or session.new:
-            session.commit()
+        session.commit()
 
 print("DONE")
     #print(cols)
