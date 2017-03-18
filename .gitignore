@@ -3,6 +3,10 @@ __pycache__/
 *~
 cagematch.sqlite3
 
+ass/img/p/*
+ass/img/w/*
+ass/img/t/*
+
 .kdev4/
 bookstrong.kdev4
 
