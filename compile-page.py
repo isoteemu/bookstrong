@@ -14,6 +14,7 @@ import gettext, locale
 from jinja2 import Template
 from jinja2 import Environment, FileSystemLoader
 
+import argparse
 import logging, sys
 from datetime import date, timedelta
 from os import path
@@ -41,7 +42,7 @@ def get_riser_stuff(wrestler):
 
 
 def get_event_stuff(wrestler):
-    logging.debug('Event stuff for wrestler %s', wrestler.name)
+    logger.debug('Event stuff for wrestler %s', wrestler.name)
 
     try:
         wrestler.ranks_risen = ranking.get_previous_rank(wrestler) - ranking.get_rank(wrestler)
@@ -67,9 +68,29 @@ if __name__ == '__main__':
         'items_per_page': 20
     }
 
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    limit = 1000
+
+    cmdline = argparse.ArgumentParser(description='Compile page.')
+
+    cmdline.add_argument('--debug', help='Debug', action='store_true')
+    cmdline.add_argument('--output-file', help='Output file.')
+    cmdline.add_argument('--limit', help='Limit wrestler count.',
+                         type=int, default=limit)
+
+    args = cmdline.parse_args()
+
+    if args.debug:
+        logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    else:
+        logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+
+    if args.limit:
+        limit = args.limit
+
+    logger = logging.getLogger()
 
     translations = gettext.translation('bookstrong', localedir='ass/locale', languages=['ja'])
+
     translations.install()
 
     tpl = Environment(loader=FileSystemLoader('tpl'), extensions=['jinja2.ext.i18n'])
@@ -83,7 +104,7 @@ if __name__ == '__main__':
 
     promotions = dict()
 
-    ranking = Ranking()
+    ranking = Ranking(limit=limit)
 
     # Find highest riser, and worst
     max_r_risen = max_s_risen = -10000
@@ -91,9 +112,7 @@ if __name__ == '__main__':
     score_riser = rank_riser = rank_dropper = None
     for w in ranking:
 
-        logging.info("Processing Wrestler %s [%d]", w.name, w.nr)
-
-        # get_face(w)
+        logger.info("Processing Wrestler %s [%d]", w.name, w.nr)
 
         if w.promotion_id not in promotions:
             promotions[w.promotion_id] = session.query(Promotion).filter_by(cm_id=w.promotion_id).one()
@@ -111,15 +130,15 @@ if __name__ == '__main__':
         score_diff = score / prev_score
 
         if rank_diff > max_r_risen:
-            logging.debug("New rank riser: %s [%d], rised %d", w.name, w.nr, rank_diff)
+            logger.debug("New rank riser: %s [%d], rised %d", w.name, w.nr, rank_diff)
             max_r_risen = rank_diff
             rank_riser = w
         if score_diff > max_s_risen:
-            logging.debug("New score riser: %s [%d], rised %d", w.name, w.nr, rank_diff)
+            logger.debug("New score riser: %s [%d], rised %d", w.name, w.nr, rank_diff)
             max_s_risen = score_diff
             score_riser = w
         if rank_diff < max_r_dropped:
-            logging.debug("New rank dropper: %s [%d], dropper %d", w.name, w.nr, rank_diff)
+            logger.debug("New rank dropper: %s [%d], dropper %d", w.name, w.nr, rank_diff)
             rank_dropper = w
             max_r_dropped = rank_diff
 
@@ -134,8 +153,6 @@ if __name__ == '__main__':
     if rank_dropper:
         carousel.append(get_event_stuff(rank_dropper))
 
-    call(['lessc', '-rp=ass/', '-ru', 'style.less', 'style.css']) and exit()
-
     output = tpl.get_template('index.tpl.html').render(
         promotions=promotions,
         ranking=ranking,
@@ -143,5 +160,10 @@ if __name__ == '__main__':
         carousel=carousel
     )
 
-    #print(output)
-    print(translate_html(output, translations))
+    call(['lessc', '-rp=ass/', '-ru', 'ass/less/style.less', 'style.css']) and exit()
+
+    output = str(translate_html(output, translations))
+    if args.output_file:
+        open(args.output_file, 'w').write(output)
+    else:
+        print(output)

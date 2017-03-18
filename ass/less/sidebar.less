@@ -1,0 +1,199 @@
+.wrestler-rank-item .list-group-item-heading,
+.wrestler-rank-item .list-group-item-text {
+    position:relative;
+}
+
+.sidebar {
+    z-index: 1000;
+    display: block;
+    padding: 0;
+
+    background-color: @panel-default-heading-bg;
+    min-height:100%;
+    
+    box-shadow: 1px 1px 2px 2px rgba(0,0,0,0.3);
+}
+
+
+.sidebar .panel {
+    background-color: @sidebar-bg;
+    border: 0 none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.sidebar .list-group {
+    margin:0;
+}
+
+.sidebar .panel-body {
+    padding: 0;
+}
+
+.sidebar .list-group-item {
+    display:block;
+    position:relative;
+    overflow:hidden;
+    
+    background-color: @list-group-bg;
+    color: @list-group-link-color;
+    border: 0 none;
+
+    z-index:5;
+
+    #gradient.vertical(@list-group-bg; #000; 0%; 100%);
+    
+    &:hover,
+    &:hover .rank-nr,
+    &:focus {
+        color: @list-group-link-hover-color;
+        background-color: @list-group-hover-bg;
+    }    
+}
+    
+    
+.sidebar .list-group-item.active {
+    border-left: 15px solid @list-group-hover-bg;
+
+    z-index:4;
+
+    margin-right:-15px;
+    .transition-property(~"border-left-width, margin-right");
+    .transition-duration(.15s);
+    .transition-timing-function(ease);
+}
+
+.sidebar .list-group-item + .list-group-item  {
+    margin-top:2px;
+}
+
+.sidebar a.list-group-item .list-group-item-heading {
+    color: @list-group-link-heading-color;    
+}
+    
+.sidebar .rank .list-group-item-text {
+    overflow:hidden;
+    height: @line-height-base;
+}
+
+.sidebar .list-group-item .rank-nr {
+    float:left;
+    margin-right:13px;
+    font-size:150%;
+    background-color: #1B1B1B;
+    color: @list-group-link-color;
+
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.15), inset 0 -1px 1px rgba(255,255,255,.15);
+}
+
+.sidebar .panel-footer {
+    padding:0;
+    
+}
+
+.sidebar .pagination {
+    margin: 0;
+    width:100%;
+    background-color: @pager-bg;
+    text-align:center;
+    color:#c2c2c2;
+    border-top:1px solid #323232;
+}
+.sidebar .pagination > li {
+    display: inline-block;
+}
+
+.sidebar .pagination > li > a,
+.sidebar .pagination > li > span {
+    color:#828282;
+    border:0;
+    background-color: inherit;
+    &:hover {
+        color: #e2e2e2;
+        background: #212121;
+        text-shadow: 0px 1px 1px #000;
+        box-shadow: inset 1px 1px 1px rgba(0,0,0,.15), inset -1px -1px 1px rgba(255,255,255,.15);
+    }
+}
+
+.sidebar .pagination > li.disabled > a,
+.sidebar .pagination > li.disabled > span {
+    &:hover {
+        color: inherit;
+        background: inherit;
+    }
+}
+
+
+.sidebar .pagination > li.active > a {
+    color:@pagination-active-color;
+    background-color:@panel-default-heading-bg;
+}
+
+.wrestler-rank-item .bg {
+    position:absolute;
+    top:-2px;
+    left:-2px;
+    right:-2px;
+    bottom:-2px;
+    filter:blur(5px);
+    -webkit-filter: blur(5px);
+    background-size: cover;
+    display: block;
+    background-position: center 40%;
+    opacity:0.3;
+    &:after {
+        .transition(opacity .1s linear);
+        overflow:hidden;
+        content:" ";
+        display:block;
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        width:100%;
+        height:100%;
+        #gradient.vertical(rgba(0,0,0,0.1); rgba(0,0,0,0.7); 0%; 90%);
+    }
+}
+
+
+a.wrestler-rank-item .rank-nr {
+    position:relative;
+    overflow:hidden;
+    &:after {
+        .transition(all 0.4s ease-in);
+        background-position:top center;
+        background-size: cover;
+        overflow:hidden;
+        content:" ";
+        display:block;
+        position:absolute;
+        top:-15px;
+        left:-15px;
+        right:-15px;
+        bottom:-15px;
+        opacity:0;
+    }
+}
+
+a.wrestler-rank-item:hover {
+    & .rank-nr:after {
+        top:0px;
+        left:0px;
+        right:0px;
+        bottom:0px;
+        opacity:1;
+        display:block;
+    }
+    & .bg {
+        .transition(opacity 10s linear);
+        opacity: 1;
+    }
+}
+
+a.wrestler-rank-item:hover .bg:after {
+
+    opacity:0;
+}
