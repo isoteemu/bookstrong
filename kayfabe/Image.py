@@ -65,6 +65,8 @@ def crop_thumb(picture, thumb_size=(100, 100), **kwargs):
 
         x, y, w, h = crop_to_aspectratio(im, crop, aspect_ratio=aspect_ratio)
 
+        logger.debug("Face dimenssions: %s, %s, %s, %s",x,y,w,h)
+
         if y > 0:
             face_offset = h * 0.13
         else:
@@ -85,6 +87,8 @@ def crop_thumb(picture, thumb_size=(100, 100), **kwargs):
         im = upscale_if_needed(im, thumb_size)
 
         crop = _dummy_crop_box(im, size=thumb_size)
+
+        logger.debug("Crop box: %s, thumb: %s", crop, thumb_size)
         im = _crop(im, crop)
 
     im.thumbnail(thumb_size, Image.ANTIALIAS)
@@ -130,8 +134,8 @@ def _dummy_crop_box(im, size):
     :param thumb_size:  tuple of requested size()
     :return:            tuple(x, y, w, h)
     """
-
-    target_aspect_ratio = size[0] / size[1]
+    target_width, target_height = size
+    target_aspect_ratio = target_width / target_height
 
     width, height = im.size
     source_aspect_ratio = width / height
@@ -140,10 +144,10 @@ def _dummy_crop_box(im, size):
         # Crop on horizontal axis, using center point
         y = 0
         x = width / 2 - (height / 2)
-        width = height
+        width = target_width
     elif source_aspect_ratio < target_aspect_ratio:
         x = y = 0
-        height = width
+        height = target_height
     else:
         x = y = 0
 
