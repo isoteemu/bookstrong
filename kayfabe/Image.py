@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from PIL import Image, ImageOps, ImageChops
+from PIL import Image, ImageOps, ImageChops, ImageDraw
 
 from .FaceDetect import face_detect
 
@@ -61,11 +61,10 @@ def crop_thumb(picture, thumb_size=(100, 100), **kwargs):
 
         scale = 0.35
         crop = zoom_box(im, face_box, scale)
+
         aspect_ratio = thumb_size[0] / thumb_size[1]
 
         x, y, w, h = crop_to_aspectratio(im, crop, aspect_ratio=aspect_ratio)
-
-        logger.debug("Face dimenssions: %s, %s, %s, %s",x,y,w,h)
 
         if y > 0:
             face_offset = h * 0.13
@@ -76,9 +75,6 @@ def crop_thumb(picture, thumb_size=(100, 100), **kwargs):
 
         im = _crop(im, crop)
         im = upscale_if_needed(im, thumb_size)
-
-        logger.debug('Box size: %s, thumb target: %s', crop, thumb_size)
-        # Move viewbox according
 
     except AttributeError:
         logger.debug('Could not find face, using dummy cropping.')
@@ -140,14 +136,18 @@ def _dummy_crop_box(im, size):
     width, height = im.size
     source_aspect_ratio = width / height
 
+    logger.debug("Rations: %s, %s",source_aspect_ratio, target_aspect_ratio)
+    logger.debug("Dimenssion: %s", im.size)
     if source_aspect_ratio > target_aspect_ratio:
         # Crop on horizontal axis, using center point
         y = 0
-        x = width / 2 - (height / 2)
-        width = target_width
+        width = width /  (source_aspect_ratio / target_aspect_ratio)
+        x = (width / 2) - (width / 4)
+
     elif source_aspect_ratio < target_aspect_ratio:
+        ## TODO: If more closer to panorama, start moving Y point.
         x = y = 0
-        height = target_height
+        height = height * (source_aspect_ratio / target_aspect_ratio)
     else:
         x = y = 0
 
@@ -228,18 +228,26 @@ def crop_to_aspectratio(im, box, aspect_ratio):
     diff_width = width / target_width
     diff_height = height / target_height
 
-    scale = max(diff_width, diff_height)
+    scale = min(diff_width, diff_height)
+
+    logger.debug("Scale: %s (%s, %s)", scale, diff_height, diff_width)
+
     if scale < 1:
         logger.debug('New bounding box too big, scaling down.')
         target_width = target_width * scale
         target_height = target_height * scale
 
+        new_x = (width * scale) * center - (target_width/2)
+        new_y = (height * scale) * middle - (target_height/2)
+
+    else:
+        new_x = width * center - (target_width/2)
+        new_y = height * middle - (target_height/2)
+
     logger.debug("Targets: %s x %s", target_width, target_height)
 
-    new_x = width * center - (target_width/2)
-    new_y = height * middle - (target_height/2)
 
-    bounds = (int(new_x), int(new_y), int(target_width), int(target_height))
+    bounds = (new_x, new_y, target_width, target_height)
 
     return _check_bounds(im, bounds)
 
