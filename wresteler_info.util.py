@@ -4,8 +4,8 @@
 from kayfabe import session, BASE_SCORE
 from kayfabe.models import *
 
-from kayfabe.scrapper import cagematchnet, ProWrestlingWiki
-from kayfabe.Image import crop_thumb
+from kayfabe.scrapper import cagematchnet, WikiData
+from kayfabe.util import get_last_match
 
 from kayfabe.proxy import WrestlerProxy
 from kayfabe.view import get_image_path
@@ -14,9 +14,6 @@ import logging, sys
 
 from sqlalchemy import asc, desc, func
 
-def get_last_match(wrestler: Wrestler) -> Match:
-    q = session.query(Match).join(MatchWrestler).filter_by(wrestler_id=wrestler.nr).order_by(desc(Match.date)).limit(1)
-    return q.one()
 
 if __name__ == '__main__':
     import argparse
@@ -37,8 +34,11 @@ if __name__ == '__main__':
 
     if args.debug:
         logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+
     else:
         logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+
+    logger = logging.getLogger(__name__)
 
     force_update = args.update
 
@@ -51,7 +51,7 @@ if __name__ == '__main__':
             if len(_wrestlers) == 1:
                 w_nr = list(_wrestlers.keys())[0]
                 wrestler = Wrestler(nr=w_nr)
-                logging.info("Found Wrestler %s from cagematch.net" % w_nr)
+                logger.info('Found Wrestler %s from cagematch.net', w_nr)
             else:
                 logging.error('Wrong ammount of results %i', len(_wrestlers))
                 sys.exit(2)
@@ -61,12 +61,12 @@ if __name__ == '__main__':
 
         session.add(wrestler)
         logging.info('Adding wrestler %s with id %i' % (wrestler.name, wrestler.nr))
+        force_update = True
 
     elif args.name:
         wrestler = session.query(Wrestler).filter_by(name=args.name).one()
     else:
         wrestler = session.query(Wrestler).get(args.wrestler_id)
-
 
     proxy = WrestlerProxy(wrestler)
     proxy.force_update = force_update
@@ -74,7 +74,11 @@ if __name__ == '__main__':
     print("Name: %s" % proxy.name(force_update))
     print("Id: %s" % wrestler.nr)
 
-    ringnames = [g.gimmick for g in proxy.gimmicks(force_update)]
+    logging.debug('Retrieving gimmicks')
+    gimmicks = proxy.gimmicks(force_update)
+    logging.debug('Flattening gimmicks')
+
+    ringnames = [g.gimmick for g in gimmicks]
     print("Ringnames: %s" % ', '.join(ringnames))
 
     print("Promotion: %s" % proxy.promotion(force_update).name)
