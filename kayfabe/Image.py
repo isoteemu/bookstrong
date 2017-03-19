@@ -268,19 +268,22 @@ def trim_borders(im):
         return im.crop(bbox)
     return im
 
+
 def find_face(picture):
+    '''Find face in picture.'''
+    # Minimal face area
+    MIN_FACE_AREA = 0.007
 
     faces = face_detect(picture)
 
-    logger.debug("Found %d faces for picture %s", len(faces), picture)
+    logger.debug("Found %d faces for picture %s: %s", len(faces), picture, faces)
 
-    max_area_idx = 0
+    # Fetch image dimenssions, to calculate face size in relative to those.
+    im = Image.open(picture)
+    size = im.size[0] * im.size[1]
+
+    max_area_idx = -1
     max_area_size = 0
-
-    logger.debug("Faces: %s", faces)
-
-    if len(faces) == 1:
-        return faces[0]
 
     for i, f in enumerate(faces):
 
@@ -288,19 +291,30 @@ def find_face(picture):
         cp = copy(faces)
         cp.pop(i)
 
-        # Calculate cluster center point for rest of the faces
-        mean_area = mean([i[2] * i[3] for i in cp])
+        if len(cp):
+            mean_area = mean([i[2] * i[3] for i in cp])
+        else:
+            mean_area = 1
+
         current_area = f[2] * f[3]
 
         area_diff = (current_area - mean_area)
+        area_percent = current_area / size
+    
+        logger.debug("Relative size: %s mean area diff: %s", current_area / size, area_diff / mean_area)
 
+        if area_percent < MIN_FACE_AREA:
+            logger.debug("Skipping too small face %s x %s", f[2], f[3])
+            continue
+
+        # Select biggest image
         if area_diff > max_area_size:
             max_area_size = area_diff
             max_area_idx = i
 
-#    print('Biggest face', max_idx, faces[max_idx])
-
-    return faces[max_area_idx]
+    if max_area_idx > -1:
+        return faces[max_area_idx]
+    return None
 
 
 def _make_dir(name, dirmode=0o0755):
