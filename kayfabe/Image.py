@@ -7,6 +7,9 @@ from .FaceDetect import face_detect
 
 import os
 import logging
+from math import sqrt
+from numpy import mean
+from copy import copy
 
 logger = logging.getLogger(__name__)
 
@@ -271,17 +274,36 @@ def find_face(picture):
 
     logger.debug("Found %d faces for picture %s", len(faces), picture)
 
-    max_idx = None
-    max_size = 0
-    for i, face in enumerate(faces):
-        face_size = face[2] * face[3]
-        if face_size > max_size:
-            max_size = face_size
-            max_idx = i
+    # Default is -1, in case there is two faces, we select right most,
+    # as ref rises competitors right hand in air.
+    furthest_idx = 0
+    furthest_distance = 0
+
+    logger.debug("Faces: %s", faces)
+
+    # Enumerate faces, and find element furthest from others.
+    if len(faces) == 1:
+        return faces[0]
+
+    for i, f in enumerate(faces):
+
+        # Create shallow copy of faces, and remove current face from it.
+        cp = copy(faces)
+        cp.pop(i)
+
+        # Calculate cluster center point for rest of the faces
+        x_mean = mean([g[0] for g in cp])
+        y_mean = mean([g[1] for g in cp])
+
+        distance = sqrt((f[0] - x_mean)**2 + (f[1] - y_mean)**2)
+
+        if distance > furthest_distance:
+            furthest_distance = distance
+            furthest_idx = i
 
 #    print('Biggest face', max_idx, faces[max_idx])
 
-    return faces[max_idx]
+    return faces[furthest_idx]
 
 
 def _make_dir(name, dirmode=0o0755):
