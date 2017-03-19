@@ -274,14 +274,11 @@ def find_face(picture):
 
     logger.debug("Found %d faces for picture %s", len(faces), picture)
 
-    # Default is -1, in case there is two faces, we select right most,
-    # as ref rises competitors right hand in air.
-    furthest_idx = 0
-    furthest_distance = 0
+    max_area_idx = 0
+    max_area_size = 0
 
     logger.debug("Faces: %s", faces)
 
-    # Enumerate faces, and find element furthest from others.
     if len(faces) == 1:
         return faces[0]
 
@@ -292,18 +289,18 @@ def find_face(picture):
         cp.pop(i)
 
         # Calculate cluster center point for rest of the faces
-        x_mean = mean([g[0] for g in cp])
-        y_mean = mean([g[1] for g in cp])
+        mean_area = mean([i[2] * i[3] for i in cp])
+        current_area = f[2] * f[3]
 
-        distance = sqrt((f[0] - x_mean)**2 + (f[1] - y_mean)**2)
+        area_diff = (current_area - mean_area)
 
-        if distance > furthest_distance:
-            furthest_distance = distance
-            furthest_idx = i
+        if area_diff > max_area_size:
+            max_area_size = area_diff
+            max_area_idx = i
 
 #    print('Biggest face', max_idx, faces[max_idx])
 
-    return faces[furthest_idx]
+    return faces[max_area_idx]
 
 
 def _make_dir(name, dirmode=0o0755):
