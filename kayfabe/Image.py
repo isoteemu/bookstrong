@@ -14,6 +14,10 @@ from copy import copy
 logger = logging.getLogger(__name__)
 
 
+class FaceNotFound(RuntimeError):
+    pass
+
+
 def get_thumb(picture, thumb_path='ass/img/t', thumb_size=(100, 100), force_regen=False):
     """Get thumb picture. Create one if missing.
 
@@ -79,7 +83,7 @@ def crop_thumb(picture, thumb_size=(100, 100), **kwargs):
         im = _crop(im, crop)
         im = upscale_if_needed(im, thumb_size)
 
-    except AttributeError:
+    except (AttributeError, FaceNotFound):
         logger.debug('Could not find face, using dummy cropping.')
 
         im = trim_borders(im)
@@ -272,7 +276,7 @@ def trim_borders(im):
 def find_face(picture):
     '''Find face in picture.'''
     # Minimal face area
-    MIN_FACE_AREA = 0.007
+    MIN_FACE_AREA = 0.008
 
     faces = face_detect(picture)
 
@@ -314,11 +318,11 @@ def find_face(picture):
 
     if max_area_idx > -1:
         return faces[max_area_idx]
-    return None
+    raise FaceNotFound('No suitable face found.')
 
 
 def _make_dir(name, dirmode=0o0755):
-    ''' Create directory for file
+    ''' Create directory for file.
         :param name: Filename.
     '''
 
