@@ -286,6 +286,9 @@ def find_face(picture):
     im = Image.open(picture)
     size = im.size[0] * im.size[1]
 
+    # List for candidates
+    candidates = []
+
     max_area_idx = -1
     max_area_size = 0
 
@@ -295,29 +298,38 @@ def find_face(picture):
         cp = copy(faces)
         cp.pop(i)
 
-        if len(cp):
-            mean_area = mean([i[2] * i[3] for i in cp])
-        else:
-            mean_area = 1
-
+        # Calculate relative size to image.
         current_area = f[2] * f[3]
-
-        area_diff = (current_area - mean_area)
         area_percent = current_area / size
-    
-        logger.debug("Relative size: %s mean area diff: %s", current_area / size, area_diff / mean_area)
 
+        logger.debug('Relative size: %s percent', area_percent * 100)
+
+        # Remove too small faces.
         if area_percent < MIN_FACE_AREA:
             logger.debug("Skipping too small face %s x %s", f[2], f[3])
             continue
 
         # Select biggest image
-        if area_diff > max_area_size:
-            max_area_size = area_diff
+        if area_percent > max_area_size:
+            max_area_size = area_percent
             max_area_idx = i
 
-    if max_area_idx > -1:
-        return faces[max_area_idx]
+        candidates.append(i)
+
+    candidates_num = len(candidates)
+    if candidates_num == 2:
+        # If faces are on same line, select rightmost, as usually picture
+        # of wrestler is where he might be winning, and right hand is one
+        # that is rised.
+
+        right = candidates[0] if faces[candidates[1]][0] > faces[candidates[0]][0] else candidates[1]
+
+        logger.debug("Two candidates, returning right most")
+        return faces[right]
+
+    elif candidates_num >= 1:
+        return faces[max_area_idx]]
+
     raise FaceNotFound('No suitable face found.')
 
 
