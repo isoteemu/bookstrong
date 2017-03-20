@@ -12,6 +12,7 @@ from urllib.error import HTTPError
 
 import time
 from glob import glob
+import xattr
 
 from .models import Wrestler
 
@@ -447,9 +448,15 @@ class FaceFetcher():
 
             try:
                 fetch = urlretrieve(url, save)
+
                 if fetch:
                     logging.debug('Found wrestler image: "%s". Saving to: %s' % (url, save))
+
+                    attrs = xattr.xattr(save)
+                    attrs['user.xdg.origin.url'] = url.encode(encoding='utf_8')
+
                     return save
+
             except HTTPError as e:
                 logging.warning("URL retrieval error: %s", e)
 
