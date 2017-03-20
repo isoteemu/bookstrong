@@ -24,6 +24,7 @@ import json
 
 from subprocess import call, check_output
 
+
 def get_riser_stuff(wrestler):
     scores = session.query(Score).filter_by(wrestler_nr=wrestler.nr).\
         join(Match).order_by(asc(Match.date))
@@ -63,6 +64,8 @@ def get_event_stuff(wrestler):
 
 
 if __name__ == '__main__':
+
+    Session.configure(autoflush=False)
 
     config = {
         'items_per_page': 20
