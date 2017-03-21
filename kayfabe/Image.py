@@ -278,7 +278,10 @@ def find_face(picture):
     # Minimal face area
     MIN_FACE_AREA = 0.008
 
-    faces = face_detect(picture)
+    try:
+        faces = face_detect(picture)
+    except Exception as e:
+        raise FaceNotFound('OpenCV Error: %s' % e)
 
     logger.debug("Found %d faces for picture %s: %s", len(faces), picture, faces)
 
@@ -328,7 +331,7 @@ def find_face(picture):
         return faces[right]
 
     elif candidates_num >= 1:
-        return faces[max_area_idx]]
+        return faces[max_area_idx]
 
     raise FaceNotFound('No suitable face found.')
 
