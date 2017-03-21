@@ -18,11 +18,17 @@ from glob import glob
 
 IMAGES_PATH = 'ass/img/'
 
+IMAGE_SIZES = {
+    'carousel': (664, 373),
+    'thumb': (100,100),
+    'favicon': (16,16)
+}
+
 def translate_html(page, translation):
-    ''' Translate lang elements.
+    """Translate lang elements.
     Goes throug HTML tree, and searches <span lang="en"></span>
     tags translating them.
-    '''
+    """
 
     lang = translation.info()['language']
 
@@ -93,10 +99,10 @@ def get_image_path(obj: object, size: str ="full") -> str:
         image = 'ass/1.gif'
     elif size != "full":
         # Set size into tuple.
-        if size == "thumb":
-            size = (100,100)
+        if size in IMAGE_SIZES:
+            size = IMAGE_SIZES[size]
         else:
-            size = tuple(size.split('x'))
+            size = tuple(int(i) for i in size.split('x'))
 
         image = get_thumb(image, thumb_size=size)
     return image
