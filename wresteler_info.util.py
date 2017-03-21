@@ -20,7 +20,7 @@ def get_wrassler(nr):
     try:
         wrestler = session.query(Wrestler).filter_by(nr=nr).one()
     except exc.NoResultFound:
-        wrestler = Wrestler(nr=args.wrestler_id)
+        wrestler = Wrestler(nr=nr)
         session.add(wrestler)
     return wrestler
 
@@ -59,7 +59,11 @@ if __name__ == '__main__':
             wrestlers.append(get_wrassler(nr))
 
     elif args.name:
-        wrestler = session.query(Wrestler).filter_by(name=args.name).one()
+        try:
+            wrestler = session.query(Wrestler).filter_by(name=args.name).one()
+        except exc.NoResultFound:
+            wrestler = None
+
         if wrestler:
             wrestlers.append(wrestler)
         else:
@@ -102,6 +106,6 @@ if __name__ == '__main__':
             print('Picture: %s' % picture)
 
         if force_update:
-            print('')
             logger.debug("Storing")
+            print('')
             session.commit()
