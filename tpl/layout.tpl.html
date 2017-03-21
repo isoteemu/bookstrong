@@ -9,7 +9,9 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    {#
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    #}
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -41,6 +43,7 @@
     }
 
     </style>
+    {% block head %}{% endblock %}
   </head>
   <body>
 
@@ -61,8 +64,8 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-right">            
             {% for id, promotion in promotions.items() %}
-                <li><a class="promotion-filter" data-promotion="{{ promotion.cm_id }}" href="#promotion-{{ promotion.cm_id }}">
-                    <span lang="en" title="{{ promotion.name|escape }}">{{ promotion.abbrevation }}</span>
+                <li><a class="promotion-filter" data-promotion="{{ promotion.cm_id }}" href="#promotion={{ promotion.cm_id }}">
+                    <span lang="en" title="{{ promotion.name|escape }}">{{ promotion.abbrevation|escape }}</span>
                 </a></li>
             {% endfor %}
           <li role="separator" class="divider"></li>
@@ -72,7 +75,6 @@
     </form><!-- /input-group -->
 				</div>
 					<div class="panel-body">
-					
                         <style>
                             {% for wrestler in ranking %}
 a[data-nr="{{ wrestler.nr }}"].wrestler-rank-item .rank-nr:after,
@@ -80,11 +82,17 @@ a[data-nr="{{ wrestler.nr }}"].wrestler-rank-item .bg {
     background-image: url('{{wrestler|img('thumb')}}');
 }
                             {% endfor %}
+                            {% for id, promotion in promotions.items() %}
+
+a[href="#promotion={{promotion.cm_id}}"]:before {
+    content: url('{{promotion|img('favicon')}}');
+}
+                            {% endfor %}
                         </style>
 					
                         <nav class="list-group rank">
                             {% for wrestler in ranking %}
-                                <a href="#" class="list-group-item wrestler-rank-item {% if loop.index > config['items_per_page'] %}limit-filter-hide{%endif%}" data-promotion="{{ wrestler.promotion.cm_id }}" data-nr="{{ wrestler.nr }}" data-gimmicks="{% for gimmick in wrestler.gimmicks %}{{gimmick.gimmick|escape}}, {% endfor %}">
+                                <a href="#nr={{wrestler.nr}}" class="list-group-item wrestler-rank-item {% if loop.index > config['items_per_page'] %}limit-filter-hide{%endif%}" data-promotion="{{ wrestler.promotion.cm_id }}" data-nr="{{ wrestler.nr }}" data-gimmicks="{% for gimmick in wrestler.gimmicks %}{{gimmick.gimmick|escape}}, {% endfor %}">
                                     <div class="bg"></div>
                                     <h4 class="list-group-item-heading"><span class="label label-info rank-nr">{{ wrestler.rank }}</span> 
                                         <div class="ln"><span lang="en">{{ wrestler.name|escape }}</span></div>
@@ -155,6 +163,9 @@ a[data-nr="{{ wrestler.nr }}"].wrestler-rank-item .bg {
 
                 </header>
 
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
                 <div>
                 {% block content %}{% endblock %}
                 </div>
@@ -166,10 +177,7 @@ a[data-nr="{{ wrestler.nr }}"].wrestler-rank-item .bg {
 		</div>
 	</div>
   
-  
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>

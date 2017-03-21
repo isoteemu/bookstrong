@@ -1,0 +1,12 @@
+
+  <img src="{{ wrestler|img('carousel') }}" alt="{{wrestler.name}}">
+  <div class="carousel-caption">
+    <h3><span lang="en">{{wrestler.name|escape}}</span></h3>
+    <p>
+        <span lang="en">Biggest Cheater</span>
+
+        {% for method in stats %}
+            {{method}}: {{stats[method]}}
+        {% endfor %}
+    </p>
+  </div>
