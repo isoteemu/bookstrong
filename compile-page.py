@@ -66,11 +66,24 @@ def carousel_cheater(date_from, date_to):
     cheater = get_biggest_cheater(date_from, date_to)
     cheater_stats = match_ending_stats(cheater, date_from, date_to)
 
-    return tpl.get_template('carousel-cheater.tpl.html').render(
-        config = config,
-        wrestler = cheater,
-        stats = cheater_stats
-    )
+    return ('carousel-cheater.tpl.html', {
+        'wrestler': cheater,
+        'stats': cheater_stats
+    })
+
+
+def carousel_rank_riser(riser: Wrestler):
+    return ('carousel-rank-riser.tpl.html', {
+        'wrestler': riser,
+        'stats': get_event_stuff(riser)
+    })
+
+
+def carousel_score_riser(riser: Wrestler):
+    return ('carousel-score-riser.tpl.html', {
+        'wrestler': riser,
+        'stats': get_event_stuff(riser)
+    })
 
 
 if __name__ == '__main__':
@@ -168,6 +181,9 @@ if __name__ == '__main__':
         carousel.append(get_event_stuff(rank_dropper))
     '''
 
+
+    carousel.append(carousel_rank_riser(rank_riser))
+    carousel.append(carousel_score_riser(score_riser))
     carousel.append(carousel_cheater(date_from=ranking.from_date, date_to=to_date))
 
     output = tpl.get_template('index.tpl.html').render(

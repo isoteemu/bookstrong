@@ -14,19 +14,23 @@
         <div class="row">
             <div class="carousel" id="slider">
                 <ul class="slider">
-                    {% for slide in carousel %}
+                    {% for template, item in carousel %}
                     <li class="item">
-                        {{ slide }}
+                        {% include template with context %}
                     </li>
                     {% endfor %}
                 </ul>
                 <div id="bx-pager">
                     <ul class="pager-box">
-                    {#
+                    {% for template, item in carousel %}
                         <li>
-                            <a data-slide-index="{{ loop.index - 1 }}" href=""><img src="{{ wrestler|img('70x29') }}"></a>
+                            <a data-slide-index="{{ loop.index - 1 }}" href="">
+                                {% block carousel_thumb scoped %}
+                                    <img src="{{ item.wrestler|img('carousel_thumb') }}" alt="{{ item.wrestler.name|e }}">
+                                {% endblock %}
+                            </a>
                         </li>
-                    #}
+                    {% endfor %}
 
                     </ul>
                 </div>

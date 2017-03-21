@@ -4,10 +4,6 @@
   <img src="{{ item.wrestler|img('carousel') }}" alt="Biggest Cheater: {{item.wrestler.name}}">
   <div class="carousel-caption">
     <h3><span lang="en">{{item.wrestler.name|escape}}</span></h3>
-    <p>Biggest Cheater
-      {% for key in item.stats %}
-        {{key|e}}: {{item.stats[key]}}
-      {% endfor %}
-    </p>
+    <p>Most notable wins</p>
   </div>
 {% endblock %}

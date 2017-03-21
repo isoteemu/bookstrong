@@ -1,5 +1,7 @@
-  <img src="{{ wrestler|img('carousel') }}" alt="{{wrestler.name}}">
+{% block carousel_slide %}
+  <img src="{{ item.wrestler|img('carousel') }}" alt="{{item.wrestler.name}}">
   <div class="carousel-caption">
-    <h3><span lang="en">{{wrestler.name|escape}}</span></h3>
+    <h3><span lang="en">{{item.wrestler.name|escape}}</span></h3>
     <p>.. P ..</p>
   </div>
+{% endblock %}
