@@ -6,6 +6,7 @@ from kayfabe.models import *
 from kayfabe.scrapper import WikiData
 from kayfabe.view import *
 from kayfabe.scoring import *
+from kayfabe.stats import get_biggest_cheater, match_ending_stats
 
 from sqlalchemy import asc, desc, func
 
@@ -24,7 +25,6 @@ import json
 
 from subprocess import call, check_output
 
-
 def get_riser_stuff(wrestler):
     scores = session.query(Score).filter_by(wrestler_nr=wrestler.nr).\
         join(Match).order_by(asc(Match.date))
@@ -40,7 +40,6 @@ def get_riser_stuff(wrestler):
 
     top = sorted(matches, key=lambda diff: diff[0], reverse=True)[0:5]
     return [i[1] for i in top]
-
 
 def get_event_stuff(wrestler):
     logger.debug('Event stuff for wrestler %s', wrestler.name)
@@ -61,6 +60,17 @@ def get_event_stuff(wrestler):
             e.event_name = e.event_name
 
     return (wrestler, wrestler_events)
+
+
+def carousel_cheater(date_from, date_to):
+    cheater = get_biggest_cheater(date_from, date_to)
+    cheater_stats = match_ending_stats(cheater, date_from, date_to)
+
+    return tpl.get_template('carousel-cheater.tpl.html').render(
+        config = config,
+        wrestler = cheater,
+        stats = cheater_stats
+    )
 
 
 if __name__ == '__main__':
@@ -103,11 +113,11 @@ if __name__ == '__main__':
     tpl.filters['img'] = get_image_path
 
     to_date = date.today()
-    prev_date = date(to_date.year, to_date.month, 1) - timedelta(days=30)
+    from_date = date(to_date.year, to_date.month, 1) - 3 * timedelta(days=30)
 
     promotions = dict()
 
-    ranking = Ranking(limit=limit)
+    ranking = Ranking(limit=limit, from_date=from_date, to_date=to_date)
 
     # Find highest riser, and worst
     max_r_risen = max_s_risen = -10000
@@ -147,6 +157,7 @@ if __name__ == '__main__':
 
     carousel = []
 
+    '''
     if rank_riser:
         carousel.append(get_event_stuff(rank_riser))
 
@@ -155,6 +166,9 @@ if __name__ == '__main__':
 
     if rank_dropper:
         carousel.append(get_event_stuff(rank_dropper))
+    '''
+
+    carousel.append(carousel_cheater(date_from=ranking.from_date, date_to=to_date))
 
     output = tpl.get_template('index.tpl.html').render(
         promotions=promotions,

@@ -16,9 +16,10 @@ RANK_TIME = 3
 # TODO: Restructure
 class Ranking(Sequence):
 
-    to_date         = date.today()
-    time_range      = RANK_TIME
-    limit           = 500
+    to_date         = None
+    from_date       = None
+
+    limit           = 1000
 
     rank            = None
     prev_rank       = None
@@ -32,8 +33,9 @@ class Ranking(Sequence):
     _iterator       = 0
 
     def __init__(self, **kwargs):
-        self.to_date = kwargs.get('to_date', self.to_date)
-        self.time_range = kwargs.get('time_range', self.time_range)
+        self.to_date = kwargs.get('to_date', date.today())
+        self.from_date = kwargs.get('from_date', self.to_date - timedelta(days=90) )
+
         self.limit = kwargs.get('limit', self.limit)
         self.get_ranking()
 
@@ -53,23 +55,26 @@ class Ranking(Sequence):
 
     def get_ranking(self):
         if not self.rank:
-            self.rank_idx, self.rank, self.scores = self.get_ranked_wrestlers(self.to_date, time_range=self.time_range, update=True)
+            self.rank_idx, self.rank, self.scores = self.get_ranked_wrestlers(update=True)
         return self.rank
 
     def get_previus_ranking(self):
         if not self.prev_rank:
-            to_date = date(self.to_date.year, self.to_date.month, 1) - timedelta(days=self.time_range*30)
-            self.prev_rank_idx, self.prev_rank, self.prev_scores = self.get_ranked_wrestlers(to_date, time_range=self.time_range, limit=False, update=False)
+            delta = self.to_date - self.from_date
+            date_from = self.to_date - delta
+            date_to = self.from_date
+            
+            self.prev_rank_idx, self.prev_rank, self.prev_scores = self.get_ranked_wrestlers(
+                from_date=date_from, to_date=date_to,  limit=False, update=False
+            )
 
         return self.prev_rank
 
-    def get_ranked_wrestlers(self, to_date=date.today(), from_date=None, time_range=RANK_TIME, limit=None, update=False):
-
-        if limit == None:
-            limit = self.limit
-
-        if not from_date:
-            from_date = date(to_date.year, to_date.month, 1) - timedelta(days=time_range*30)
+    def get_ranked_wrestlers(self, to_date=None, from_date=None, limit=None, update=False):
+        """Get wrestler rankings."""
+        to_date = to_date if to_date else self.to_date
+        from_date = from_date if from_date else self.from_date 
+        limit = limit if limit else self.limit
 
         q = session.query(Score).order_by(desc(func.max(Score.score))).\
             join(Match).filter(Match.date >= from_date).\
@@ -81,15 +86,11 @@ class Ranking(Sequence):
         if limit:
             q = q.slice(0,limit)
 
-
-
-        a = q.all()
-
         idx = {}
         r = []
         scores = []
 
-        for (i, w) in enumerate(a):
+        for (i, w) in enumerate(q.all()):
             if update:
                 w.wrestler.rank = i + 1
                 w.wrestler.score = w.score
